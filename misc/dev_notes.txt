@@ -1,0 +1,36 @@
+Components
+=======================
+Board Components
+- 1 Gameboard
+- 134 Pepper Tokens
+ - 17 Red
+ - 17 Yellow
+ - 17 Blue
+ - 14 Green
+ - 14 Orange
+ - 14 Purple
+ - 14 Brown
+ - 9 White
+ - 9 Black
+ - 9 Phantom
+- 50 Pepper Chits (May not be needed)
+- 65 Auction Cards
+- 48 Market Cards
+- 12 Award Plaques
+- 118 Coin Tokens
+ - 24 10
+ - 24 5
+ - 70 1
+- Bonus Action Tiles
+
+Player Components
+- 6 Farmers (Player Pieces)
+- 6 Discs (For turn order)
+- 6 Player Screens
+
+Charts
+- 6 Breeding Charts
+
+Setup
+=======================
+A. General: Assemble the board

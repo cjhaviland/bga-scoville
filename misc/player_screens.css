@@ -1,0 +1,29 @@
+.bg-screen_blue {
+    width: 673px; height: 201px;
+    background: url('css_sprites.png') -0 -0;
+}
+
+.bg-screen_green {
+    width: 673px; height: 201px;
+    background: url('css_sprites.png') -0 -201px;
+}
+
+.bg-screen_orange {
+    width: 673px; height: 201px;
+    background: url('css_sprites.png') -0 -402px;
+}
+
+.bg-screen_purple {
+    width: 673px; height: 201px;
+    background: url('css_sprites.png') -0 -603px;
+}
+
+.bg-screen_red {
+    width: 673px; height: 201px;
+    background: url('css_sprites.png') -0 -804px;
+}
+
+.bg-screen_yellow {
+    width: 673px; height: 201px;
+    background: url('css_sprites.png') -0 -1005px;
+}

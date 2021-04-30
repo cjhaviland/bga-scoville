@@ -1,0 +1,11 @@
+useComposer: false
+testDb:
+    namePrefix: null
+    user: plaidhappiness
+    pass: 30d38e04f3227bd93eaa93aa9f1de77c
+sftp:
+    host: 1.studio.boardgamearena.com
+    user: plaidhappiness
+    pass: 30d38e04f3227bd93eaa93aa9f1de77c
+linterPhpBin: php
+extraSrc: []
