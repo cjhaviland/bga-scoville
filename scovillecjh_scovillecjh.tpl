@@ -24,13 +24,20 @@
     
     Please REMOVE this comment before publishing your game on BGA
 -->
-
-<div id="board" class="board"></div>
-
-<div id="myhand_wrap" class="whiteblock">
+<div class="grid-container">
+  <div class="market-container">
+    <h2>Market</h2>
+  </div>
+  <div class="board-container">
+    <div id="board"></div>
+  </div>
+  <div class="recipe-container">
+    <h2>Chili Cookoff</h2>
+  </div>
+  <div class="player-container">
     <h3>{MY_HAND}</h3>
-    <div id="myhand">
-    </div>
+    <div id="player-screen">
+  </div>
 </div>
 
 <script type="text/javascript">

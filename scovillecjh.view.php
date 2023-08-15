@@ -30,7 +30,8 @@
   {
     function getGameName() {
         return "scovillecjh";
-    }    
+    }
+    
   	function build_page( $viewArgs )
   	{		
   	    // Get players & players number

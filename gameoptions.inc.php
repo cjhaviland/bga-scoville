@@ -3,7 +3,7 @@
 /**
  *------
  * BGA framework: © Gregory Isabelli <gisabelli@boardgamearena.com> & Emmanuel Colin <ecolin@boardgamearena.com>
- * scovilleCJH implementation : © <Your name here> <Your email address here>
+ * ScovilleCjh implementation : © <Your name here> <Your email address here>
  *
  * This code has been produced on the BGA studio platform for use on http://boardgamearena.com.
  * See http://en.boardgamearena.com/#!doc/Studio for more information.
@@ -11,7 +11,7 @@
  *
  * gameoptions.inc.php
  *
- * scovilleCJH game options description
+ * ScovilleCjh game options description
  * 
  * In this file, you can define your game options (= game variants).
  *   
@@ -42,8 +42,10 @@ $game_options = array(
 
                             // Another value, with other options:
                             //  description => this text will be displayed underneath the option when this value is selected to explain what it does
-                            //  beta=true => this option is in beta version right now.
+                            //  beta=true => this option is in beta version right now (there will be a warning)
+                            //  alpha=true => this option is in alpha version right now (there will be a warning, and starting the game will be allowed only in training mode except for the developer)
                             //  nobeginner=true  =>  this option is not recommended for beginners
+                            //  firstgameonly=true  =>  this option is recommended only for the first game (discovery option)
                             3 => array( 'name' => totranslate('option 3'), 'description' => totranslate('this option does X'), 'beta' => true, 'nobeginner' => true )
                         ),
                 'default' => 1

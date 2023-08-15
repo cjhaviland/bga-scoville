@@ -67,10 +67,38 @@
     }
 */
 
+/* Layout */
+.grid-container {
+    display: grid;
+    grid-template-columns: min-content 1fr min-content;
+    grid-template-rows: 1fr min-content;
+    gap: 0.5em 0.5em;
+    grid-template-areas:
+      "market-container board-container recipe-container"
+      "player-container player-container player-container";
+    height: 100vh;
+}
+  
+.player-container { grid-area: player-container; }
+
+.market-container { grid-area: market-container; }
+
+.board-container { grid-area: board-container; }
+
+.recipe-container { grid-area: recipe-container; }
+
 #board {
-    width: 676px;
-    height: 496px;
-    background-image: url('img/board.png');
-    position: relative;
+    background-image: url('img/board.jpg');
+    background-repeat: no-repeat;
+    background-size: contain;
+    height: 100%;
+    max-width: 90%;
     margin: auto;
+}
+
+#player-screen {
+    background-image: url('img/player_screen_back.jpg');
+    background-repeat: no-repeat;
+    background-size: contain;
+    height: 100%;
 }
