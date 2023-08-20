@@ -67,7 +67,28 @@
     }
 */
 
+/***** BOARD ****/
+.board-container {
+    display: flex;
+    height: 30em;
+}
 
+.board {
+    background-image: url('img/board.jpg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    
+    height: auto;
+    width: 100%;
+}
+
+.market-cards-container {
+    width: 20%;
+}
+
+.auction-cards-container {
+    width: 20%;
+}
 
 /***** PLAYER PANEL ****/
 .scoville_deck_board {

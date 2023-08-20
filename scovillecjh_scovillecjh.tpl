@@ -25,8 +25,11 @@
     Please REMOVE this comment before publishing your game on BGA
 -->
 
-
-This is your game interface. You can edit this HTML in your ".tpl" file.
+<div class="board-container">
+  <div class="market-cards-container whitespace"></div>
+  <div class="board"></div>
+  <div class="auction-cards-container whitespace"></div>
+</div>
 
 <script type="text/javascript">
 
