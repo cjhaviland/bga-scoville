@@ -3,7 +3,7 @@
 <!-- 
 --------
 -- BGA framework: © Gregory Isabelli <gisabelli@boardgamearena.com> & Emmanuel Colin <ecolin@boardgamearena.com>
--- scovilleCJH implementation : © <Your name here> <Your email address here>
+-- ScovilleCjh implementation : © <Your name here> <Your email address here>
 -- 
 -- This code has been produced on the BGA studio platform for use on http://boardgamearena.com.
 -- See http://en.boardgamearena.com/#!doc/Studio for more information.
@@ -24,21 +24,9 @@
     
     Please REMOVE this comment before publishing your game on BGA
 -->
-<div class="grid-container">
-  <div class="market-container">
-    <h2>Market</h2>
-  </div>
-  <div class="board-container">
-    <div id="board"></div>
-  </div>
-  <div class="recipe-container">
-    <h2>Chili Cookoff</h2>
-  </div>
-  <div class="player-container">
-    <h3>{MY_HAND}</h3>
-    <div id="player-screen">
-  </div>
-</div>
+
+
+This is your game interface. You can edit this HTML in your ".tpl" file.
 
 <script type="text/javascript">
 
@@ -50,6 +38,14 @@ var jstpl_some_game_item='<div class="my_game_item" id="my_game_item_${MY_ITEM_I
 
 */
 
-</script>
+let jstpl_player_board = '<div class="scoville_deck_board">\
+  <div class="scoville_label_line">\
+    <div class="label scoville_label" id="label_coins_${id}">\
+      <i class="fa6 fa6-solid fa6-coins"></i>\
+    </div>\
+    <div id="coins_${id}">0</div></div>\
+  </div>';
+
+</script>  
 
 {OVERALL_GAME_FOOTER}

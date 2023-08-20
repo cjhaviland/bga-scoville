@@ -48,12 +48,21 @@ function (dojo, declare) {
         {
             console.log( "Starting game setup" );
             
+            this.counter = {};
+
             // Setting up player boards
-            for( var player_id in gamedatas.players )
+            for( let player_id in gamedatas.players )
             {
-                var player = gamedatas.players[player_id];
+                let player = gamedatas.players[player_id];
+
+                let player_board_div = $('player_board_' + player_id);
+                dojo.place(this.format_block('jstpl_player_board', {id: player_id}), player_board_div);
                          
-                // TODO: Setting up players boards if needed
+                this.counter[player_id] = {}
+                this.createCounter(player_id, 'coins')
+
+                this.addTooltip('label_coins_' + player_id, dojo.string.substitute( _("Number of coins ${player_name} has."), {
+                    player_name: this.gamedatas.players[player_id].name }), "");
             }
             
             // TODO: Set up your game interface here, according to "gamedatas"
@@ -157,6 +166,12 @@ function (dojo, declare) {
             script.
         
         */
+
+        createCounter: function (player_id, name) {
+            this.counter[player_id][name] = new ebg.counter();
+            this.counter[player_id][name].create(name + "_" + player_id);
+            this.counter[player_id][name].setValue(this.gamedatas.counters[player_id][name]);
+        },
 
 
         ///////////////////////////////////////////////////

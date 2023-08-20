@@ -52,6 +52,18 @@ New Game Setup
 7. Random choose the playing order
 7a. Cover up the unused player circles with coins
 
+/**
+    Each piece of this section needs planning for...
+    id: number
+    name: string
+    type: activeplayer | multipleactiveplayer| private | game
+    description: string
+    descriptionmyturn: string
+    action: st_actionMethod PHP method to call when Entering Game Staten (Mandatory for 'game' type)
+    transitions: array of next possible state
+    possibleactions: array of possible actions for the activeplayer or multipleactiveplayer
+    args: PHP method to pass arguments to the Client Side code
+*/
 
 Auction Phase (All Players)
 ==========================================

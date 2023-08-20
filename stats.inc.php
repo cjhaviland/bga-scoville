@@ -73,8 +73,8 @@ $stats_type = array(
     // Statistics existing for each player
     "player" => array(
 
-        "turns_number" => array("id"=> 10,
-                    "name" => totranslate("Number of turns"),
+        "coins_number" => array("id"=> 10,
+                    "name" => totranslate("Number of coins"),
                     "type" => "int" ),
     
 /*

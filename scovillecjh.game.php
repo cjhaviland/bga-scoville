@@ -117,7 +117,11 @@ class ScovilleCjh extends Table
         $result['players'] = self::getCollectionFromDb( $sql );
   
         // TODO: Gather all information about current game situation (visible by player $current_player_id).
-  
+        $result['counters'] = array();
+        foreach (array_keys($result['players']) as $player_id) {
+            $result['counters'][$player_id] = $this->get_counters($player_id);
+        }
+
         return $result;
     }
 
@@ -146,7 +150,22 @@ class ScovilleCjh extends Table
     /*
         In this space, you can put any utility methods useful for your game logic
     */
-
+    function get_counters($player_id) {
+        // $result = array(
+        //     'deck' => $this->cards->countCardInLocation($this->player_deck($player_id)),
+        //     'hand' => $this->cards->countCardInLocation(STOCK_HAND, $player_id) + $this->cards->countCardInLocation(STOCK_LIMBO, $player_id),
+        //     'discard' => $this->cards->countCardInLocation($this->player_discard($player_id)),
+        // );
+        // if (self::getGameStateValue(GAME_STATE_ARTICHOKE_COUNTS) > 0) {
+        //     $counts = $this->count_cards_and_artichokes($player_id);
+        //     $result['artichokes'] = $counts['artichoke_count'];
+        // }
+        $result = array(
+            'coins' => 10
+        );
+        
+        return $result;
+    }
 
 
 //////////////////////////////////////////////////////////////////////////////

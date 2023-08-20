@@ -1,7 +1,7 @@
 /**
  *------
  * BGA framework: © Gregory Isabelli <gisabelli@boardgamearena.com> & Emmanuel Colin <ecolin@boardgamearena.com>
- * scovilleCJH implementation : © <Your name here> <Your email address here>
+ * ScovilleCjh implementation : © <Your name here> <Your email address here>
  *
  * This code has been produced on the BGA studio platform for use on http://boardgamearena.com.
  * See http://en.boardgamearena.com/#!doc/Studio for more information.
@@ -9,7 +9,7 @@
  *
  * scovillecjh.css
  *
- * scovilleCJH stylesheet
+ * ScovilleCjh stylesheet
  *
  */
 
@@ -67,38 +67,19 @@
     }
 */
 
-/* Layout */
-.grid-container {
-    display: grid;
-    grid-template-columns: min-content 1fr min-content;
-    grid-template-rows: 1fr min-content;
-    gap: 0.5em 0.5em;
-    grid-template-areas:
-      "market-container board-container recipe-container"
-      "player-container player-container player-container";
-    height: 100vh;
-}
-  
-.player-container { grid-area: player-container; }
 
-.market-container { grid-area: market-container; }
 
-.board-container { grid-area: board-container; }
-
-.recipe-container { grid-area: recipe-container; }
-
-#board {
-    background-image: url('img/board.jpg');
-    background-repeat: no-repeat;
-    background-size: contain;
-    height: 100%;
-    max-width: 90%;
-    margin: auto;
+/***** PLAYER PANEL ****/
+.scoville_deck_board {
+    display: flex;
+    justify-content: space-around;
 }
 
-#player-screen {
-    background-image: url('img/player_screen_back.jpg');
-    background-repeat: no-repeat;
-    background-size: contain;
-    height: 100%;
+.scoville_label {
+    margin-right: 5px;
+}
+
+.scoville_label_line {
+    display: flex;
+    align-items: center;
 }

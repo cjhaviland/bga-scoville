@@ -71,6 +71,17 @@ $machinestates = array(
     		"possibleactions" => array( "playCard", "pass" ),
     		"transitions" => array( "playCard" => 2, "pass" => 2 )
     ),
+
+    // 20 => array(
+    //     'name' => 'auctionPhase',
+    //     'type' => 'multipleactiveplayer',
+    //     'description' => clienttranslate('Other players must bid.'),
+    //     'descriptionmyturn' => clienttranslate('${you} must bid.'),
+    //     'possibleactions' => array('placeBid'),
+    //     'transitions' => array('' => 2,),
+    //     'action' => 'st_MultiPlayerInit',
+    //     'args' => 'arg_playerTurnSetup',
+    // ),
     
 /*
     Examples:
