@@ -68,9 +68,13 @@
 */
 
 /***** BOARD ****/
-.board-container {
+.table-container {
     display: flex;
     height: 30em;
+}
+
+.board-container {
+    width: 100%;
 }
 
 .board {
@@ -78,8 +82,35 @@
     background-size: contain;
     background-repeat: no-repeat;
     
-    height: auto;
-    width: 100%;
+    aspect-ratio: 4.05/3;
+}
+
+.board-top {
+    background-color: blue;
+    opacity: 0.3;
+    height: 22.4%;
+}
+
+.board-middle {
+    background-color: yellow;
+    opacity: 0.3;
+    height: 47.4%;
+    margin-left: 24.8%;
+    margin-right: 24.7%; 
+}
+
+.board-bottom {
+    background-color: red;
+    opacity: 0.3;
+    height: 25%
+}
+
+.pepper-plot {
+    width: 2em;
+    height: 2em;
+    position: relative;
+    background: green;
+    opacity: 0.3;
 }
 
 .market-cards-container {

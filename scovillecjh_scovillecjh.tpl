@@ -25,9 +25,17 @@
     Please REMOVE this comment before publishing your game on BGA
 -->
 
-<div class="board-container">
-  <div class="market-cards-container whitespace"></div>
-  <div class="board"></div>
+<div class="table-container">
+  <div class="market-cards-container whiteblock">
+    <h3>Market</h3>
+  </div>
+  <div class="board-container">
+    <div class="board">
+      <div class="board-top"></div>
+      <div class="board-middle"></div>
+      <div class="board-bottom"></div>
+    </div>
+  </div>
   <div class="auction-cards-container whitespace"></div>
 </div>
 
@@ -48,6 +56,8 @@ let jstpl_player_board = '<div class="scoville_deck_board">\
     </div>\
     <div id="coins_${id}">0</div></div>\
   </div>';
+
+let jstpl_pepper_plot='<div class="pepper-plot ${pepper_type}" id="pepper_plot_${x}_${y}"></div>';
 
 </script>  
 
