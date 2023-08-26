@@ -43,8 +43,8 @@ class view_scovillecjh_scovillecjh extends game_view
         /*********** Place your code below:  ************/
         $this->page->begin_block( "scovillecjh_scovillecjh", "pepperplot" );
         
-        $hor_scale = 10;
-        $ver_scale = (1/7)*100;
+        $hor_scale = 10 + 0.05;
+        $ver_scale = (1/7)*100 + 0.2;
 
         for( $x=1; $x<=10; $x++ )
         {

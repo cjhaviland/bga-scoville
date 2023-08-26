@@ -67,24 +67,32 @@
     }
 */
 
-/* CSS HEX */
 * {
-    --engineering-orange: #C13112ff;
-    --school-bus-yellow: #FEE004ff;
-    --blue-green: #009BCDff;
-    --yellow-green: #8FC73Fff;
-    --orange-wheel: #F98526ff;
-    --purple: #720D6Fff;
-    --golden-brown: #9E610Dff;
-    --white: #FFFFFFff;
-    --jet: #393534ff;
-    --light-blue: #9AC1D0ff;
+    /* Pepper Colors */
+    --pepper-red: #C13112ff;
+    --pepper-yellow: #FEE004ff;
+    --pepper-blue: #009BCDff;
+    --pepper--green: #8FC73Fff;
+    --pepper-orange: #F98526ff;
+    --pepper-purple: #720D6Fff;
+    --pepper-brown: #9E610Dff;
+    --pepper-white: #FFFFFFff;
+    --pepper-black: #393534ff;
+    --pepper-phantom: #9AC1D0ff;
+    
+    /* Player Colors */
+    --player-red: #EE3F34ff;
+    --player-yellow: #FFEE01ff;
+    --player-blue: #0093D0ff;
+    --player-green: #00A94Dff;
+    --player-orange: #F68E1Eff;
+    --player-purple: #A54499ff;
 }
+
 
 /***** BOARD ****/
 .table-container {
     display: flex;
-    height: 30em;
 }
 
 .board-container {
@@ -119,8 +127,8 @@
 }
 
 .pepper-plot {
-    width: 2.2rem;
-    height: 2.2rem;
+    width: 9.4%;
+    height: 13.5%;
     position: absolute;
 
     opacity: 0.5;
@@ -148,4 +156,17 @@
 .scoville_label_line {
     display: flex;
     align-items: center;
+}
+
+/** PLAYER SCREENS */
+.player-container {
+    display: flex;
+}
+
+.player-card {
+    background-image: url('img/player_screens.png');
+    background-repeat: no-repeat;
+
+    height: 201px;
+    width: 673px;
 }
