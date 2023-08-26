@@ -28,8 +28,7 @@ function (dojo, declare) {
             // Here, you can init the global variables of your user interface
             // Example:
             // this.myGlobalValue = 0;
-            this.gameConstants = null;
-
+            this.pepperTokens = null;
         },
         
         /*
@@ -50,7 +49,7 @@ function (dojo, declare) {
             console.log( "Starting game setup" );
             
             this.counter = {};
-            this.gameConstants = gamedatas.constants;
+            this.pepperTokens = gamedatas.pepperTokens;
 
             // Setting up player boards
             for( let player_id in gamedatas.players )
@@ -68,6 +67,22 @@ function (dojo, declare) {
             }
             
             // TODO: Set up your game interface here, according to "gamedatas"
+
+            // Setup initial pepper plots 5_4 and 6_4 are the starting plots
+            
+            console.log(this.pepperTokens)
+            console.log(this.gamedatas.pepperPlots)
+
+            for(let plotId in this.gamedatas.pepperPlots){ 
+                
+                const plot = this.gamedatas.pepperPlots[plotId]
+                console.log(`Plot:`, plot)
+                // Add pepper color to the plot
+                if (plot.pepper != null) {
+                    document.getElementById(`pepper_plot_${plot.board_x}_${plot.board_y}`).style.backgroundColor = this.pepperTokens[plot.pepper].color;
+                }
+            }
+            
  
             // Setup game notifications to handle (see "setupNotifications" method below)
             this.setupNotifications();

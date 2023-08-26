@@ -31,13 +31,13 @@
   </div>
   <div class="board-container">
     <div class="board">
-      <div class="board-top"></div>
+      <div id="board-top"></div>
       <div id="board-middle">
         <!-- BEGIN pepperplot -->
-        <div class="pepper-plot ${pepper_type}" id="pepper_plot_{X}_{Y}" style="left: {LEFT}%; top: {TOP}%;"></div>
+        <div class="pepper-plot" id="pepper_plot_{X}_{Y}" style="left: {LEFT}%; top: {TOP}%;"></div>
         <!-- END pepperplot -->
       </div>
-      <div class="board-bottom"></div>
+      <div id="board-bottom"></div>
     </div>
   </div>
   <div class="auction-cards-container whitespace"></div>

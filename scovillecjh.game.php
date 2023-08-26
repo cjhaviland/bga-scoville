@@ -72,7 +72,7 @@ class ScovilleCjh extends Table
             $color = array_shift( $default_colors );
             $values[] = "('".$player_id."','$color','".$player['player_canal']."','".addslashes( $player['player_name'] )."','".addslashes( $player['player_avatar'] )."')";
         }
-        $sql .= implode( $values, ',' );
+        $sql .= implode( ',', $values );
         self::DbQuery( $sql );
         self::reattributeColorsBasedOnPreferences( $players, $gameinfos['player_colors'] );
         self::reloadPlayersBasicInfos();
@@ -90,12 +90,28 @@ class ScovilleCjh extends Table
         // TODO: setup the initial game situation here
 
         // Insert (empty) pepper plots into database
-        $sql = "INSERT INTO pepper_plot (board_x, board_y) VALUES ";
+        $startingPepperIdxs = array_rand($this->startingPeppers, 2);
+
+        $sql = "INSERT INTO pepper_plot (board_x, board_y, pepper) VALUES ";
         $xyValues = array();
         for ($x = 1; $x <= 10; $x++) {
             for ($y = 1; $y <= 7; $y++) {
-        	
-            	$xyValues[] = "($x, $y)";   	
+                // Setup initial pepper plots 5_4 and 6_4 are the starting plots
+                if ($x == 5 && $y == 4) {
+                    // Take the first random starting pepper
+                    $leftPepper = $this->startingPeppers[$startingPepperIdxs[0]];
+
+                    $xyValues[] = "($x, $y, $leftPepper)";
+                }
+                else if ($x == 6 && $y == 4) {
+                    // Take the second random starting pepper
+                    $rightPepper = $this->startingPeppers[$startingPepperIdxs[1]];
+
+                    $xyValues[] = "($x, $y, $rightPepper)"; 
+                }
+                else {
+                    $xyValues[] = "($x, $y, null)"; 
+                }
             }
         }
         $sql .= implode( ',', $xyValues );
@@ -122,7 +138,6 @@ class ScovilleCjh extends Table
         $result = array();
         
         // Constants
-        $result['constants'] = $this->gameConstants;
     
         $current_player_id = self::getCurrentPlayerId();    // !! We must only return informations visible by this player !!
     
@@ -138,8 +153,10 @@ class ScovilleCjh extends Table
         }
 
         // Pepper Plots
-        $sql = "SELECT id, board_x, board_y, pepper_color FROM pepper_plot ";
+        $sql = "SELECT id, board_x, board_y, pepper FROM pepper_plot ";
         $result['pepperPlots'] = self::getCollectionFromDb( $sql );
+
+        $result['pepperTokens'] = $this->pepper_tokens;
 
         return $result;
     }
