@@ -88,6 +88,18 @@ class ScovilleCjh extends Table
         //self::initStat( 'player', 'player_teststat1', 0 );  // Init a player statistics (for all players)
 
         // TODO: setup the initial game situation here
+
+        // Insert (empty) pepper plots into database
+        $sql = "INSERT INTO pepper_plot (board_x, board_y) VALUES ";
+        $xyValues = array();
+        for ($x = 1; $x <= 10; $x++) {
+            for ($y = 1; $y <= 7; $y++) {
+        	
+            	$xyValues[] = "($x, $y)";   	
+            }
+        }
+        $sql .= implode( ',', $xyValues );
+        self::DbQuery( $sql );
        
 
         // Activate first player (which is in general a good idea :) )
@@ -108,6 +120,9 @@ class ScovilleCjh extends Table
     protected function getAllDatas()
     {
         $result = array();
+        
+        // Constants
+        $result['constants'] = $this->gameConstants;
     
         $current_player_id = self::getCurrentPlayerId();    // !! We must only return informations visible by this player !!
     
@@ -121,6 +136,10 @@ class ScovilleCjh extends Table
         foreach (array_keys($result['players']) as $player_id) {
             $result['counters'][$player_id] = $this->get_counters($player_id);
         }
+
+        // Pepper Plots
+        $sql = "SELECT id, board_x, board_y, pepper_color FROM pepper_plot ";
+        $result['pepperPlots'] = self::getCollectionFromDb( $sql );
 
         return $result;
     }

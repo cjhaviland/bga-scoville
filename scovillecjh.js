@@ -28,6 +28,7 @@ function (dojo, declare) {
             // Here, you can init the global variables of your user interface
             // Example:
             // this.myGlobalValue = 0;
+            this.gameConstants = null;
 
         },
         
@@ -49,6 +50,7 @@ function (dojo, declare) {
             console.log( "Starting game setup" );
             
             this.counter = {};
+            this.gameConstants = gamedatas.constants;
 
             // Setting up player boards
             for( let player_id in gamedatas.players )
@@ -66,7 +68,6 @@ function (dojo, declare) {
             }
             
             // TODO: Set up your game interface here, according to "gamedatas"
-            
  
             // Setup game notifications to handle (see "setupNotifications" method below)
             this.setupNotifications();
@@ -172,7 +173,6 @@ function (dojo, declare) {
             this.counter[player_id][name].create(name + "_" + player_id);
             this.counter[player_id][name].setValue(this.gamedatas.counters[player_id][name]);
         },
-
 
         ///////////////////////////////////////////////////
         //// Player's action

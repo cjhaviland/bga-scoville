@@ -33,3 +33,10 @@
 -- Example 2: add a custom field to the standard "player" table
 -- ALTER TABLE `player` ADD `player_my_custom_field` INT UNSIGNED NOT NULL DEFAULT '0';
 
+CREATE TABLE IF NOT EXISTS `pepper_plot` (
+   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+   `board_x` tinyint(2) unsigned NOT NULL,
+   `board_y` tinyint(2) unsigned NOT NULL,
+   `pepper_color` varchar(8) NULL,
+   PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
