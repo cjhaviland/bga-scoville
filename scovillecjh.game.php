@@ -140,6 +140,9 @@ class ScovilleCjh extends Table
         // Constants
     
         $current_player_id = self::getCurrentPlayerId();    // !! We must only return informations visible by this player !!
+
+        $gameinfos = self::getGameinfos();
+        $result['player_colors'] = $gameinfos['player_colors'];
     
         // Get information about players
         // Note: you can retrieve some extra field you added for "player" table in "dbmodel.sql" if you need it.

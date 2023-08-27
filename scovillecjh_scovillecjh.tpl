@@ -43,6 +43,10 @@
   <div class="auction-cards-container whitespace"></div>
 </div>
 
+<div class="player-container">
+  <div id="player-card"></div>
+</div>
+
 <script type="text/javascript">
 
 // Javascript HTML templates

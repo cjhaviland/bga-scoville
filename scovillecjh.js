@@ -18,7 +18,8 @@
 define([
     "dojo","dojo/_base/declare",
     "ebg/core/gamegui",
-    "ebg/counter"
+    "ebg/counter",
+    "ebg/stock"
 ],
 function (dojo, declare) {
     return declare("bgagame.scovillecjh", ebg.core.gamegui, {
@@ -29,6 +30,7 @@ function (dojo, declare) {
             // Example:
             // this.myGlobalValue = 0;
             this.pepperTokens = null;
+            this.player_colors = null;
         },
         
         /*
@@ -46,10 +48,12 @@ function (dojo, declare) {
         
         setup: function( gamedatas )
         {
-            console.log( "Starting game setup" );
+            console.log( "Starting game setup", gamedatas );
             
             this.counter = {};
             this.pepperTokens = gamedatas.pepperTokens;
+            this.player_colors = gamedatas.player_colors;
+            this.yourPlayerColor = gamedatas.players[this.player_id].color; 
 
             // Setting up player boards
             for( let player_id in gamedatas.players )
@@ -63,20 +67,22 @@ function (dojo, declare) {
                 this.createCounter(player_id, 'coins')
 
                 this.addTooltip('label_coins_' + player_id, dojo.string.substitute( _("Number of coins ${player_name} has."), {
-                    player_name: this.gamedatas.players[player_id].name }), "");
+                    player_name: player.name }), "");
             }
             
             // TODO: Set up your game interface here, according to "gamedatas"
+            
+            // Setup Player Card
+            console.log(`Your color is ${this.yourPlayerColor}`);
+            console.log(`Player colors`, this.player_colors);
+            console.log(`Your player colors is`, this.player_colors.indexOf(this.yourPlayerColor));
+            document.getElementById('player-card').style.backgroundPositionY = -(this.player_colors.indexOf(this.yourPlayerColor) * 201) + 'px';
 
             // Setup initial pepper plots 5_4 and 6_4 are the starting plots
-            
-            console.log(this.pepperTokens)
-            console.log(this.gamedatas.pepperPlots)
-
             for(let plotId in this.gamedatas.pepperPlots){ 
                 
                 const plot = this.gamedatas.pepperPlots[plotId]
-                console.log(`Plot:`, plot)
+
                 // Add pepper color to the plot
                 if (plot.pepper != null) {
                     document.getElementById(`pepper_plot_${plot.board_x}_${plot.board_y}`).style.backgroundColor = this.pepperTokens[plot.pepper].color;

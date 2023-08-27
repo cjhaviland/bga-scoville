@@ -81,12 +81,12 @@
     --pepper-phantom: #9AC1D0ff;
     
     /* Player Colors */
-    --player-red: #EE3F34ff;
-    --player-yellow: #FFEE01ff;
-    --player-blue: #0093D0ff;
-    --player-green: #00A94Dff;
-    --player-orange: #F68E1Eff;
-    --player-purple: #A54499ff;
+    --player-blue: #0093D0;
+    --player-green: #00A94D;
+    --player-orange: #F68E1E;
+    --player-purple: #A54499;
+    --player-red: #EE3F34;
+    --player-yellow: #FFEE01;
 }
 
 
@@ -163,10 +163,13 @@
     display: flex;
 }
 
-.player-card {
+#player-card {
     background-image: url('img/player_screens.png');
     background-repeat: no-repeat;
+    opacity: 0.6;
 
     height: 201px;
     width: 673px;
+
+    margin: 0 auto;
 }
