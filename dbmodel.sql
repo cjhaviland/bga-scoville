@@ -31,7 +31,7 @@
 
 
 -- Example 2: add a custom field to the standard "player" table
--- ALTER TABLE `player` ADD `player_my_custom_field` INT UNSIGNED NOT NULL DEFAULT '0';
+ALTER TABLE `player` ADD `player_coins` INT UNSIGNED NOT NULL DEFAULT '0';
 
 CREATE TABLE IF NOT EXISTS `pepper_plot` (
    `id` int(10) unsigned NOT NULL AUTO_INCREMENT,

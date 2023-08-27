@@ -61,16 +61,18 @@ class ScovilleCjh extends Table
         // The default below is red/green/blue/orange/brown
         // The number of colors defined here must correspond to the maximum number of players allowed for the gams
         $gameinfos = self::getGameinfos();
+        
         $default_colors = $gameinfos['player_colors'];
  
         // Create players
         // Note: if you added some extra field on "player" table in the database (dbmodel.sql), you can initialize it there.
-        $sql = "INSERT INTO player (player_id, player_color, player_canal, player_name, player_avatar) VALUES ";
+        $sql = "INSERT INTO player (player_id, player_color, player_canal, player_name, player_avatar, player_coins) VALUES ";
         $values = array();
         foreach( $players as $player_id => $player )
         {
             $color = array_shift( $default_colors );
-            $values[] = "('".$player_id."','$color','".$player['player_canal']."','".addslashes( $player['player_name'] )."','".addslashes( $player['player_avatar'] )."')";
+            $setupCoinAmount = 10;
+            $values[]= "('".$player_id."','$color','".$player['player_canal']."','".addslashes( $player['player_name'] )."','".addslashes( $player['player_avatar'] )."','$setupCoinAmount')";
         }
         $sql .= implode( ',', $values );
         self::DbQuery( $sql );
@@ -146,13 +148,13 @@ class ScovilleCjh extends Table
     
         // Get information about players
         // Note: you can retrieve some extra field you added for "player" table in "dbmodel.sql" if you need it.
-        $sql = "SELECT player_id id, player_score score FROM player ";
+        $sql = "SELECT player_id id, player_score score, player_coins coins FROM player ";
         $result['players'] = self::getCollectionFromDb( $sql );
   
         // TODO: Gather all information about current game situation (visible by player $current_player_id).
         $result['counters'] = array();
         foreach (array_keys($result['players']) as $player_id) {
-            $result['counters'][$player_id] = $this->get_counters($player_id);
+            $result['counters'][$player_id] = $this->get_counters($result['players'][$player_id]);
         }
 
         // Pepper Plots
@@ -189,7 +191,7 @@ class ScovilleCjh extends Table
     /*
         In this space, you can put any utility methods useful for your game logic
     */
-    function get_counters($player_id) {
+    function get_counters($player) {
         // $result = array(
         //     'deck' => $this->cards->countCardInLocation($this->player_deck($player_id)),
         //     'hand' => $this->cards->countCardInLocation(STOCK_HAND, $player_id) + $this->cards->countCardInLocation(STOCK_LIMBO, $player_id),
@@ -200,7 +202,7 @@ class ScovilleCjh extends Table
         //     $result['artichokes'] = $counts['artichoke_count'];
         // }
         $result = array(
-            'coins' => 10
+            'coins' => (int)$player['coins']
         );
         
         return $result;

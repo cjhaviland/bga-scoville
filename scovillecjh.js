@@ -73,9 +73,6 @@ function (dojo, declare) {
             // TODO: Set up your game interface here, according to "gamedatas"
             
             // Setup Player Card
-            console.log(`Your color is ${this.yourPlayerColor}`);
-            console.log(`Player colors`, this.player_colors);
-            console.log(`Your player colors is`, this.player_colors.indexOf(this.yourPlayerColor));
             document.getElementById('player-card').style.backgroundPositionY = -(this.player_colors.indexOf(this.yourPlayerColor) * 201) + 'px';
 
             // Setup initial pepper plots 5_4 and 6_4 are the starting plots
