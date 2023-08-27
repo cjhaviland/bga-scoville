@@ -37,7 +37,27 @@
         <div class="pepper-plot" id="pepper_plot_{X}_{Y}" style="left: {LEFT}%; top: {TOP}%;"></div>
         <!-- END pepperplot -->
       </div>
-      <div id="board-bottom"></div>
+      <div id="board-bottom">
+        <div id="awards-container"></div>
+        <div id="turn-track-container">
+          <div id="turn-track-top">
+            <div id="top-disc-1" class="player-disc"></div>
+            <div id="top-disc-2" class="player-disc"></div>
+            <div id="top-disc-3" class="player-disc"></div>
+            <div id="top-disc-4" class="player-disc"></div>
+            <div id="top-disc-5" class="player-disc"></div>
+            <div id="top-disc-6" class="player-disc"></div>
+          </div>
+          <div id="turn-track-bottom">
+            <div id="bottom-disc-1" class="player-disc"></div>
+            <div id="bottom-disc-2" class="player-disc"></div>
+            <div id="bottom-disc-3" class="player-disc"></div>
+            <div id="bottom-disc-4" class="player-disc"></div>
+            <div id="bottom-disc-5" class="player-disc"></div>
+            <div id="bottom-disc-6" class="player-disc"></div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <div class="auction-cards-container whitespace"></div>
