@@ -63,7 +63,7 @@ class ScovilleCjh extends Table
         $gameinfos = self::getGameinfos();
         
         $default_colors = $gameinfos['player_colors'];
- 
+
         // Create players
         // Note: if you added some extra field on "player" table in the database (dbmodel.sql), you can initialize it there.
         $sql = "INSERT INTO player (player_id, player_color, player_canal, player_name, player_avatar, player_coins) VALUES ";
@@ -144,11 +144,11 @@ class ScovilleCjh extends Table
         $current_player_id = self::getCurrentPlayerId();    // !! We must only return informations visible by this player !!
 
         $gameinfos = self::getGameinfos();
-        $result['player_colors'] = $gameinfos['player_colors'];
+        $result['player_colors'] = $this->player_colors;
     
         // Get information about players
         // Note: you can retrieve some extra field you added for "player" table in "dbmodel.sql" if you need it.
-        $sql = "SELECT player_id id, player_score score, player_coins coins FROM player ";
+        $sql = "SELECT player_id id, player_no turn_order, player_score score, player_coins coins FROM player ";
         $result['players'] = self::getCollectionFromDb( $sql );
   
         // TODO: Gather all information about current game situation (visible by player $current_player_id).
@@ -207,7 +207,6 @@ class ScovilleCjh extends Table
         
         return $result;
     }
-
 
 //////////////////////////////////////////////////////////////////////////////
 //////////// Player actions

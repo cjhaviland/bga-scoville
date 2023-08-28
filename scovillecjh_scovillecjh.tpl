@@ -41,20 +41,20 @@
         <div id="awards-container"></div>
         <div id="turn-track-container">
           <div id="turn-track-top">
-            <div id="top-disc-1" class="player-disc"></div>
-            <div id="top-disc-2" class="player-disc"></div>
-            <div id="top-disc-3" class="player-disc"></div>
-            <div id="top-disc-4" class="player-disc"></div>
-            <div id="top-disc-5" class="player-disc"></div>
-            <div id="top-disc-6" class="player-disc"></div>
+            <div id="top-disc-1" class="player-disc-container player-disc-top"></div>
+            <div id="top-disc-2" class="player-disc-container player-disc-top"></div>
+            <div id="top-disc-3" class="player-disc-container player-disc-top"></div>
+            <div id="top-disc-4" class="player-disc-container player-disc-top"></div>
+            <div id="top-disc-5" class="player-disc-container player-disc-top"></div>
+            <div id="top-disc-6" class="player-disc-container player-disc-top"></div>
           </div>
           <div id="turn-track-bottom">
-            <div id="bottom-disc-1" class="player-disc"></div>
-            <div id="bottom-disc-2" class="player-disc"></div>
-            <div id="bottom-disc-3" class="player-disc"></div>
-            <div id="bottom-disc-4" class="player-disc"></div>
-            <div id="bottom-disc-5" class="player-disc"></div>
-            <div id="bottom-disc-6" class="player-disc"></div>
+            <div id="bottom-disc-1" class="player-disc-container player-disc-bottom"></div>
+            <div id="bottom-disc-2" class="player-disc-container player-disc-bottom"></div>
+            <div id="bottom-disc-3" class="player-disc-container player-disc-bottom"></div>
+            <div id="bottom-disc-4" class="player-disc-container player-disc-bottom"></div>
+            <div id="bottom-disc-5" class="player-disc-container player-disc-bottom"></div>
+            <div id="bottom-disc-6" class="player-disc-container player-disc-bottom"></div>
           </div>
         </div>
       </div>
@@ -71,12 +71,6 @@
 
 // Javascript HTML templates
 
-/*
-// Example:
-var jstpl_some_game_item='<div class="my_game_item" id="my_game_item_${MY_ITEM_ID}"></div>';
-
-*/
-
 let jstpl_player_board = '<div class="scoville_deck_board">\
   <div class="scoville_label_line">\
     <div class="label scoville_label" id="label_coins_${id}">\
@@ -84,6 +78,8 @@ let jstpl_player_board = '<div class="scoville_deck_board">\
     </div>\
     <div id="coins_${id}">0</div></div>\
   </div>';
+
+let jstpl_player_token = '<div class="player-token bg-${COLOR}" id="player-${PLAYER_ID}-token"></div>';
 
 </script>  
 

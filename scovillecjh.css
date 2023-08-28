@@ -89,6 +89,30 @@
     --player-yellow: #FFEE01;
 }
 
+.bg-blue {
+    background-color: var(--player-blue);
+}
+
+.bg-green {
+    background-color: var(--player-green);
+}
+
+.bg-orange {
+    background-color: var(--player-orange);
+}
+
+.bg-purple {
+    background-color: var(--player-purple);
+}
+
+.bg-red {
+    background-color: var(--player-red);
+}
+
+.bg-yellow {
+    background-color: var(--player-yellow);
+}
+
 
 /***** BOARD ****/
 .table-container {
@@ -133,6 +157,8 @@
     opacity: 0.3;
 }
 
+/***** TURN TRACKS ****/
+
 #turn-track-container {
     width: 45%;
 
@@ -142,78 +168,74 @@
 
 #turn-track-top {
     height: 50%;
-    background-color: orange;
-    opacity: 0.3;
     position: relative;
 }
 
 #turn-track-bottom {
     height: 50%;
-    background-color: yellow;
-    opacity: 0.3;
     position: relative;
-    
 }
 
-.player-disc {
+.player-disc-container {
     position: absolute;
-    background-color: black;
     
     width: 10%;
     aspect-ratio: 1/1;
+}
 
+.player-token {
     border-radius: 50%;
+    height: 100%;
+    width: 100%;
+}
+
+.player-disc-top {
+    top: 35%;
+}
+
+.player-disc-bottom {
+    top: 6%;
 }
 
 #top-disc-1 {
     left: calc(28.4% + (0 * 10.8%));
-    top: 35%;
 }
 #top-disc-2 {
     left: calc(28.4% + (1 * 10.8%));
-    top: 35%;
 }
 #top-disc-3 {
     left: calc(28.4% + (2 * 10.8%));
-    top: 35%;
 }
 #top-disc-4 {
     left: calc(28.4% + (3 * 10.8%));
-    top: 35%;
 }
 #top-disc-5 {
     left: calc(28.4% + (4 * 10.8%));
-    top: 35%;
 }
 #top-disc-6 {
     left: calc(28.4% + (5 * 10.8%));
-    top: 35%;
 }
 
 #bottom-disc-1 {
     left: calc(28.4% + (0 * 10.8%));
-    top: 6%;
 }
 #bottom-disc-2 {
     left: calc(28.4% + (1 * 10.8%));
-    top: 6%;
 }
 #bottom-disc-3 {
     left: calc(28.4% + (2 * 10.8%));
-    top: 6%;
 }
 #bottom-disc-4 {
     left: calc(28.4% + (3 * 10.8%));
-    top: 6%;
 }
 #bottom-disc-5 {
     left: calc(28.4% + (4 * 10.8%));
-    top: 6%;
 }
 #bottom-disc-6 {
     left: calc(28.4% + (5 * 10.8%));
-    top: 6%;
 }
+
+/***** PEPPER PLOTS ****/
 
 .pepper-plot {
     width: 9.4%;

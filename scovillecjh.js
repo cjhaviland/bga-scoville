@@ -59,6 +59,7 @@ function (dojo, declare) {
             for( let player_id in gamedatas.players )
             {
                 let player = gamedatas.players[player_id];
+                const playerOrder = gamedatas.playerorder.indexOf(player_id) + 1;
 
                 let player_board_div = $('player_board_' + player_id);
                 dojo.place(this.format_block('jstpl_player_board', {id: player_id}), player_board_div);
@@ -68,12 +69,14 @@ function (dojo, declare) {
 
                 this.addTooltip('label_coins_' + player_id, dojo.string.substitute( _("Number of coins ${player_name} has."), {
                     player_name: player.name }), "");
+
+                this.addTokenOnBoard(player, true)
             }
             
             // TODO: Set up your game interface here, according to "gamedatas"
             
             // Setup Player Card
-            document.getElementById('player-card').style.backgroundPositionY = -(this.player_colors.indexOf(this.yourPlayerColor) * 201) + 'px';
+            document.getElementById('player-card').style.backgroundPositionY = -(this.player_colors[this.yourPlayerColor].sprite_pos * 201) + 'px';
 
             // Setup initial pepper plots 5_4 and 6_4 are the starting plots
             for(let plotId in this.gamedatas.pepperPlots){ 
@@ -190,6 +193,34 @@ function (dojo, declare) {
             this.counter[player_id][name] = new ebg.counter();
             this.counter[player_id][name].create(name + "_" + player_id);
             this.counter[player_id][name].setValue(this.gamedatas.counters[player_id][name]);
+        },
+
+        addTokenOnBoard: function( player, isTurnOrderTrack)
+        {
+            console.log(`addTokenOnBoard for ${player.id}`)
+            const topOrBottom = isTurnOrderTrack ? 'bottom' : 'top';
+
+            dojo.place( this.format_block( 'jstpl_player_token', {
+                PLAYER_ID: player.id,
+                COLOR: this.getColorName(player.color)
+            } ) , `${topOrBottom}-disc-${player.turn_order}`);
+        },
+
+        getColorName: function(colorHex) {
+            switch(colorHex) {
+                case '0093D0':
+                    return 'blue';
+                case '00A94D':
+                    return 'green';
+                case 'F68E1E':
+                    return 'orange';
+                case 'A54499':
+                    return 'purple';
+                case 'EE3F34':
+                    return 'red';
+                case 'FFEE01':
+                    return 'yellow';
+            }
         },
 
         ///////////////////////////////////////////////////

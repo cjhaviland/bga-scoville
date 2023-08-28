@@ -32,21 +32,21 @@ $this->card_types = array(
 
 */
 if (!defined('PLAYER_RED')) {
-  define('PLAYER_RED', 'EE3F34');
-  define('PLAYER_YELLOW', 'FFEE01');
   define('PLAYER_BLUE', '0093D0');
   define('PLAYER_GREEN', '00A94D');
   define('PLAYER_ORANGE', 'F68E1E');
   define('PLAYER_PURPLE', 'A54499');
+  define('PLAYER_RED', 'EE3F34');
+  define('PLAYER_YELLOW', 'FFEE01');
 }
 
 $this->player_colors = array(
-  PLAYER_RED => 1,
-  PLAYER_YELLOW => 2,
-  PLAYER_BLUE => 3,
-  PLAYER_GREEN => 4,
-  PLAYER_ORANGE => 5,
-  PLAYER_PURPLE => 6
+  PLAYER_BLUE => array("sprite_pos" => 0, "color_name" => "blue"),
+  PLAYER_GREEN => array("sprite_pos" => 1, "color_name" => "green"),
+  PLAYER_ORANGE => array("sprite_pos" => 2, "color_name" => "orange"),
+  PLAYER_PURPLE => array("sprite_pos" => 3, "color_name" => "purple"),
+  PLAYER_RED => array("sprite_pos" => 4, "color_name" => "red"),
+  PLAYER_YELLOW => array("sprite_pos" => 5, "color_name" => "yellow")
 );
 
 if (!defined('PEPPER_RED')) { // ensure this block is only invoked once, since it is included multiple times
