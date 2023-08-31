@@ -26,10 +26,7 @@
 -->
 
 <div class="table-container">
-  <div class="market-cards-container whiteblock">
-    <h3>Market</h3>
-  </div>
-  <div class="board-container">
+  <div class="board-container whiteblock">
     <div class="board">
       <div id="board-top"></div>
       <div id="board-middle">
@@ -60,6 +57,9 @@
       </div>
     </div>
   </div>
+  <div id="market-cards-container" class="whiteblock">
+    <h3>Market</h3>
+  </div>
   <div class="auction-cards-container whitespace"></div>
 </div>
 
@@ -80,6 +80,8 @@ let jstpl_player_board = '<div class="scoville_deck_board">\
   </div>';
 
 let jstpl_player_token = '<div class="player-token bg-${COLOR}" id="player-${PLAYER_ID}-token"></div>';
+
+let jstpl_market_card = '<div id="market-card-${morningAfternoon}_${x}_${y}" class="market-card market-card-${morningAfternoon}" data-col="${x}" data-row="${y}"></div>';
 
 </script>  
 

@@ -19,6 +19,12 @@
 
 require_once( APP_GAMEMODULE_PATH.'module/table/table.game.php' );
 
+if (!defined('DECK_LOC_DECK')) {
+    // constants for deck locations
+    define("DECK_LOC_DECK", "deck");
+    define("DECK_LOC_MARKET", "market");
+    define("DECK_LOC_WON", "won");
+}
 
 class ScovilleCjh extends Table
 {
@@ -39,7 +45,10 @@ class ScovilleCjh extends Table
             //    "my_first_game_variant" => 100,
             //    "my_second_game_variant" => 101,
             //      ...
-        ) );        
+        ) );
+
+        $this->morning_market_cards = self::getNew("module.common.deck");
+        $this->morning_market_cards->init("morning_market_card");
 	}
 	
     protected function getGameName( )
@@ -119,6 +128,7 @@ class ScovilleCjh extends Table
         $sql .= implode( ',', $xyValues );
         self::DbQuery( $sql );
        
+        self::setupMorningMarketDeck($players);
 
         // Activate first player (which is in general a good idea :) )
         $this->activeNextPlayer();
@@ -151,17 +161,24 @@ class ScovilleCjh extends Table
         $sql = "SELECT player_id id, player_no turn_order, player_score score, player_coins coins FROM player ";
         $result['players'] = self::getCollectionFromDb( $sql );
   
-        // TODO: Gather all information about current game situation (visible by player $current_player_id).
+        $players = self::loadPlayersBasicInfos();
+
         $result['counters'] = array();
-        foreach (array_keys($result['players']) as $player_id) {
-            $result['counters'][$player_id] = $this->get_counters($result['players'][$player_id]);
+
+        foreach ($players as $player) {
+            $playerId = $player["player_id"];
+            $result['counters'][$playerId] = $this->get_counters($result['players'][$playerId]);
+            $result['won'][$playerId] = $this->morning_market_cards->getCardsInLocation(DECK_LOC_WON, $playerId);
         }
 
         // Pepper Plots
         $sql = "SELECT id, board_x, board_y, pepper FROM pepper_plot ";
         $result['pepperPlots'] = self::getCollectionFromDb( $sql );
 
+        // TODO: Gather all information about current game situation (visible by player $current_player_id).
         $result['pepperTokens'] = $this->pepper_tokens;
+        $result['cardsDescription'] = $this->getCardsDescription();
+        $result['cardsInMarket'] = $this->morning_market_cards->getCardsInLocation(DECK_LOC_MARKET);
 
         return $result;
     }
@@ -206,6 +223,48 @@ class ScovilleCjh extends Table
         );
         
         return $result;
+    }
+
+    function setupMorningMarketDeck($players)
+    {
+        $cards = array();
+
+        foreach ($this->getCardsAvailable()["morning_market"] as $range) {
+            for ($i = $range["from"]; $i <= $range["to"]; $i++) {
+                $morningMarket = $this->morningMarketCards[$i];
+                $cards[] = array('type' => $morningMarket["nameId"], 'type_arg' => $i, 'nbr' => 1);
+            }
+        }
+
+        $this->morning_market_cards->createCards($cards, DECK_LOC_DECK);
+        $this->morning_market_cards->shuffle(DECK_LOC_DECK);
+
+        // Get the number of cards to draw
+        $nbrPlayers = count($players);
+        $nbrMarketCardsToDraw = $this->playerNumOptions[4]["marketCards"];
+        $this->morning_market_cards->pickCardsForLocation($nbrMarketCardsToDraw, DECK_LOC_DECK, DECK_LOC_MARKET);
+    }
+
+    function getCardsAvailable()
+    {
+        $cardsAvailable = array();
+
+        $cardsAvailable["morning_market"] = array(
+            array(
+                "from" => 1,
+                "to" => 24,
+            ),
+        );
+
+        return $cardsAvailable;
+    }
+
+    function getCardsDescription() {
+        $desc = array(
+            'morningMarketCards' => $this->morningMarketCards            
+        );
+
+        return $desc;
     }
 
 //////////////////////////////////////////////////////////////////////////////

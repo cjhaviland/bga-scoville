@@ -31,6 +31,11 @@ function (dojo, declare) {
             // this.myGlobalValue = 0;
             this.pepperTokens = null;
             this.player_colors = null;
+
+            this.domFontSize = parseFloat(getComputedStyle(document.getElementsByTagName('html')[0]).fontSize)
+            this.marketCardWidth = this.domFontSize * 5;
+            this.marketCardHeight = this.domFontSize * 5;
+            this.morning_market_img = 'img/market/morning-market-sprite.png';
         },
         
         /*
@@ -51,9 +56,13 @@ function (dojo, declare) {
             console.log( "Starting game setup", gamedatas );
             
             this.counter = {};
-            this.pepperTokens = gamedatas.pepperTokens;
+            this.yourPlayerColor = gamedatas.players[this.player_id].color;
             this.player_colors = gamedatas.player_colors;
-            this.yourPlayerColor = gamedatas.players[this.player_id].color; 
+            
+            this.pepperTokens = gamedatas.pepperTokens;
+
+            this.cardsInMarket = gamedatas.cardsInMarket;
+            this.morningMarketCardsDescs = gamedatas.cardsDescription.morningMarketCards;
 
             // Setting up player boards
             for( let player_id in gamedatas.players )
@@ -88,7 +97,15 @@ function (dojo, declare) {
                     document.getElementById(`pepper_plot_${plot.board_x}_${plot.board_y}`).style.backgroundColor = this.pepperTokens[plot.pepper].color;
                 }
             }
-            
+
+            // Setup Market cards
+
+            for (let cardId in gamedatas.cardsInMarket) {
+                const card = gamedatas.cardsInMarket[cardId];
+                const cardDesc = gamedatas.cardsDescription.morningMarketCards[card.type];
+                
+                dojo.place(this.format_block('jstpl_market_card', {morningAfternoon: 'morning', x: cardDesc.spriteColumn, y: cardDesc.spriteRow}), 'market-cards-container');
+            }
  
             // Setup game notifications to handle (see "setupNotifications" method below)
             this.setupNotifications();
