@@ -58,9 +58,11 @@
     </div>
   </div>
   <div id="market-cards-container" class="whiteblock">
-    <h3>Market</h3>
+    <h3 style="width: 100%">Market</h3>
   </div>
-  <div class="auction-cards-container whitespace"></div>
+  <div id="auction-cards-container" class="whiteblock">
+    <h3 style="width: 100%">Auction</h3>
+  </div>
 </div>
 
 <div class="player-container">
