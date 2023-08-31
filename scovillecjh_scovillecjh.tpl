@@ -81,6 +81,8 @@ let jstpl_player_board = '<div class="scoville_deck_board">\
     <div id="coins_${id}">0</div></div>\
   </div>';
 
+let jstpl_pepper = '<div class="pepper pepper-${color}"></div>';
+
 let jstpl_player_token = '<div class="player-token bg-${COLOR}" id="player-${PLAYER_ID}-token"></div>';
 
 let jstpl_market_card = '<div id="market-card-${morningAfternoon}_${x}_${y}" class="market-card market-card-${morningAfternoon}" data-col="${x}" data-row="${y}"></div>';

@@ -130,7 +130,7 @@
     justify-content: center;
     flex-wrap: wrap;
     gap: 0.5em;
-    
+
     width: 90%;
     margin: 1em auto;
 }
@@ -254,8 +254,56 @@
     height: 13.5%;
     position: absolute;
 
-    opacity: 0.5;
-    border-radius: 50%;
+    /* opacity: 0.5;
+    border-radius: 50%; */
+}
+
+.pepper {
+    background-image: url('img/peppers-transparent.png');
+    background-size: 650% auto;
+    transform: rotate(-0.02turn);
+    height: 100%;
+    width: 100%;
+}
+
+.pepper-red {
+    background-position: 2% 24%;
+}
+
+.pepper-yellow {
+    background-position: 24% 24%;
+}
+
+.pepper-blue {
+    background-position: 46% 24%;
+}
+
+.pepper-green {
+    background-position: 68% 24%;
+}
+
+.pepper-orange {
+    background-position: 90% 24%;
+}
+
+.pepper-purple {
+    background-position: 2% 78%;
+}
+
+.pepper-brown {
+    background-position: 24% 78%;
+}
+
+.pepper-white {
+    background-position: 46% 78%;
+}
+
+.pepper-black {
+    background-position: 68% 78%;
+}
+
+.pepper-phantom {
+    background-position: 90% 78%;
 }
 
 /***** PLAYER PANEL ****/

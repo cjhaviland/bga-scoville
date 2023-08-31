@@ -94,7 +94,8 @@ function (dojo, declare) {
 
                 // Add pepper color to the plot
                 if (plot.pepper != null) {
-                    document.getElementById(`pepper_plot_${plot.board_x}_${plot.board_y}`).style.backgroundColor = this.pepperTokens[plot.pepper].color;
+                    // document.getElementById(`pepper_plot_${plot.board_x}_${plot.board_y}`).style.backgroundColor = this.pepperTokens[plot.pepper].color;
+                    dojo.place(this.format_block('jstpl_pepper', {color: this.pepperTokens[plot.pepper].color}), `pepper_plot_${plot.board_x}_${plot.board_y}`);
                 }
             }
 
