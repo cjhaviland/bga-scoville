@@ -267,6 +267,15 @@ class ScovilleCjh extends Table
         return $desc;
     }
 
+    /**
+     * Find an array item's Row (X) and Column (Y) coordinates in a grid given it's item number and the grid size
+     */
+    function getSpriteRowColumn($item_num, $num_of_rows, $num_of_cols) {
+        $row_number = floor($item_num / $num_of_rows);
+        $col_number = ($item_num % $num_of_cols) + 1;
+        return array($row_number, $col_number);
+    }
+
 //////////////////////////////////////////////////////////////////////////////
 //////////// Player actions
 //////////// 

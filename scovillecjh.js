@@ -35,7 +35,12 @@ function (dojo, declare) {
             this.domFontSize = parseFloat(getComputedStyle(document.getElementsByTagName('html')[0]).fontSize)
             this.marketCardWidth = this.domFontSize * 5;
             this.marketCardHeight = this.domFontSize * 5;
-            this.morning_market_img = 'img/market/morning-market-sprite.png';
+
+            this.morningMarketSprite = {
+                url: 'img/market/morning-market-sprite.png',
+                numberOfRows: 5,
+                numberOfColumns: 5,
+            }
         },
         
         /*
@@ -104,8 +109,10 @@ function (dojo, declare) {
             for (let cardId in gamedatas.cardsInMarket) {
                 const card = gamedatas.cardsInMarket[cardId];
                 const cardDesc = gamedatas.cardsDescription.morningMarketCards[card.type];
-                
-                dojo.place(this.format_block('jstpl_market_card', {morningAfternoon: 'morning', x: cardDesc.spriteColumn, y: cardDesc.spriteRow}), 'market-cards-container');
+                const rowCol = this.getSpriteRowColumn(cardId, this.morningMarketSprite.numberOfRows, this.morningMarketSprite.numberOfColumns)
+
+                dojo.place(this.format_block('jstpl_market_card', {morningAfternoon: 'morning', x: rowCol.row, y: rowCol.col}), 'market-cards-container');
+                // dojo.place(this.format_block('jstpl_market_card', {morningAfternoon: 'morning', x: cardDesc.spriteColumn, y: cardDesc.spriteRow}), 'market-cards-container');
             }
  
             // Setup game notifications to handle (see "setupNotifications" method below)
@@ -239,6 +246,12 @@ function (dojo, declare) {
                 case 'FFEE01':
                     return 'yellow';
             }
+        },
+
+        getSpriteRowColumn: function(itemNum, numOfRows, numOfCols) {
+            const rowNumber = Math.floor(itemNum / numOfRows);
+            const colNumber = (itemNum % numOfCols) + 1;
+            return { row: rowNumber, col: colNumber };
         },
 
         ///////////////////////////////////////////////////
