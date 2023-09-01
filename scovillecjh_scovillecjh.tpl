@@ -60,8 +60,8 @@
   <div id="market-cards-container" class="whiteblock">
     <h3 style="width: 100%">Market</h3>
   </div>
-  <div id="auction-cards-container" class="whiteblock">
-    <h3 style="width: 100%">Auction</h3>
+  <div id="recipe-cards-container" class="whiteblock">
+    <h3 style="width: 100%">Chili Cookoff</h3>
   </div>
 </div>
 
@@ -85,7 +85,9 @@ let jstpl_pepper = '<div class="pepper pepper-${color}"></div>';
 
 let jstpl_player_token = '<div class="player-token bg-${COLOR}" id="player-${PLAYER_ID}-token"></div>';
 
-let jstpl_market_card = '<div id="market-card-${morningAfternoon}_${x}_${y}" class="market-card market-card-${morningAfternoon}" data-col="${x}" data-row="${y}"></div>';
+let jstpl_market_card = '<div id="market-card-${morningAfternoon}_${type}" class="market-card-box"><div class="market-card market-card-${morningAfternoon}" data-row="${row}" data-col="${col}"></div></div>';
+
+let jstpl_recipe_card = '<div id="recipe-${type}" class="recipe-card-box"><div class="recipe-card" data-row="${row}" data-col="${col}"></div></div>';
 
 </script>  
 

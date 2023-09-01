@@ -22,7 +22,8 @@ require_once( APP_GAMEMODULE_PATH.'module/table/table.game.php' );
 if (!defined('DECK_LOC_DECK')) {
     // constants for deck locations
     define("DECK_LOC_DECK", "deck");
-    define("DECK_LOC_MARKET", "market");
+    define("DECK_LOC_BOX", "box");
+    define("DECK_LOC_BOARD", "board");
     define("DECK_LOC_WON", "won");
 }
 
@@ -47,8 +48,12 @@ class ScovilleCjh extends Table
             //      ...
         ) );
 
-        $this->morning_market_cards = self::getNew("module.common.deck");
-        $this->morning_market_cards->init("morning_market_card");
+        $this->morning_market_deck = self::getNew("module.common.deck");
+        $this->morning_market_deck->init("morning_market_card");
+        
+        $this->recipe_deck = self::getNew("module.common.deck");
+        $this->recipe_deck->init("recipe_card");
+        
 	}
 	
     protected function getGameName( )
@@ -101,7 +106,7 @@ class ScovilleCjh extends Table
         // TODO: setup the initial game situation here
 
         // Insert (empty) pepper plots into database
-        $startingPepperIdxs = array_rand($this->startingPeppers, 2);
+        $startingPepperIdxs = array_rand($this->starting_peppers, 2);
 
         $sql = "INSERT INTO pepper_plot (board_x, board_y, pepper) VALUES ";
         $xyValues = array();
@@ -110,13 +115,13 @@ class ScovilleCjh extends Table
                 // Setup initial pepper plots 5_4 and 6_4 are the starting plots
                 if ($x == 5 && $y == 4) {
                     // Take the first random starting pepper
-                    $leftPepper = $this->startingPeppers[$startingPepperIdxs[0]];
+                    $leftPepper = $this->starting_peppers[$startingPepperIdxs[0]];
 
                     $xyValues[] = "($x, $y, $leftPepper)";
                 }
                 else if ($x == 6 && $y == 4) {
                     // Take the second random starting pepper
-                    $rightPepper = $this->startingPeppers[$startingPepperIdxs[1]];
+                    $rightPepper = $this->starting_peppers[$startingPepperIdxs[1]];
 
                     $xyValues[] = "($x, $y, $rightPepper)"; 
                 }
@@ -129,6 +134,7 @@ class ScovilleCjh extends Table
         self::DbQuery( $sql );
        
         self::setupMorningMarketDeck($players);
+        self::setupRecipeDeck($players);
 
         // Activate first player (which is in general a good idea :) )
         $this->activeNextPlayer();
@@ -154,7 +160,7 @@ class ScovilleCjh extends Table
         $current_player_id = self::getCurrentPlayerId();    // !! We must only return informations visible by this player !!
 
         $gameinfos = self::getGameinfos();
-        $result['player_colors'] = $this->player_colors;
+        $result['allPlayerColors'] = $this->player_colors;
     
         // Get information about players
         // Note: you can retrieve some extra field you added for "player" table in "dbmodel.sql" if you need it.
@@ -168,7 +174,7 @@ class ScovilleCjh extends Table
         foreach ($players as $player) {
             $playerId = $player["player_id"];
             $result['counters'][$playerId] = $this->get_counters($result['players'][$playerId]);
-            $result['won'][$playerId] = $this->morning_market_cards->getCardsInLocation(DECK_LOC_WON, $playerId);
+            $result['won'][$playerId] = $this->morning_market_deck->getCardsInLocation(DECK_LOC_WON, $playerId);
         }
 
         // Pepper Plots
@@ -178,7 +184,7 @@ class ScovilleCjh extends Table
         // TODO: Gather all information about current game situation (visible by player $current_player_id).
         $result['pepperTokens'] = $this->pepper_tokens;
         $result['cardsDescription'] = $this->getCardsDescription();
-        $result['cardsInMarket'] = $this->morning_market_cards->getCardsInLocation(DECK_LOC_MARKET);
+        $result['cardsOnBoard'] = $this->getCardsOnBoard();
 
         return $result;
     }
@@ -229,23 +235,54 @@ class ScovilleCjh extends Table
     {
         $cards = array();
 
-        foreach ($this->getCardsAvailable()["morning_market"] as $range) {
+        foreach ($this->getCardsCount()["morning_market"] as $range) {
             for ($i = $range["from"]; $i <= $range["to"]; $i++) {
-                $morningMarket = $this->morningMarketCards[$i];
+                $morningMarket = $this->morning_market_cards[$i];
                 $cards[] = array('type' => $morningMarket["nameId"], 'type_arg' => $i, 'nbr' => 1);
             }
         }
 
-        $this->morning_market_cards->createCards($cards, DECK_LOC_DECK);
-        $this->morning_market_cards->shuffle(DECK_LOC_DECK);
+        $this->morning_market_deck->createCards($cards, DECK_LOC_DECK);
+        $this->morning_market_deck->shuffle(DECK_LOC_DECK);
 
         // Get the number of cards to draw
         $nbrPlayers = count($players);
-        $nbrMarketCardsToDraw = $this->playerNumOptions[4]["marketCards"];
-        $this->morning_market_cards->pickCardsForLocation($nbrMarketCardsToDraw, DECK_LOC_DECK, DECK_LOC_MARKET);
+        $nbrMarketCardsToDraw = $this->player_num_options[$nbrPlayers]["marketCards"];
+        $this->morning_market_deck->pickCardsForLocation($nbrMarketCardsToDraw, DECK_LOC_DECK, DECK_LOC_BOARD);
+
+        // Put all other cards "Back in the Box"
+        $this->morning_market_deck->moveAllCardsInLocation(DECK_LOC_DECK, DECK_LOC_BOX);
+    }
+    
+    function setupRecipeDeck($players)
+    {
+        $cards = array();
+
+        /**
+         * type: The nameId of the recipe card
+         * type_arg: The VP value for "ranking" the card 
+         */
+        foreach ($this->getCardsCount()["recipe"] as $range) {
+            for ($i = $range["from"]; $i <= $range["to"]; $i++) {
+                $recipes = $this->recipe_cards[$i];
+                $cards[] = array('type' => $i, 'type_arg' => $recipes["rewards"]["vp"], 'nbr' => 1);
+            }
+        }
+
+        $this->recipe_deck->createCards($cards, DECK_LOC_DECK);
+        $this->recipe_deck->shuffle(DECK_LOC_DECK);
+
+        // Get the number of cards to draw
+        $nbrPlayers = count($players);
+        $nbrRecipeCardsToDraw = $this->player_num_options[$nbrPlayers]["recipeCards"];
+        $this->recipe_deck->pickCardsForLocation($nbrRecipeCardsToDraw, DECK_LOC_DECK, DECK_LOC_BOARD);
+
+        
+        // Put all other cards "Back in the Box"
+        $this->recipe_deck->moveAllCardsInLocation(DECK_LOC_DECK, DECK_LOC_BOX);
     }
 
-    function getCardsAvailable()
+    function getCardsCount()
     {
         $cardsAvailable = array();
 
@@ -255,16 +292,41 @@ class ScovilleCjh extends Table
                 "to" => 24,
             ),
         );
+        
+        $cardsAvailable["afternoon_market"] = array(
+            array(
+                "from" => 1,
+                "to" => 24,
+            ),
+        );
+        
+        $cardsAvailable["recipe"] = array(
+            array(
+                "from" => 1,
+                "to" => 30,
+            ),
+        );
 
         return $cardsAvailable;
     }
 
     function getCardsDescription() {
         $desc = array(
-            'morningMarketCards' => $this->morningMarketCards            
+            'morningMarketCards' => $this->morning_market_cards,
+            'recipeCards' => $this->recipe_cards,        
         );
 
         return $desc;
+    }
+    
+    function getCardsOnBoard() {
+        // TODO: Add Morning/Afternoon switch so player cannot see what the upcoming afternoon cards are
+        $onBoard = array(
+            'market' => $this->morning_market_deck->getCardsInLocation(DECK_LOC_BOARD),
+            'recipe' => $this->recipe_deck->getCardsInLocation(DECK_LOC_BOARD),        
+        );
+
+        return $onBoard;
     }
 
     /**

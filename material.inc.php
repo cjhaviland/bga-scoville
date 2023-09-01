@@ -31,7 +31,11 @@ $this->card_types = array(
 );
 
 */
-$this->playerNumOptions = array(
+
+$MORNING = "morning";
+$AFTERNOON = "afternoon";
+
+$this->player_num_options = array(
   2 => array(
     'marketCards' => 7,
     'recipeCards' => 8,
@@ -108,12 +112,9 @@ $this->pepper_tokens = array(
   PEPPER_PHANTOM => array( 'name' => 'Phantom Pepper', 'color' => 'phantom', 'color_code' => '#9AC1D0' )
 );
 
-$this->startingPeppers = array(PEPPER_RED, PEPPER_YELLOW, PEPPER_BLUE);
+$this->starting_peppers = array(PEPPER_RED, PEPPER_YELLOW, PEPPER_BLUE);
 
-$MORNING = "morning";
-$AFTERNOON = "afternoon";
-
-$this->morningMarketCards = array (
+$this->morning_market_cards = array (
   1 => array(
     'nameId' => 1,
     'wanted' => array(PEPPER_BLUE, PEPPER_PURPLE),
@@ -332,7 +333,7 @@ $this->morningMarketCards = array (
   )
 );
 
-$this->recipeCards = array(
+$this->recipe_cards = array(
   1 => array(
     'nameId' => 'WILBURS_LAST_STAND',
     'name' => "Wilbur's Last Stand",

@@ -30,16 +30,23 @@ function (dojo, declare) {
             // Example:
             // this.myGlobalValue = 0;
             this.pepperTokens = null;
-            this.player_colors = null;
+            this.allPlayerColors = null;
 
             this.domFontSize = parseFloat(getComputedStyle(document.getElementsByTagName('html')[0]).fontSize)
             this.marketCardWidth = this.domFontSize * 5;
             this.marketCardHeight = this.domFontSize * 5;
 
-            this.morningMarketSprite = {
-                url: 'img/market/morning-market-sprite.png',
-                numberOfRows: 5,
-                numberOfColumns: 5,
+            this.spriteInfo = {
+                morningMarket: {
+                    url: 'img/market/morning-market-sprite.png',
+                    numberOfRows: 5,
+                    numberOfColumns: 5,
+                },
+                recipe: {
+                    url: 'img/recipe-cards.png',
+                    numberOfRows: 7,
+                    numberOfColumns: 5,
+                },
             }
         },
         
@@ -62,18 +69,17 @@ function (dojo, declare) {
             
             this.counter = {};
             this.yourPlayerColor = gamedatas.players[this.player_id].color;
-            this.player_colors = gamedatas.player_colors;
+            this.allPlayerColors = gamedatas.allPlayerColors;
             
             this.pepperTokens = gamedatas.pepperTokens;
 
-            this.cardsInMarket = gamedatas.cardsInMarket;
+            this.cardsOnBoard = gamedatas.cardsOnBoard;
             this.morningMarketCardsDescs = gamedatas.cardsDescription.morningMarketCards;
 
             // Setting up player boards
             for( let player_id in gamedatas.players )
             {
                 let player = gamedatas.players[player_id];
-                const playerOrder = gamedatas.playerorder.indexOf(player_id) + 1;
 
                 let player_board_div = $('player_board_' + player_id);
                 dojo.place(this.format_block('jstpl_player_board', {id: player_id}), player_board_div);
@@ -90,7 +96,7 @@ function (dojo, declare) {
             // TODO: Set up your game interface here, according to "gamedatas"
             
             // Setup Player Card
-            document.getElementById('player-card').style.backgroundPositionY = -(this.player_colors[this.yourPlayerColor].sprite_pos * 201) + 'px';
+            document.getElementById('player-card').style.backgroundPositionY = -(this.allPlayerColors[this.yourPlayerColor].sprite_pos * 201) + 'px';
 
             // Setup initial pepper plots 5_4 and 6_4 are the starting plots
             for(let plotId in this.gamedatas.pepperPlots){ 
@@ -105,14 +111,23 @@ function (dojo, declare) {
             }
 
             // Setup Market cards
-
-            for (let cardId in gamedatas.cardsInMarket) {
-                const card = gamedatas.cardsInMarket[cardId];
+            for (let cardId in gamedatas.cardsOnBoard.market) {
+                const card = gamedatas.cardsOnBoard.market[cardId];
                 const cardDesc = gamedatas.cardsDescription.morningMarketCards[card.type];
-                const rowCol = this.getSpriteRowColumn(cardId, this.morningMarketSprite.numberOfRows, this.morningMarketSprite.numberOfColumns)
 
-                dojo.place(this.format_block('jstpl_market_card', {morningAfternoon: 'morning', x: rowCol.row, y: rowCol.col}), 'market-cards-container');
-                // dojo.place(this.format_block('jstpl_market_card', {morningAfternoon: 'morning', x: cardDesc.spriteColumn, y: cardDesc.spriteRow}), 'market-cards-container');
+                const rowCol = this.getSpriteRowColumn(card.type, this.spriteInfo.morningMarket.numberOfColumns)
+
+                dojo.place(this.format_block('jstpl_market_card', {morningAfternoon: 'morning', type: card.type, row: rowCol.row, col: rowCol.col}), 'market-cards-container');
+            }
+            
+            // Setup Recipe cards
+            for (let cardId in gamedatas.cardsOnBoard.recipe) {
+                const card = gamedatas.cardsOnBoard.recipe[cardId];
+                const cardDesc = gamedatas.cardsDescription.recipeCards[card.type];
+
+                const rowCol = this.getSpriteRowColumn(card.type, this.spriteInfo.recipe.numberOfColumns)
+
+                dojo.place(this.format_block('jstpl_recipe_card', {type: card.type, row: rowCol.row, col: rowCol.col}), 'recipe-cards-container');
             }
  
             // Setup game notifications to handle (see "setupNotifications" method below)
@@ -248,10 +263,16 @@ function (dojo, declare) {
             }
         },
 
-        getSpriteRowColumn: function(itemNum, numOfRows, numOfCols) {
-            const rowNumber = Math.floor(itemNum / numOfRows);
-            const colNumber = (itemNum % numOfCols) + 1;
-            return { row: rowNumber, col: colNumber };
+        getSpriteRowColumn: function(itemNum, itemsPerRow) {
+            const parsedItemNum = parseInt(itemNum);
+
+            // Calculate row
+            const rowNumber = Math.ceil(parsedItemNum / itemsPerRow);
+
+            // Calculate column n % itemsPerRow === 0 means it's in the last column
+            const colNumber = parsedItemNum % itemsPerRow;
+
+            return { row: rowNumber, col: colNumber === 0 ? itemsPerRow : colNumber };
         },
 
         ///////////////////////////////////////////////////
