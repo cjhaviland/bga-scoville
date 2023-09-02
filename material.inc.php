@@ -731,3 +731,36 @@ $this->afternoon_auction_cards = array(
     'nbr' => 2
   ),
 );
+
+$this->award_plaques = array(
+  1 => array(
+    'nameId' => '1',
+    'peppers' => array(PEPPER_PURPLE, PEPPER_ORANGE, PEPPER_GREEN),
+    'vp' => array(2, 2, 2),
+    'nbr' => 3
+  ),
+  2 => array(
+    'nameId' => '2',
+    'peppers' => array(PEPPER_BROWN),
+    'vp' => array(3, 4, 5),
+    'nbr' => 3
+  ),
+  3 => array(
+    'nameId' => '3',
+    'peppers' => array(PEPPER_WHITE),
+    'vp' => array(5, 7),
+    'nbr' => 2
+  ),
+  4 => array(
+    'nameId' => '4',
+    'peppers' => array(PEPPER_BLACK),
+    'vp' => array(6, 9),
+    'nbr' => 2
+  ),
+  5 => array(
+    'nameId' => '5',
+    'peppers' => array(PEPPER_PHANTOM),
+    'vp' => array(8, 12),
+    'nbr' => 2
+  )
+);

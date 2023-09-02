@@ -36,7 +36,13 @@
         <!-- END pepperplot -->
       </div>
       <div id="board-bottom">
-        <div id="awards-container"></div>
+        <div id="awards-container">
+          <div id="award-1-box" class="award-box"></div>
+          <div id="award-2-box" class="award-box"></div>
+          <div id="award-3-box" class="award-box"></div>
+          <div id="award-4-box" class="award-box"></div>
+          <div id="award-5-box" class="award-box"></div>
+        </div>
         <div id="turn-track-container">
           <div id="turn-track-top">
             <div id="top-disc-1" class="player-disc-container player-disc-top"></div>
@@ -82,15 +88,17 @@ let jstpl_player_board = '<div class="scoville_deck_board">\
     <div id="coins_${id}">0</div></div>\
   </div>';
 
-let jstpl_pepper = '<div class="pepper pepper-${color}"></div>';
+const jstpl_pepper = '<div class="pepper pepper-${color}"></div>';
 
-let jstpl_player_token = '<div class="player-token bg-${COLOR}" id="player-${PLAYER_ID}-token"></div>';
+const jstpl_player_token = '<div class="player-token bg-${COLOR}" id="player-${PLAYER_ID}-token"></div>';
 
-let jstpl_market_card = '<div id="market-card-${morningAfternoon}_${type}" class="market-card-box"><div class="market-card market-card-${morningAfternoon}" data-row="${row}" data-col="${col}"></div></div>';
+const jstpl_market_card = '<div id="market-card-${morningAfternoon}_${type}" class="market-card-box"><div class="market-card market-card-${morningAfternoon}" data-row="${row}" data-col="${col}"></div></div>';
 
-let jstpl_recipe_card = '<div id="recipe-${type}" class="recipe-card-box"><div class="recipe-card" data-row="${row}" data-col="${col}"></div></div>';
+const jstpl_recipe_card = '<div id="recipe-${type}" class="recipe-card-box"><div class="recipe-card" data-row="${row}" data-col="${col}"></div></div>';
 
-let jstpl_auction_card = '<div id="auction-card-${morningAfternoon}_${type}" class="auction-card-box" style="left: ${leftVal}%"><div class="auction-card" data-row="${row}" data-col="${col}"></div></div>';
+const jstpl_auction_card = '<div id="auction-card-${morningAfternoon}_${type}" class="auction-card-box" style="left: ${leftVal}%"><div class="auction-card" data-row="${row}" data-col="${col}"></div></div>';
+
+const jstpl_award_plaque = '<div id="award_plaque_${type}_${vp}" class="award-plaque" style="z-index: ${vp};"><span>${vp}</span></div>';
 
 </script>  
 

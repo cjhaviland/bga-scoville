@@ -57,6 +57,9 @@ class ScovilleCjh extends Table
         $this->morning_auction_deck = self::getNew("module.common.deck");
         $this->morning_auction_deck->init("morning_auction_card");
         
+        $this->award_plaque_deck = self::getNew("module.common.deck");
+        $this->award_plaque_deck->init("award_plaque_card");
+        
 	}
 	
     protected function getGameName( )
@@ -139,6 +142,7 @@ class ScovilleCjh extends Table
         self::setupMorningMarketDeck($players);
         self::setupRecipeDeck($players);
         self::setupMorningAuctionDeck($players);
+        self::setupAwardPlaqueDeck($players);
 
         // Activate first player (which is in general a good idea :) )
         $this->activeNextPlayer();
@@ -305,6 +309,37 @@ class ScovilleCjh extends Table
         $nbrMarketCardsToDraw = $this->player_num_options[$nbrPlayers]["auctionCards"];
         $this->morning_auction_deck->pickCardsForLocation($nbrMarketCardsToDraw, DECK_LOC_DECK, DECK_LOC_BOARD);
     }
+    
+    function setupAwardPlaqueDeck($players)
+    {
+        $cards = array();
+        $nbrPlayers = count($players);
+        $limitPlaqueNbr = $this->player_num_options[$nbrPlayers]["lessRewardPlaques"] ? 1 : 0;
+
+        foreach ($this->getCardsCount()["award_plaques"] as $range) {
+            // For each type of Award Plaque...
+            for ($i = $range["from"]; $i <= $range["to"]; $i++) {
+                // Get the Award Plaque info from the Material file
+                $awardPlaque = $this->award_plaques[$i];
+
+                // Get how many of that type of plaque needs to be added to the deck
+                $awardTypeCount = $awardPlaque["nbr"] - $limitPlaqueNbr;
+
+                for ($j = 0; $j < $awardTypeCount; $j++) {
+                    // type_arg is the "Rank" in this case or the amount of VP
+                    // card_location_arg is used a ranking, supposedly the highest number is pulled first which is what we want
+                    $cards[] = array('type' => $awardPlaque["nameId"], 'type_arg' => $awardPlaque["vp"][$j], 'nbr' => 1);
+                }
+            }
+        }
+
+        $this->award_plaque_deck->createCards($cards, DECK_LOC_DECK);
+
+        // "Draw" the cards and set the location_arg to be the VP value so they are ordered from highest to lowest
+        foreach ($this->award_plaque_deck->getCardsInLocation(DECK_LOC_DECK, null, "card_type_arg") as $card) {
+            $this->award_plaque_deck->insertCardOnExtremePosition($card["id"], DECK_LOC_BOARD, true);
+        }
+    }
 
     function getCardsCount()
     {
@@ -344,6 +379,13 @@ class ScovilleCjh extends Table
                 "to" => 30,
             ),
         );
+        
+        $cardsAvailable["award_plaques"] = array(
+            array(
+                "from" => 1,
+                "to" => 5,
+            ),
+        );
 
         return $cardsAvailable;
     }
@@ -354,6 +396,7 @@ class ScovilleCjh extends Table
             'recipeCards' => $this->recipe_cards,
             'morningAuctionCards' => $this->morning_auction_cards,
             'afternoonAuctionCards' => $this->afternoon_auction_cards,
+            'awardPlaques' => $this->award_plaques
         );
 
         return $desc;
@@ -364,7 +407,8 @@ class ScovilleCjh extends Table
         $onBoard = array(
             'market' => $this->morning_market_deck->getCardsInLocation(DECK_LOC_BOARD),
             'recipe' => $this->recipe_deck->getCardsInLocation(DECK_LOC_BOARD),
-            'auction' => $this->morning_auction_deck->getCardsInLocation(DECK_LOC_BOARD)
+            'auction' => $this->morning_auction_deck->getCardsInLocation(DECK_LOC_BOARD),
+            'awards' => $this->award_plaque_deck->getCardsInLocation(DECK_LOC_BOARD)
         );
 
         return $onBoard;

@@ -155,6 +155,16 @@ function (dojo, declare) {
 
                 dojo.place(this.format_block('jstpl_recipe_card', {type: card.type, row: rowCol.row, col: rowCol.col}), 'recipe-cards-container');
             }
+            
+            // Setup Award Plaques
+            for (let cardId in gamedatas.cardsOnBoard.awards) {
+                const card = gamedatas.cardsOnBoard.awards[cardId];
+                const cardDesc = gamedatas.cardsDescription.awardPlaques[card.type];
+
+                // const rowCol = this.getSpriteRowColumn(card.type, this.spriteInfo.recipe.numberOfColumns)
+
+                dojo.place(this.format_block('jstpl_award_plaque', {type: card.type, vp: card.type_arg}), `award-${card.type}-box`);
+            }
  
             // Setup game notifications to handle (see "setupNotifications" method below)
             this.setupNotifications();
