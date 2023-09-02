@@ -605,3 +605,129 @@ $this->recipe_cards = array(
     )
   ),
 );
+
+$this->morning_auction_cards = array(
+  1 => array(
+    'nameId' => 1,
+    'peppers' => array(PEPPER_BLUE),
+    'nbr' => 4
+  ),
+  2 => array(
+    'nameId' => 2,
+    'peppers' => array(PEPPER_ORANGE),
+    'nbr' => 2
+  ),
+  3 => array(
+    'nameId' => 3,
+    'peppers' => array(PEPPER_GREEN),
+    'nbr' => 2
+  ),
+  4 => array(
+    'nameId' => 4,
+    'peppers' => array(PEPPER_YELLOW, PEPPER_BLUE),
+    'nbr' => 2
+  ),
+  5 => array(
+    'nameId' => 5,
+    'peppers' => array(PEPPER_RED),
+    'nbr' => 4
+  ),
+  6 => array(
+    'nameId' => 6,
+    'peppers' => array(PEPPER_BLUE, PEPPER_BLUE),
+    'nbr' => 2
+  ),
+  7 => array(
+    'nameId' => 7,
+    'peppers' => array(PEPPER_YELLOW),
+    'nbr' => 4
+  ),
+  8 => array(
+    'nameId' => 8,
+    'peppers' => array(PEPPER_PURPLE),
+    'nbr' => 2
+  ),
+  9 => array(
+    'nameId' => 9,
+    'peppers' => array(PEPPER_YELLOW, PEPPER_YELLOW),
+    'nbr' => 2
+  ),
+  10 => array(
+    'nameId' => 10,
+    'peppers' => array(PEPPER_RED, PEPPER_BLUE),
+    'nbr' => 2
+  ),
+  11 => array(
+    'nameId' => 11,
+    'peppers' => array(PEPPER_RED, PEPPER_YELLOW),
+    'nbr' => 2
+  ),
+  12 => array(
+    'nameId' => 12,
+    'peppers' => array(PEPPER_RED, PEPPER_RED),
+    'nbr' => 2
+  ),
+);
+
+$this->afternoon_auction_cards = array(
+  1 => array(
+    'nameId' => 1,
+    'peppers' => array(PEPPER_ORANGE),
+    'nbr' => 4
+  ),
+  2 => array(
+    'nameId' => 2,
+    'peppers' => array(PEPPER_WHITE),
+    'nbr' => 3
+  ),
+  3 => array(
+    'nameId' => 3,
+    'peppers' => array(PEPPER_BLACK),
+    'nbr' => 3
+  ),
+  4 => array(
+    'nameId' => 4,
+    'peppers' => array(PEPPER_ORANGE, PEPPER_PURPLE),
+    'nbr' => 2
+  ),
+  5 => array(
+    'nameId' => 5,
+    'peppers' => array(PEPPER_GREEN),
+    'nbr' => 4
+  ),
+  6 => array(
+    'nameId' => 6,
+    'peppers' => array(PEPPER_PURPLE, PEPPER_PURPLE),
+    'nbr' => 2
+  ),
+  7 => array(
+    'nameId' => 7,
+    'peppers' => array(PEPPER_PURPLE),
+    'nbr' => 4
+  ),
+  8 => array(
+    'nameId' => 8,
+    'peppers' => array(PEPPER_RED, PEPPER_YELLOW, PEPPER_BLUE),
+    'nbr' => 4
+  ),
+  9 => array(
+    'nameId' => 9,
+    'peppers' => array(PEPPER_ORANGE, PEPPER_ORANGE),
+    'nbr' => 2
+  ),
+  10 => array(
+    'nameId' => 10,
+    'peppers' => array(PEPPER_GREEN, PEPPER_PURPLE),
+    'nbr' => 2
+  ),
+  11 => array(
+    'nameId' => 11,
+    'peppers' => array(PEPPER_GREEN, PEPPER_ORANGE),
+    'nbr' => 2
+  ),
+  12 => array(
+    'nameId' => 12,
+    'peppers' => array(PEPPER_GREEN, PEPPER_GREEN),
+    'nbr' => 2
+  ),
+);

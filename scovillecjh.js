@@ -42,6 +42,21 @@ function (dojo, declare) {
                     numberOfRows: 5,
                     numberOfColumns: 5,
                 },
+                afternoonMarket: {
+                    url: 'img/market/afternoon-market-sprite.png',
+                    numberOfRows: 5,
+                    numberOfColumns: 5,
+                },
+                morningAuction: {
+                    url: 'img/auction/auction-cards-morning.png',
+                    numberOfRows: 5,
+                    numberOfColumns: 3,
+                },
+                afternoonAuction: {
+                    url: 'img/auction/auction-cards-afternoon.png',
+                    numberOfRows: 5,
+                    numberOfColumns: 3,
+                },
                 recipe: {
                     url: 'img/recipe-cards.png',
                     numberOfRows: 7,
@@ -74,7 +89,6 @@ function (dojo, declare) {
             this.pepperTokens = gamedatas.pepperTokens;
 
             this.cardsOnBoard = gamedatas.cardsOnBoard;
-            this.morningMarketCardsDescs = gamedatas.cardsDescription.morningMarketCards;
 
             // Setting up player boards
             for( let player_id in gamedatas.players )
@@ -118,6 +132,18 @@ function (dojo, declare) {
                 const rowCol = this.getSpriteRowColumn(card.type, this.spriteInfo.morningMarket.numberOfColumns)
 
                 dojo.place(this.format_block('jstpl_market_card', {morningAfternoon: 'morning', type: card.type, row: rowCol.row, col: rowCol.col}), 'market-cards-container');
+            }
+           
+            // Setup Auction cards
+            for (let cardId in gamedatas.cardsOnBoard.auction) {
+                const card = gamedatas.cardsOnBoard.auction[cardId];
+                const cardDesc = gamedatas.cardsDescription.morningAuctionCards[card.type];
+
+                const rowCol = this.getSpriteRowColumn(card.type, this.spriteInfo.morningAuction.numberOfColumns)
+
+                const keyIndex = Object.keys(gamedatas.cardsOnBoard.auction).findIndex(key => gamedatas.cardsOnBoard.auction[key].id === card.id);
+                const leftVal = (keyIndex * 8.1) + 49.1;
+                dojo.place(this.format_block('jstpl_auction_card', {morningAfternoon: 'morning', type: card.type, row: rowCol.row, col: rowCol.col, leftVal: leftVal}), 'board-top');
             }
             
             // Setup Recipe cards

@@ -28,7 +28,8 @@
 <div class="table-container">
   <div class="board-container whiteblock">
     <div class="board">
-      <div id="board-top"></div>
+      <div id="board-top">
+      </div>
       <div id="board-middle">
         <!-- BEGIN pepperplot -->
         <div class="pepper-plot" id="pepper_plot_{X}_{Y}" style="left: {LEFT}%; top: {TOP}%;"></div>
@@ -88,6 +89,8 @@ let jstpl_player_token = '<div class="player-token bg-${COLOR}" id="player-${PLA
 let jstpl_market_card = '<div id="market-card-${morningAfternoon}_${type}" class="market-card-box"><div class="market-card market-card-${morningAfternoon}" data-row="${row}" data-col="${col}"></div></div>';
 
 let jstpl_recipe_card = '<div id="recipe-${type}" class="recipe-card-box"><div class="recipe-card" data-row="${row}" data-col="${col}"></div></div>';
+
+let jstpl_auction_card = '<div id="auction-card-${morningAfternoon}_${type}" class="auction-card-box" style="left: ${leftVal}%"><div class="auction-card" data-row="${row}" data-col="${col}"></div></div>';
 
 </script>  
 

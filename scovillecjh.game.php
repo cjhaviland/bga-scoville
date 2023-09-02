@@ -54,6 +54,9 @@ class ScovilleCjh extends Table
         $this->recipe_deck = self::getNew("module.common.deck");
         $this->recipe_deck->init("recipe_card");
         
+        $this->morning_auction_deck = self::getNew("module.common.deck");
+        $this->morning_auction_deck->init("morning_auction_card");
+        
 	}
 	
     protected function getGameName( )
@@ -135,6 +138,7 @@ class ScovilleCjh extends Table
        
         self::setupMorningMarketDeck($players);
         self::setupRecipeDeck($players);
+        self::setupMorningAuctionDeck($players);
 
         // Activate first player (which is in general a good idea :) )
         $this->activeNextPlayer();
@@ -281,6 +285,26 @@ class ScovilleCjh extends Table
         // Put all other cards "Back in the Box"
         $this->recipe_deck->moveAllCardsInLocation(DECK_LOC_DECK, DECK_LOC_BOX);
     }
+    
+    function setupMorningAuctionDeck($players)
+    {
+        $cards = array();
+
+        foreach ($this->getCardsCount()["morning_auction"] as $range) {
+            for ($i = $range["from"]; $i <= $range["to"]; $i++) {
+                $morningMarket = $this->morning_auction_cards[$i];
+                $cards[] = array('type' => $morningMarket["nameId"], 'type_arg' => $i, 'nbr' => $morningMarket["nbr"]);
+            }
+        }
+
+        $this->morning_auction_deck->createCards($cards, DECK_LOC_DECK);
+        $this->morning_auction_deck->shuffle(DECK_LOC_DECK);
+
+        // Get the number of cards to draw
+        $nbrPlayers = count($players);
+        $nbrMarketCardsToDraw = $this->player_num_options[$nbrPlayers]["auctionCards"];
+        $this->morning_auction_deck->pickCardsForLocation($nbrMarketCardsToDraw, DECK_LOC_DECK, DECK_LOC_BOARD);
+    }
 
     function getCardsCount()
     {
@@ -300,6 +324,20 @@ class ScovilleCjh extends Table
             ),
         );
         
+        $cardsAvailable["morning_auction"] = array(
+            array(
+                "from" => 1,
+                "to" => 12,
+            ),
+        );
+        
+        $cardsAvailable["afternoon_auction"] = array(
+            array(
+                "from" => 1,
+                "to" => 12,
+            ),
+        );
+        
         $cardsAvailable["recipe"] = array(
             array(
                 "from" => 1,
@@ -313,7 +351,9 @@ class ScovilleCjh extends Table
     function getCardsDescription() {
         $desc = array(
             'morningMarketCards' => $this->morning_market_cards,
-            'recipeCards' => $this->recipe_cards,        
+            'recipeCards' => $this->recipe_cards,
+            'morningAuctionCards' => $this->morning_auction_cards,
+            'afternoonAuctionCards' => $this->afternoon_auction_cards,
         );
 
         return $desc;
@@ -323,7 +363,8 @@ class ScovilleCjh extends Table
         // TODO: Add Morning/Afternoon switch so player cannot see what the upcoming afternoon cards are
         $onBoard = array(
             'market' => $this->morning_market_deck->getCardsInLocation(DECK_LOC_BOARD),
-            'recipe' => $this->recipe_deck->getCardsInLocation(DECK_LOC_BOARD),        
+            'recipe' => $this->recipe_deck->getCardsInLocation(DECK_LOC_BOARD),
+            'auction' => $this->morning_auction_deck->getCardsInLocation(DECK_LOC_BOARD)
         );
 
         return $onBoard;
