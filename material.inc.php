@@ -97,6 +97,7 @@ if (!defined('PEPPER_RED')) { // ensure this block is only invoked once, since i
   define('PEPPER_WHITE', 8);
   define('PEPPER_BLACK', 9);
   define('PEPPER_PHANTOM', 10);
+  define('PEPPER_BLACK_OR_WHITE', 11);
 }
 
 $this->pepper_tokens = array(
@@ -329,6 +330,225 @@ $this->morning_market_cards = array (
       'pepper' => array(PEPPER_BROWN),
       'coin' => 3,
       'vp' => 1
+    )
+  )
+);
+
+$this->afternoon_market_cards = array (
+  1 => array(
+    'nameId' => 1,
+    'wanted' => array(PEPPER_WHITE, PEPPER_BLACK),
+    'rewards' => array(
+      'pepper' => array(PEPPER_PHANTOM),
+      'coin' => 0,
+      'vp' => 5
+    )
+  ),
+  2 => array(
+    'nameId' => 2,
+    'wanted' => array(PEPPER_BROWN, PEPPER_BLUE),
+    'rewards' => array(
+      'pepper' => array(),
+      'coin' => 4,
+      'vp' => 1
+    )
+  ),
+  3 => array(
+    'nameId' => 3,
+    'wanted' => array(PEPPER_WHITE, PEPPER_PURPLE),
+    'rewards' => array(
+      'pepper' => array(PEPPER_BLACK),
+      'coin' => 0,
+      'vp' => 4
+    )
+  ),
+  4 => array(
+    'nameId' => 4,
+    'wanted' => array(PEPPER_BROWN, PEPPER_GREEN),
+    'rewards' => array(
+      'pepper' => array(),
+      'coin' => 5,
+      'vp' => 2
+    )
+  ),
+  5 => array(
+    'nameId' => 5,
+    'wanted' => array(PEPPER_GREEN, PEPPER_GREEN),
+    'rewards' => array(
+      'pepper' => array(PEPPER_BROWN, PEPPER_BROWN),
+      'coin' => 0,
+      'vp' => 3
+    )
+  ),
+  6 => array(
+    'nameId' => 6,
+    'wanted' => array(PEPPER_BROWN, PEPPER_YELLOW),
+    'rewards' => array(
+      'pepper' => array(),
+      'coin' => 4,
+      'vp' => 1
+    )
+  ),
+  7 => array(
+    'nameId' => 7,
+    'wanted' => array(PEPPER_BROWN, PEPPER_RED),
+    'rewards' => array(
+      'pepper' => array(),
+      'coin' => 4,
+      'vp' => 1
+    )
+  ),
+  8 => array(
+    'nameId' => 8,
+    'wanted' => array(PEPPER_WHITE, PEPPER_ORANGE),
+    'rewards' => array(
+      'pepper' => array(PEPPER_BROWN, PEPPER_BROWN),
+      'coin' => 2,
+      'vp' => 4
+    )
+  ),
+  9 => array(
+    'nameId' => 9,
+    'wanted' => array(PEPPER_PURPLE, PEPPER_PURPLE, PEPPER_PURPLE),
+    'rewards' => array(
+      'pepper' => array(PEPPER_BROWN, PEPPER_BROWN),
+      'coin' => 2,
+      'vp' => 4
+    )
+  ),
+  10 => array(
+    'nameId' => 10,
+    'wanted' => array(PEPPER_BLACK, PEPPER_BROWN),
+    'rewards' => array(
+      'pepper' => array(PEPPER_WHITE),
+      'coin' => 0,
+      'vp' => 4
+    )
+  ),
+  11 => array(
+    'nameId' => 11,
+    'wanted' => array(PEPPER_WHITE, PEPPER_GREEN),
+    'rewards' => array(
+      'pepper' => array(PEPPER_BLACK),
+      'coin' => 0,
+      'vp' => 4
+    )
+  ),
+  12 => array(
+    'nameId' => 12,
+    'wanted' => array(PEPPER_BROWN, PEPPER_PURPLE),
+    'rewards' => array(
+      'pepper' => array(),
+      'coin' => 5,
+      'vp' => 2
+    )
+  ),
+  13 => array(
+    'nameId' => 13,
+    'wanted' => array(PEPPER_BROWN, PEPPER_ORANGE),
+    'rewards' => array(
+      'pepper' => array(),
+      'coin' => 5,
+      'vp' => 2
+    )
+  ),
+  14 => array(
+    'nameId' => 14,
+    'wanted' => array(PEPPER_WHITE, PEPPER_BROWN),
+    'rewards' => array(
+      'pepper' => array(PEPPER_BLACK),
+      'coin' => 0,
+      'vp' => 4
+    )
+  ),
+  15 => array(
+    'nameId' => 15,
+    'wanted' => array(PEPPER_GREEN, PEPPER_ORANGE, PEPPER_PURPLE),
+    'rewards' => array(
+      'pepper' => array(PEPPER_BLACK_OR_WHITE),
+      'coin' => 0,
+      'vp' => 4
+    )
+  ),
+  16 => array(
+    'nameId' => 16,
+    'wanted' => array(PEPPER_ORANGE, PEPPER_ORANGE, PEPPER_ORANGE),
+    'rewards' => array(
+      'pepper' => array(PEPPER_BROWN, PEPPER_BROWN),
+      'coin' => 2,
+      'vp' => 4
+    )
+  ),
+  17 => array(
+    'nameId' => 17,
+    'wanted' => array(PEPPER_GREEN, PEPPER_GREEN, PEPPER_GREEN),
+    'rewards' => array(
+      'pepper' => array(PEPPER_BROWN, PEPPER_BROWN),
+      'coin' => 2,
+      'vp' => 4
+    )
+  ),
+  18 => array(
+    'nameId' => 18,
+    'wanted' => array(PEPPER_PURPLE, PEPPER_PURPLE),
+    'rewards' => array(
+      'pepper' => array(PEPPER_BROWN, PEPPER_BROWN),
+      'coin' => 0,
+      'vp' => 3
+    )
+  ),
+  19 => array(
+    'nameId' => 19,
+    'wanted' => array(PEPPER_ORANGE, PEPPER_ORANGE),
+    'rewards' => array(
+      'pepper' => array(PEPPER_BROWN, PEPPER_BROWN),
+      'coin' => 0,
+      'vp' => 3
+    )
+  ),
+  20 => array(
+    'nameId' => 20,
+    'wanted' => array(PEPPER_GREEN, PEPPER_ORANGE, PEPPER_PURPLE),
+    'rewards' => array(
+      'pepper' => array(PEPPER_BLACK_OR_WHITE),
+      'coin' => 0,
+      'vp' => 4
+    )
+  ),
+  21 => array(
+    'nameId' => 21,
+    'wanted' => array(PEPPER_BROWN, PEPPER_BROWN),
+    'rewards' => array(
+      'pepper' => array(),
+      'coin' => 7,
+      'vp' => 2
+    )
+  ),
+  22 => array(
+    'nameId' => 22,
+    'wanted' => array(PEPPER_BLACK, PEPPER_PURPLE),
+    'rewards' => array(
+      'pepper' => array(PEPPER_WHITE),
+      'coin' => 0,
+      'vp' => 4
+    )
+  ),
+  23 => array(
+    'nameId' => 23,
+    'wanted' => array(PEPPER_BLACK, PEPPER_ORANGE),
+    'rewards' => array(
+      'pepper' => array(PEPPER_WHITE),
+      'coin' => 0,
+      'vp' => 4
+    )
+  ),
+  24 => array(
+    'nameId' => 24,
+    'wanted' => array(PEPPER_BLACK, PEPPER_GREEN),
+    'rewards' => array(
+      'pepper' => array(PEPPER_WHITE),
+      'coin' => 0,
+      'vp' => 4
     )
   )
 );
