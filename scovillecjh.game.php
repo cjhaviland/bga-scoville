@@ -86,13 +86,13 @@ class ScovilleCjh extends Table
 
         // Create players
         // Note: if you added some extra field on "player" table in the database (dbmodel.sql), you can initialize it there.
-        $sql = "INSERT INTO player (player_id, player_color, player_canal, player_name, player_avatar, player_coins) VALUES ";
+        $sql = "INSERT INTO player (player_id, player_color, player_canal, player_name, player_avatar) VALUES ";
         $values = array();
         foreach( $players as $player_id => $player )
         {
             $color = array_shift( $default_colors );
             $setupCoinAmount = 10;
-            $values[]= "('".$player_id."','$color','".$player['player_canal']."','".addslashes( $player['player_name'] )."','".addslashes( $player['player_avatar'] )."','$setupCoinAmount')";
+            $values[]= "('".$player_id."','$color','".$player['player_canal']."','".addslashes( $player['player_name'] )."','".addslashes( $player['player_avatar'] )."')";
         }
         $sql .= implode( ',', $values );
         self::DbQuery( $sql );
