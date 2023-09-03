@@ -49,8 +49,8 @@ function (dojo, declare) {
                 },
                 morningAuction: {
                     url: 'img/auction/auction-cards-morning.png',
-                    numberOfRows: 5,
-                    numberOfColumns: 3,
+                    numberOfRows: 3,
+                    numberOfColumns: 5,
                 },
                 afternoonAuction: {
                     url: 'img/auction/auction-cards-afternoon.png',

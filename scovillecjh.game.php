@@ -306,8 +306,8 @@ class ScovilleCjh extends Table
 
         // Get the number of cards to draw
         $nbrPlayers = count($players);
-        $nbrMarketCardsToDraw = $this->player_num_options[$nbrPlayers]["auctionCards"];
-        $this->morning_auction_deck->pickCardsForLocation($nbrMarketCardsToDraw, DECK_LOC_DECK, DECK_LOC_BOARD);
+        $nbrAuctionToDraw = $this->player_num_options[$nbrPlayers]["auctionCards"];
+        $this->morning_auction_deck->pickCardsForLocation($nbrAuctionToDraw, DECK_LOC_DECK, DECK_LOC_BOARD);
     }
     
     function setupAwardPlaqueDeck($players)
