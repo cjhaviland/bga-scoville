@@ -69,16 +69,16 @@
 
 * {
     /* Pepper Colors */
-    --pepper-red: #C13112ff;
-    --pepper-yellow: #FEE004ff;
-    --pepper-blue: #009BCDff;
-    --pepper--green: #8FC73Fff;
-    --pepper-orange: #F98526ff;
-    --pepper-purple: #720D6Fff;
-    --pepper-brown: #9E610Dff;
-    --pepper-white: #FFFFFFff;
-    --pepper-black: #393534ff;
-    --pepper-phantom: #9AC1D0ff;
+    --pepper-red: #C13112;
+    --pepper-yellow: #FEE004;
+    --pepper-blue: #009BCD;
+    --pepper--green: #8FC73F;
+    --pepper-orange: #F98526;
+    --pepper-purple: #720D6F;
+    --pepper-brown: #9E610D;
+    --pepper-white: #FFFFFF;
+    --pepper-black: #393534;
+    --pepper-phantom: #9AC1D0;
     
     /* Player Colors */
     --player-blue: #0093D0;
@@ -147,23 +147,111 @@
 
 .board {
     background-image: url('img/board.jpg');
-    background-size: contain;
+    background-size: 100% auto;
     background-repeat: no-repeat;
     
-    aspect-ratio: 4.05/3;
+    aspect-ratio: 1.3621;
 }
 
 #board-top {
-    height: 22.4%;
+    height: 22.58%;
     width: 100%;
     position: relative;
 }
 
 #board-middle {
-    height: 47.4%;
-    margin-left: 24.8%;
-    margin-right: 24.7%;
+    height: 47.82%;
+    width: 50.33%;
+
+    margin-left: 24.87%;
     position: relative;
+}
+
+.farmer-container {
+    position: absolute;
+    height: 29%;
+    width: 10%;
+
+    /* 
+     * 100% / 14 plots 
+     * 0 is left most
+     * 7 is middle 
+     * 14 is right most
+     */
+    top: calc(7.14% * 7);
+
+    /* 
+     * 100% / 20 plots 
+     * 0 is left most
+     * 10 is middle 
+     * 20 is right most
+    */
+    left: calc(5% * 10);
+    transform: translate(-50%, -50%);
+}
+
+.farmer {
+    height: 25%;
+    width: 40%;
+    /* background-color: var(--player-blue); */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.board-path {
+    height: 16%;
+    width: 33%;
+    background-color: var(--pepper-phantom);
+    position: absolute;
+    cursor: pointer;
+}
+
+.board-path-12 {
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.board-path-2 {
+    left: 100%;
+    top: 33.333%;
+    transform: translate(-50%, -100%) rotate(45deg);
+}
+
+.board-path-4 {
+    left: 100%;
+    top: 66.666%;
+    transform: translate(-50%, -0%) rotate(45deg);
+}
+
+.board-path-6 {
+    left: 50%;
+    top: 100%;
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.board-path-8 {
+    left: 0%;
+    top: 66.666%;
+    transform: translate(-50%, -0%) rotate(45deg);
+}
+
+.board-path-10 {
+    left: 0%;
+    top: 33.333%;
+    transform: translate(-50%, -100%) rotate(45deg);
+}
+
+#pepper-container {
+    height: 100%;
+    width: 100%;
+    
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(7, 1fr);
+    grid-column-gap: 0.46%;
+    grid-row-gap: 0.63%;    
 }
 
 #board-bottom {
@@ -253,18 +341,14 @@
 /***** PEPPER PLOTS ****/
 
 .pepper-plot {
-    width: 9.4%;
-    height: 13.5%;
-    position: absolute;
-
-    /* opacity: 0.5;
-    border-radius: 50%; */
+    width: 100%;
+    height: 100%;
 }
 
 .pepper {
     background-image: url('img/peppers-transparent.png');
     background-size: 650% auto;
-    transform: rotate(-0.02turn);
+    transform: rotate(-0.01turn);
     height: 100%;
     width: 100%;
 }

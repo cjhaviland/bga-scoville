@@ -100,11 +100,22 @@ function (dojo, declare) {
                          
                 this.counter[player_id] = {}
                 this.createCounter(player_id, 'coins')
+                // this.createCounter(player_id, 'pepper_red')
+                // this.createCounter(player_id, 'pepper_yellow')
+                // this.createCounter(player_id, 'pepper_blue')
+                // this.createCounter(player_id, 'pepper_green')
+                // this.createCounter(player_id, 'pepper_orange')
+                // this.createCounter(player_id, 'pepper_purple')
+                // this.createCounter(player_id, 'pepper_brown')
+                // this.createCounter(player_id, 'pepper_white')
+                // this.createCounter(player_id, 'pepper_black')
+                // this.createCounter(player_id, 'pepper_phantom')
 
                 this.addTooltip('label_coins_' + player_id, dojo.string.substitute( _("Number of coins ${player_name} has."), {
                     player_name: player.name }), "");
 
                 this.addTokenOnBoard(player, true)
+                // this.addFarmerOnBoard(player)
             }
             
             // TODO: Set up your game interface here, according to "gamedatas"
@@ -112,6 +123,14 @@ function (dojo, declare) {
             // Setup Player Card
             document.getElementById('player-card').style.backgroundPositionY = -(this.allPlayerColors[this.yourPlayerColor].sprite_pos * 201) + 'px';
 
+            for( $y=1; $y<=7; $y++ )
+            {
+                for( $x=1; $x<=10; $x++ )
+                {
+                    dojo.place(this.format_block('jstpl_pepper_plot', { x: $x, y: $y }), `pepper-container`);
+                }        
+            }
+            
             // Setup initial pepper plots 5_4 and 6_4 are the starting plots
             for(let plotId in this.gamedatas.pepperPlots){ 
                 
@@ -123,6 +142,14 @@ function (dojo, declare) {
                     dojo.place(this.format_block('jstpl_pepper', {color: this.pepperTokens[plot.pepper].color}), `pepper_plot_${plot.board_x}_${plot.board_y}`);
                 }
             }
+
+            // Setup board paths
+            // TODO: Get spaces where a player exists
+            // for (let pathId in this.gamedatas.boardPaths) {
+            //     const path = this.gamedatas.boardPaths[pathId]
+
+            //     dojo.place(this.format_block('jstpl_board_path', { id: pathId }), `board-path-container`);
+            // }
 
             // Setup Market cards
             for (let cardId in gamedatas.cardsOnBoard.market) {
@@ -277,9 +304,17 @@ function (dojo, declare) {
             const topOrBottom = isTurnOrderTrack ? 'bottom' : 'top';
 
             dojo.place( this.format_block( 'jstpl_player_token', {
-                PLAYER_ID: player.id,
-                COLOR: this.getColorName(player.color)
+                playerId: player.id,
+                color: this.getColorName(player.color)
             } ) , `${topOrBottom}-disc-${player.turn_order}`);
+        },
+        
+        addFarmerOnBoard: function(player)
+        {
+            dojo.place( this.format_block( 'jstpl_player_farmer', {
+                playerId: player.id,
+                color: this.getColorName(player.color)
+            } ) , `board-path-container`);
         },
 
         getColorName: function(colorHex) {

@@ -28,12 +28,9 @@
 <div class="table-container">
   <div class="board-container whiteblock">
     <div class="board">
-      <div id="board-top">
-      </div>
+      <div id="board-top"></div>
       <div id="board-middle">
-        <!-- BEGIN pepperplot -->
-        <div class="pepper-plot" id="pepper_plot_{X}_{Y}" style="left: {LEFT}%; top: {TOP}%;"></div>
-        <!-- END pepperplot -->
+        <div id="pepper-container"></div>
       </div>
       <div id="board-bottom">
         <div id="awards-container">
@@ -90,7 +87,21 @@ let jstpl_player_board = '<div class="scoville_deck_board">\
 
 const jstpl_pepper = '<div class="pepper pepper-${color}"></div>';
 
-const jstpl_player_token = '<div class="player-token bg-${COLOR}" id="player-${PLAYER_ID}-token"></div>';
+const jstpl_pepper_plot = '<div class="pepper-plot" id="pepper_plot_${x}_${y}"></div>';
+
+const jstpl_board_path = '<div class="board-path" id="board_path_${id}"></div>';
+
+const jstpl_player_token = '<div id="player-${playerId}-token" class="player-token bg-${color}"></div>';
+
+const jstpl_player_farmer = '<div id="farmer-${playerId}" class="farmer-container bg-${color}">\
+          <div class="farmer"></div>\
+          <div class="board-path board-path-12"></div>\
+          <div class="board-path board-path-2"></div>\
+          <div class="board-path board-path-4"></div>\
+          <div class="board-path board-path-6"></div>\
+          <div class="board-path board-path-8"></div>\
+          <div class="board-path board-path-10"></div>\
+        </div>';
 
 const jstpl_market_card = '<div id="market-card-${morningAfternoon}_${type}" class="market-card-box"><div class="market-card market-card-${morningAfternoon}" data-row="${row}" data-col="${col}"></div></div>';
 

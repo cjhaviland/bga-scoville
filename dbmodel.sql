@@ -57,6 +57,18 @@ CREATE TABLE IF NOT EXISTS `pepper_plot` (
    PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+-- Table to store board path positions
+-- pos_1 will be either a N/E Direction and the corresponding pepper id
+-- pos_2 will be either a S/W Direction and the corresponding pepper id
+-- If either position is NULL that tells us it's an edge space
+CREATE TABLE IF NOT EXISTS `board_path` (
+   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+   `pos_1` varchar(6) NULL,
+   `pos_2` varchar(6) NULL,
+   `player_id` int NULL,
+   PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
 CREATE TABLE IF NOT EXISTS `morning_market_card` (
    `card_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
    `card_type` varchar(16) NOT NULL,

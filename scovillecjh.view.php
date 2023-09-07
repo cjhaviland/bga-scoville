@@ -41,23 +41,6 @@ class view_scovillecjh_scovillecjh extends game_view
         $players_nbr = count( $players );
 
         /*********** Place your code below:  ************/
-        $this->page->begin_block( "scovillecjh_scovillecjh", "pepperplot" );
-        
-        $hor_scale = 10 + 0.05;
-        $ver_scale = (1/7)*100 + 0.2;
-
-        for( $x=1; $x<=10; $x++ )
-        {
-            for( $y=1; $y<=7; $y++ )
-            {
-                $this->page->insert_block( "pepperplot", array(
-                    'X' => $x,
-                    'Y' => $y,
-                    'LEFT' => ($x-1) * $hor_scale,
-                    'TOP' => ($y-1) * $ver_scale
-                ) );
-            }        
-        }
 
         /*
         

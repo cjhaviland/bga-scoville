@@ -138,6 +138,8 @@ class ScovilleCjh extends Table
         }
         $sql .= implode( ',', $xyValues );
         self::DbQuery( $sql );
+        
+        self::initBoardPathTable();
        
         self::setupMorningMarketDeck($players);
         self::setupRecipeDeck($players);
@@ -172,7 +174,7 @@ class ScovilleCjh extends Table
     
         // Get information about players
         // Note: you can retrieve some extra field you added for "player" table in "dbmodel.sql" if you need it.
-        $sql = "SELECT player_id id, player_no turn_order, player_score score, player_coins coins FROM player ";
+        $sql = "SELECT player_id id, player_no turn_order, player_score score, player_coins coins, pepper_red, pepper_yellow, pepper_blue, pepper_green, pepper_orange, pepper_purple, pepper_brown, pepper_white, pepper_black, pepper_phantom FROM player ";
         $result['players'] = self::getCollectionFromDb( $sql );
   
         $players = self::loadPlayersBasicInfos();
@@ -188,6 +190,10 @@ class ScovilleCjh extends Table
         // Pepper Plots
         $sql = "SELECT id, board_x, board_y, pepper FROM pepper_plot ";
         $result['pepperPlots'] = self::getCollectionFromDb( $sql );
+        
+        // Board Paths
+        $sql = "SELECT id, pos_1, pos_2 FROM board_path ";
+        $result['boardPaths'] = self::getCollectionFromDb( $sql );
 
         // TODO: Gather all information about current game situation (visible by player $current_player_id).
         $result['pepperTokens'] = $this->pepper_tokens;
@@ -222,6 +228,58 @@ class ScovilleCjh extends Table
     /*
         In this space, you can put any utility methods useful for your game logic
     */
+
+
+
+    /**
+     * Board Table
+     * 15 rows of board paths that alternate 10 on ODD rows, 11 on EVEN rows
+     * Total of 157 Path Positions around the peppers
+     */
+    function initBoardPathTable() 
+    {
+        $sql = "INSERT INTO board_path (pos_1, pos_2) VALUES ";
+        
+        $posValues = array();
+
+        $row = 1;
+        
+        for ($row = 1; $row <= 8; $row++) {
+
+            // Odd row, 10 columns, NORTH/SOUTH
+            for ($col = 1; $col <= 10; $col++) {
+                $isFirstRow = $row == 1 ? true : false; 
+                $isLastRow = $row == 8 ? true : false;
+                
+                $southRowVal = $row - 1;
+                
+                // CompassDir_X_Y
+                $northVal = $isLastRow  ? "NULL" : "'N{$col}_{$row}'";
+                $southVal = $isFirstRow ? "NULL" : "'S{$col}_{$southRowVal}'";
+                
+                $posValues[] = "($northVal, $southVal)";
+            }
+
+            if ($row !== 8) {
+                // Even row, 11 columns, EAST/WEST
+                for ($col = 1; $col <= 11; $col++) {
+                	$isFirstCol = $col == 1 ? true : false; 
+                	$isLastCol  = $col == 11 ? true : false;
+                    
+                    $eastRowVal = $col - 1;
+                    
+                    // CompassDir_X_Y
+                    $eastVal = $isFirstCol ? "NULL" : "'E{$eastRowVal}_{$row}'";
+                    $westVal = $isLastCol  ? "NULL" : "'W{$col}_{$row}'";
+                    $posValues[] = "($eastVal, $westVal)";
+                }
+            }
+        }
+
+        $sql .= implode( ',', $posValues );
+        self::DbQuery( $sql );
+    }
+
     function get_counters($player) {
         // $result = array(
         //     'deck' => $this->cards->countCardInLocation($this->player_deck($player_id)),
