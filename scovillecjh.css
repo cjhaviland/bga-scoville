@@ -187,6 +187,8 @@
      * 20 is right most
     */
     left: calc(5% * 10);
+
+    /* Add rotate(-90deg) when moving in E/W directions */
     transform: translate(-50%, -50%);
 }
 
@@ -208,11 +210,13 @@
     cursor: pointer;
 }
 
+/* North Y + 1 or West X - 1 */
 .board-path-12 {
     left: 50%;
     transform: translate(-50%, -50%) rotate(45deg);
 }
 
+/* North Y + 1 or West X - 1 */
 .board-path-2 {
     left: 100%;
     top: 33.333%;
