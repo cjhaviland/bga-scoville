@@ -174,7 +174,7 @@ class ScovilleCjh extends Table
     
         // Get information about players
         // Note: you can retrieve some extra field you added for "player" table in "dbmodel.sql" if you need it.
-        $sql = "SELECT player_id id, player_no turn_order, player_score score, player_coins coins, pepper_red, pepper_yellow, pepper_blue, pepper_green, pepper_orange, pepper_purple, pepper_brown, pepper_white, pepper_black, pepper_phantom FROM player ";
+        $sql = "SELECT player_id id, player_no turn_order, player_score score, player_coins coins, pepper_red, pepper_yellow, pepper_blue, pepper_green, pepper_orange, pepper_purple, pepper_brown, pepper_white, pepper_black, pepper_phantom, has_double_back, has_extra_pepper, has_extra_step FROM player ";
         $result['players'] = self::getCollectionFromDb( $sql );
   
         $players = self::loadPlayersBasicInfos();

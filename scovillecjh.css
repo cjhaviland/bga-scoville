@@ -201,6 +201,13 @@ h3.container-label {
 #counter_container {
     display: flex;
     justify-content: space-evenly;
+    margin-top: 1em;
+}
+
+#bonus_tiles_container {
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: 1em;
 }
 
 .board {

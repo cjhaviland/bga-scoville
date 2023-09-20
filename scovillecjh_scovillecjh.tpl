@@ -69,8 +69,8 @@
   </div>
   <div id="player_screen" class="whiteblock">
     <h3 id="player_screen_name" class="container-label"></h3>
-    <div id="counter_container">
-    </div>
+    <div id="counter_container"></div>
+    <div id="bonus_tiles_container"></div>
   </div>
 </div>
 
@@ -106,6 +106,9 @@ const jstpl_auction_card = '<div id="auction-card-${morningAfternoon}_${type}" c
 const jstpl_award_plaque = '<div id="award_plaque_${type}_${vp}" class="award-plaque" style="z-index: ${vp};"><span>${vp}</span></div>';
 
 const jstpl_screen_counter = '<div id="label_${name}_${id}"><i class="fa6 fa6-solid ${cssClasses}"></i><span id="counter_${name}_${id}">0</span></div>';
+
+const jstpl_bonus_tile = '<div id="${tileId}" class="bonus-tile">${text}</div>';
+
 </script>  
 
 {OVERALL_GAME_FOOTER}

@@ -103,9 +103,10 @@ function (dojo, declare) {
             
             // Setting up Player Screen
             const playerCounters = counters[this.player_id];
+            const player = players[this.player_id];
             this.counter[this.player_id] = {}
 
-            document.getElementById('player_screen_name').innerText = players[this.player_id].name
+            document.getElementById('player_screen_name').innerText = player.name
 
             for (let screenCounter in playerCounters) {
                 const explodedName = screenCounter.split('_');
@@ -121,7 +122,28 @@ function (dojo, declare) {
                 this.createCounter(this.player_id, screenCounter)
 
                 this.addTooltip(`label_${screenCounter}_${this.player_id}`, dojo.string.substitute( _(`Number of ${pepperColor} ${counterIconKey} ${players[this.player_id].name} has.`), {
-                    player_name: players[this.player_id].name }), "");
+                    player_name: player.name }), "");
+            }
+
+            if (player['has_extra_step']) {
+                dojo.place(this.format_block('jstpl_bonus_tile', {
+                    tileId: 'has_extra_step',
+                    text: 'Move 1 Extra Step'
+                }), `bonus_tiles_container`);
+            }
+            
+            if (player['has_extra_pepper']) {
+                dojo.place(this.format_block('jstpl_bonus_tile', {
+                    tileId: 'has_extra_pepper',
+                    text: 'Plant 1 Extra Pepper'
+                }), `bonus_tiles_container`);
+            }
+            
+            if (player['has_double_back']) {
+                dojo.place(this.format_block('jstpl_bonus_tile', {
+                    tileId: 'has_double_back',
+                    text: 'Double Back Once'
+                }), `bonus_tiles_container`);
             }
 
             // Setting up ALL players
