@@ -90,20 +90,22 @@ function (dojo, declare) {
         setup: function( gamedatas )
         {
             console.log( "Starting game setup", gamedatas );
+
+            const { allPlayerColors, players, counters, won, pepperPlots, boardPaths, pepperTokens, cardsDescription, cardsOnBoard, gamestate, tablespeed, game_result_neutralized, neutralized_player_id, playerorder, gamestates, notifications, decision } = gamedatas;
             
             this.counter = {};
-            this.yourPlayerColor = gamedatas.players[this.player_id].color;
-            this.allPlayerColors = gamedatas.allPlayerColors;
+            this.yourPlayerColor = players[this.player_id].color;
+            this.allPlayerColors = allPlayerColors;
             
-            this.pepperTokens = gamedatas.pepperTokens;
+            this.pepperTokens = pepperTokens;
             
-            this.cardsOnBoard = gamedatas.cardsOnBoard;
+            this.cardsOnBoard = cardsOnBoard;
             
             // Setting up Player Screen
-            const playerCounters = gamedatas.counters[this.player_id];
+            const playerCounters = counters[this.player_id];
             this.counter[this.player_id] = {}
 
-            document.getElementById('player_screen_name').innerText = gamedatas.players[this.player_id].name
+            document.getElementById('player_screen_name').innerText = players[this.player_id].name
 
             for (let screenCounter in playerCounters) {
                 const explodedName = screenCounter.split('_');
@@ -118,14 +120,14 @@ function (dojo, declare) {
 
                 this.createCounter(this.player_id, screenCounter)
 
-                this.addTooltip(`label_${screenCounter}_${this.player_id}`, dojo.string.substitute( _(`Number of ${pepperColor} ${counterIconKey} ${gamedatas.players[this.player_id].name} has.`), {
-                    player_name: gamedatas.players[this.player_id].name }), "");
+                this.addTooltip(`label_${screenCounter}_${this.player_id}`, dojo.string.substitute( _(`Number of ${pepperColor} ${counterIconKey} ${players[this.player_id].name} has.`), {
+                    player_name: players[this.player_id].name }), "");
             }
 
             // Setting up ALL players
-            for( let player_id in gamedatas.players )
+            for( let player_id in players )
             {
-                let player = gamedatas.players[player_id];
+                let player = players[player_id];
 
                 // let player_board_div = $('player_board_' + player_id);
                 // dojo.place(this.format_block('jstpl_player_board', {id: player_id}), player_board_div);
@@ -148,9 +150,9 @@ function (dojo, declare) {
             }
             
             // Setup initial pepper plots 5_4 and 6_4 are the starting plots
-            for(let plotId in this.gamedatas.pepperPlots){ 
+            for(let plotId in this.pepperPlots){ 
                 
-                const plot = this.gamedatas.pepperPlots[plotId]
+                const plot = this.pepperPlots[plotId]
 
                 // Add pepper color to the plot
                 if (plot.pepper != null) {
@@ -161,16 +163,16 @@ function (dojo, declare) {
 
             // Setup board paths
             // TODO: Get spaces where a player exists
-            // for (let pathId in this.gamedatas.boardPaths) {
-            //     const path = this.gamedatas.boardPaths[pathId]
+            // for (let pathId in this.boardPaths) {
+            //     const path = this.boardPaths[pathId]
 
             //     dojo.place(this.format_block('jstpl_board_path', { id: pathId }), `board-path-container`);
             // }
 
             // Setup Market cards
-            for (let cardId in gamedatas.cardsOnBoard.market) {
-                const card = gamedatas.cardsOnBoard.market[cardId];
-                const cardDesc = gamedatas.cardsDescription.morningMarketCards[card.type];
+            for (let cardId in cardsOnBoard.market) {
+                const card = cardsOnBoard.market[cardId];
+                const cardDesc = cardsDescription.morningMarketCards[card.type];
 
                 const rowCol = this.getSpriteRowColumn(card.type, this.spriteInfo.morningMarket.numberOfColumns)
 
@@ -178,21 +180,21 @@ function (dojo, declare) {
             }
            
             // Setup Auction cards
-            for (let cardId in gamedatas.cardsOnBoard.auction) {
-                const card = gamedatas.cardsOnBoard.auction[cardId];
-                const cardDesc = gamedatas.cardsDescription.morningAuctionCards[card.type];
+            for (let cardId in cardsOnBoard.auction) {
+                const card = cardsOnBoard.auction[cardId];
+                const cardDesc = cardsDescription.morningAuctionCards[card.type];
 
                 const rowCol = this.getSpriteRowColumn(card.type, this.spriteInfo.morningAuction.numberOfColumns)
 
-                const keyIndex = Object.keys(gamedatas.cardsOnBoard.auction).findIndex(key => gamedatas.cardsOnBoard.auction[key].id === card.id);
+                const keyIndex = Object.keys(cardsOnBoard.auction).findIndex(key => cardsOnBoard.auction[key].id === card.id);
                 const leftVal = (keyIndex * 8.1) + 49.1;
                 dojo.place(this.format_block('jstpl_auction_card', {morningAfternoon: 'morning', type: card.type, row: rowCol.row, col: rowCol.col, leftVal: leftVal}), 'board-top');
             }
             
             // Setup Recipe cards
-            for (let cardId in gamedatas.cardsOnBoard.recipe) {
-                const card = gamedatas.cardsOnBoard.recipe[cardId];
-                const cardDesc = gamedatas.cardsDescription.recipeCards[card.type];
+            for (let cardId in cardsOnBoard.recipe) {
+                const card = cardsOnBoard.recipe[cardId];
+                const cardDesc = cardsDescription.recipeCards[card.type];
 
                 const rowCol = this.getSpriteRowColumn(card.type, this.spriteInfo.recipe.numberOfColumns)
 
@@ -200,9 +202,9 @@ function (dojo, declare) {
             }
             
             // Setup Award Plaques
-            for (let cardId in gamedatas.cardsOnBoard.awards) {
-                const card = gamedatas.cardsOnBoard.awards[cardId];
-                const cardDesc = gamedatas.cardsDescription.awardPlaques[card.type];
+            for (let cardId in cardsOnBoard.awards) {
+                const card = cardsOnBoard.awards[cardId];
+                const cardDesc = cardsDescription.awardPlaques[card.type];
 
                 // const rowCol = this.getSpriteRowColumn(card.type, this.spriteInfo.recipe.numberOfColumns)
 
