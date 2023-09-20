@@ -72,7 +72,7 @@
     --pepper-red: #C13112;
     --pepper-yellow: #FEE004;
     --pepper-blue: #009BCD;
-    --pepper--green: #8FC73F;
+    --pepper-green: #8FC73F;
     --pepper-orange: #F98526;
     --pepper-purple: #720D6F;
     --pepper-brown: #9E610D;
@@ -113,6 +113,47 @@
     background-color: var(--player-yellow);
 }
 
+/********* PEPPER COLORS **********/
+.red {
+    color: var(--pepper-red);
+}
+
+.yellow {
+    color: var(--pepper-yellow);
+}
+
+.blue {
+    color: var(--pepper-blue);
+}
+
+.green {
+    color: var(--pepper-green);
+}
+
+.orange {
+    color: var(--pepper-orange);
+}
+
+.purple {
+    color: var(--pepper-purple);
+}
+
+.brown {
+    color: var(--pepper-brown);
+}
+
+.white {
+    color: var(--pepper-white);
+}
+
+.black {
+    color: var(--pepper-black);
+}
+
+.phantom {
+    color: var(--pepper-phantom);
+}
+
 
 /***** BOARD ****/
 .table-container {
@@ -123,6 +164,10 @@
 .board-container {
     width: 90%;
     margin: 1em auto;
+}
+
+h3.container-label {
+    width: 100%;
 }
 
 #market-cards-container {
@@ -143,6 +188,19 @@
 
     width: 90%;
     margin: 1em auto;
+}
+
+#player_screen {
+    display: flex;
+    flex-direction: column;
+
+    width: 90%;
+    margin: 1em auto;
+}
+
+#counter_container {
+    display: flex;
+    justify-content: space-evenly;
 }
 
 .board {
@@ -412,15 +470,10 @@
     align-items: center;
 }
 
-/** PLAYER SCREENS */
-.player-container {
-    display: flex;
-}
-
 #player-card {
-    background-image: url('img/player_screens.png');
+    /* background-image: url('img/player_screens.png'); */
     background-repeat: no-repeat;
-    opacity: 0.6;
+    /* opacity: 0.6; */
 
     height: 201px;
     width: 673px;

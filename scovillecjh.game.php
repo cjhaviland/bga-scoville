@@ -291,7 +291,17 @@ class ScovilleCjh extends Table
         //     $result['artichokes'] = $counts['artichoke_count'];
         // }
         $result = array(
-            'coins' => (int)$player['coins']
+            'coins' => (int)$player['coins'],
+            'pepper_red' => (int)$player['pepper_red'],
+            'pepper_yellow' => (int)$player['pepper_yellow'],
+            'pepper_blue' => (int)$player['pepper_blue'],
+            'pepper_green' => (int)$player['pepper_green'],
+            'pepper_orange' => (int)$player['pepper_orange'],
+            'pepper_purple' => (int)$player['pepper_purple'],
+            'pepper_brown' => (int)$player['pepper_brown'],
+            'pepper_white' => (int)$player['pepper_white'],
+            'pepper_black' => (int)$player['pepper_black'],
+            'pepper_phantom' => (int)$player['pepper_phantom']
         );
         
         return $result;

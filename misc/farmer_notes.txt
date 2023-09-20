@@ -1,0 +1,21 @@
+Pepper Plots (X_Y) 1_1 to 10_7
+
+Starting Farmer Path is...
+- E5_4, W6_4
+
+Farmer can go in ANY direction, available paths:
+- 12: E5_3, W6_3 (X_Y-1, X_Y-1)
+
+- 02: N6_4, S6_3 (X+1_Y, X_Y-1)
+
+- 04: N6_5, S6_4 (X+1_Y+1, X_Y)
+
+- 06: E5_5, W6_5 (X_Y+1, X_Y+1)
+
+- 08: N5_5, S5_4 (X_Y+1, X-1_Y)
+
+- 10: N5_4, S5_3 (X_Y, X-1_Y-1)
+
+Traveling E/W to E/W means moving in a N/S direction.
+Traveling N/S to N/S means moving in an E/W direction.
+

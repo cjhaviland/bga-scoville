@@ -63,6 +63,15 @@ function (dojo, declare) {
                     numberOfColumns: 5,
                 },
             }
+
+            this.counterIcons = {
+                'coins': {
+                    iconClass: 'fa6-coins',
+                },
+                'pepper': {
+                    iconClass: 'fa6-pepper-hot',
+                },
+            }
         },
         
         /*
@@ -87,32 +96,39 @@ function (dojo, declare) {
             this.allPlayerColors = gamedatas.allPlayerColors;
             
             this.pepperTokens = gamedatas.pepperTokens;
-
+            
             this.cardsOnBoard = gamedatas.cardsOnBoard;
+            
+            // Setting up Player Screen
+            const playerCounters = gamedatas.counters[this.player_id];
+            this.counter[this.player_id] = {}
 
-            // Setting up player boards
+            document.getElementById('player_screen_name').innerText = gamedatas.players[this.player_id].name
+
+            for (let screenCounter in playerCounters) {
+                const explodedName = screenCounter.split('_');
+                const counterIconKey = explodedName[0];
+                const pepperColor = explodedName.length > 1 ? explodedName[1] : '';
+
+                dojo.place(this.format_block('jstpl_screen_counter', {
+                    id: this.player_id,
+                    name: screenCounter,
+                    cssClasses: `${this.counterIcons[counterIconKey].iconClass} ${pepperColor}`,
+                }), `counter_container`);
+
+                this.createCounter(this.player_id, screenCounter)
+
+                this.addTooltip(`label_${screenCounter}_${this.player_id}`, dojo.string.substitute( _(`Number of ${pepperColor} ${counterIconKey} ${gamedatas.players[this.player_id].name} has.`), {
+                    player_name: gamedatas.players[this.player_id].name }), "");
+            }
+
+            // Setting up ALL players
             for( let player_id in gamedatas.players )
             {
                 let player = gamedatas.players[player_id];
 
-                let player_board_div = $('player_board_' + player_id);
-                dojo.place(this.format_block('jstpl_player_board', {id: player_id}), player_board_div);
-                         
-                this.counter[player_id] = {}
-                this.createCounter(player_id, 'coins')
-                // this.createCounter(player_id, 'pepper_red')
-                // this.createCounter(player_id, 'pepper_yellow')
-                // this.createCounter(player_id, 'pepper_blue')
-                // this.createCounter(player_id, 'pepper_green')
-                // this.createCounter(player_id, 'pepper_orange')
-                // this.createCounter(player_id, 'pepper_purple')
-                // this.createCounter(player_id, 'pepper_brown')
-                // this.createCounter(player_id, 'pepper_white')
-                // this.createCounter(player_id, 'pepper_black')
-                // this.createCounter(player_id, 'pepper_phantom')
-
-                this.addTooltip('label_coins_' + player_id, dojo.string.substitute( _("Number of coins ${player_name} has."), {
-                    player_name: player.name }), "");
+                // let player_board_div = $('player_board_' + player_id);
+                // dojo.place(this.format_block('jstpl_player_board', {id: player_id}), player_board_div);
 
                 this.addTokenOnBoard(player, true)
                 // this.addFarmerOnBoard(player)
@@ -121,7 +137,7 @@ function (dojo, declare) {
             // TODO: Set up your game interface here, according to "gamedatas"
             
             // Setup Player Card
-            document.getElementById('player-card').style.backgroundPositionY = -(this.allPlayerColors[this.yourPlayerColor].sprite_pos * 201) + 'px';
+            // document.getElementById('player-card').style.backgroundPositionY = -(this.allPlayerColors[this.yourPlayerColor].sprite_pos * 201) + 'px';
 
             for( $y=1; $y<=7; $y++ )
             {
@@ -294,13 +310,12 @@ function (dojo, declare) {
 
         createCounter: function (player_id, name) {
             this.counter[player_id][name] = new ebg.counter();
-            this.counter[player_id][name].create(name + "_" + player_id);
+            this.counter[player_id][name].create(`counter_${name}_${player_id}`);
             this.counter[player_id][name].setValue(this.gamedatas.counters[player_id][name]);
         },
 
         addTokenOnBoard: function( player, isTurnOrderTrack)
         {
-            console.log(`addTokenOnBoard for ${player.id}`)
             const topOrBottom = isTurnOrderTrack ? 'bottom' : 'top';
 
             dojo.place( this.format_block( 'jstpl_player_token', {
@@ -345,6 +360,10 @@ function (dojo, declare) {
 
             return { row: rowNumber, col: colNumber === 0 ? itemsPerRow : colNumber };
         },
+
+        // getAvailableFarmerPaths(currentPath, currentDir) {
+            
+        // },
 
         ///////////////////////////////////////////////////
         //// Player's action
@@ -393,6 +412,22 @@ function (dojo, declare) {
         },        
         
         */
+
+        // placeFarmer() {
+            // Check that this action is possible
+            // if (!this.checkAction('placeFarmer')) {
+            //     return;
+            // }
+
+            // Make call to server
+            // this.ajaxCall('/scovillecjh/placeFarmer.php', {
+            //     playerId: this.currentPlayer.id
+            // }, this, function(result) {
+
+            // Update board state
+
+            
+        // },
 
         
         ///////////////////////////////////////////////////

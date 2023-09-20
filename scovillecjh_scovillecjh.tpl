@@ -62,28 +62,22 @@
     </div>
   </div>
   <div id="market-cards-container" class="whiteblock">
-    <h3 style="width: 100%">Market</h3>
+    <h3 class="container-label">Market</h3>
   </div>
   <div id="recipe-cards-container" class="whiteblock">
-    <h3 style="width: 100%">Chili Cookoff</h3>
+    <h3 class="container-label">Chili Cookoff</h3>
+  </div>
+  <div id="player_screen" class="whiteblock">
+    <h3 id="player_screen_name" class="container-label"></h3>
+    <div id="counter_container">
+    </div>
   </div>
 </div>
 
-<div class="player-container">
-  <div id="player-card"></div>
-</div>
 
 <script type="text/javascript">
 
 // Javascript HTML templates
-
-let jstpl_player_board = '<div class="scoville_deck_board">\
-  <div class="scoville_label_line">\
-    <div class="label scoville_label" id="label_coins_${id}">\
-      <i class="fa6 fa6-solid fa6-coins"></i>\
-    </div>\
-    <div id="coins_${id}">0</div></div>\
-  </div>';
 
 const jstpl_pepper = '<div class="pepper pepper-${color}"></div>';
 
@@ -111,6 +105,7 @@ const jstpl_auction_card = '<div id="auction-card-${morningAfternoon}_${type}" c
 
 const jstpl_award_plaque = '<div id="award_plaque_${type}_${vp}" class="award-plaque" style="z-index: ${vp};"><span>${vp}</span></div>';
 
+const jstpl_screen_counter = '<div id="label_${name}_${id}"><i class="fa6 fa6-solid ${cssClasses}"></i><span id="counter_${name}_${id}">0</span></div>';
 </script>  
 
 {OVERALL_GAME_FOOTER}
