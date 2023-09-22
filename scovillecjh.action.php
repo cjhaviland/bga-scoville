@@ -63,6 +63,15 @@
     
     */
 
+    public function bidAction() {
+      self::setAjaxMode();
+
+      $bid_amount = self::getArg('bid_amount', AT_posint, true);
+
+      $this->game->bid($bid_amount);
+
+      self::ajaxResponse();
+    } 
   }
   
 

@@ -68,9 +68,9 @@ New Game Setup
 Auction Phase (All Players)
 ==========================================
 
-1. Slide the up and off the order track
-2. ALL PLAYERS "secretly" select 0 to N coins to bid
-3. When all bids are selected, reveal them.
+SETUP: Slide the up and off the order track
+MULTIPLE PLAYER STATE: ALL PLAYERS "secretly" select 0 to N coins to bid
+OnLeavingState: When all bids are selected, reveal them.
 
 4. In bid order of highest to lowest; each player chooses their spot on the turn order
 4a. If bids are tied, AND bids are > 0; then order is previous turn order

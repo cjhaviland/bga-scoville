@@ -526,6 +526,19 @@ class ScovilleCjh extends Table
     
     */
 
+    function bid($bid_amount) {
+        self::checkAction('bid');
+
+        $player_id = self::getCurrentPlayerId();
+
+        // TODO: Check if bid is valid (not negative, not more than MAX bid allowed)
+
+        // $this->gamestate->setPlayerProperty($player_id, 'bid', $bidAmount);
+
+        // Deactivate player; if none left, transition to 'playerTurn' state
+        $this->gamestate->setPlayerNonMultiactive($player_id, 'playerTurn');
+    }
+
     
 //////////////////////////////////////////////////////////////////////////////
 //////////// Game state arguments
@@ -575,6 +588,10 @@ class ScovilleCjh extends Table
         $this->gamestate->nextState( 'some_gamestate_transition' );
     }    
     */
+
+    function stMultiPlayerInit() {
+        $this->gamestate->setAllPlayersMultiactive();
+    }
 
 //////////////////////////////////////////////////////////////////////////////
 //////////// Zombie

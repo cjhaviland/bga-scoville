@@ -262,6 +262,9 @@ function (dojo, declare) {
                 
                 break;
            */
+
+            case 'auctionBid':
+                break;
            
            
             case 'dummmy':
@@ -318,6 +321,9 @@ function (dojo, declare) {
                     this.addActionButton( 'button_3_id', _('Button 3 label'), 'onMyMethodToCall3' ); 
                     break;
 */
+                    case 'auctionBid':
+                        this.addActionButton( 'button_bid', _('Bid'), 'onBid' );
+                        break;
                 }
             }
         },        
@@ -436,7 +442,22 @@ function (dojo, declare) {
         },        
         
         */
+        onBid: function( evt ) {
+            // Preventing default browser reaction
+            // dojo.stopEvent( evt );
 
+            // Check that this action is possible (see "possibleactions" in states.inc.php)
+            if (this.checkAction('bid')) {
+                this.ajaxcall( "/scovillecjh/scovillecjh/bidAction.html", {
+                    lock: true,
+                    bid_amount: 0,
+                }, 
+                this, 
+                function(result) {
+                    console.log(result);
+                });
+            }
+        },
         // placeFarmer() {
             // Check that this action is possible
             // if (!this.checkAction('placeFarmer')) {
