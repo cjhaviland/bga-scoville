@@ -88,7 +88,7 @@ $machinestates = array(
         'name' => 'auctionBid',
         'type' => 'multipleactiveplayer',
         'description' => clienttranslate('Others must bid for position.'),
-        'descriptionmyturn' => clienttranslate('${you} must bid for position.'),
+        'descriptionmyturn' => clienttranslate('${you} must bid <input type="number" id="player_bid_amount" min="0" value="0"/> coins for position.'),
         'possibleactions' => array('bid'),
         'action' => 'stMultiPlayerInit',
         'transitions' => array('playerTurn' => STATE_PLAYER_TURN,),

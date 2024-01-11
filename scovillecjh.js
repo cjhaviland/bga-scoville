@@ -322,7 +322,7 @@ function (dojo, declare) {
                     break;
 */
                     case 'auctionBid':
-                        this.addActionButton( 'button_bid', _('Bid'), 'onBid' );
+                        this.addActionButton( 'button_bid', _(`Bid coins`), 'onBid' );
                         break;
                 }
             }
@@ -391,6 +391,16 @@ function (dojo, declare) {
             return { row: rowNumber, col: colNumber === 0 ? itemsPerRow : colNumber };
         },
 
+        checkIfBidIsValid: function(bid) {
+            const playerCoins = this.gamedatas.players[this.player_id].coins
+
+            if (bid > playerCoins || bid < 0) {
+                return false;
+            }
+            
+            return true;
+        },
+
         // getAvailableFarmerPaths(currentPath, currentDir) {
             
         // },
@@ -448,9 +458,16 @@ function (dojo, declare) {
 
             // Check that this action is possible (see "possibleactions" in states.inc.php)
             if (this.checkAction('bid')) {
+                const bidAmountEl = document.getElementById('player_bid_amount');
+
+                if (!this.checkIfBidIsValid(bidAmountEl.value)) {
+                    this.showMessage(_('Please choose a valid bid amount!'), 'error');
+                    return;
+                }
+
                 this.ajaxcall( "/scovillecjh/scovillecjh/bidAction.html", {
                     lock: true,
-                    bid_amount: 0,
+                    bid_amount: bidAmountEl.value,
                 }, 
                 this, 
                 function(result) {
@@ -502,6 +519,8 @@ function (dojo, declare) {
             // dojo.subscribe( 'cardPlayed', this, "notif_cardPlayed" );
             // this.notifqueue.setSynchronous( 'cardPlayed', 3000 );
             // 
+
+            // dojo.subscribe('bid', this, "notif_placeBid");
         },  
         
         // TODO: from this point and below, you can write your game notifications handling methods

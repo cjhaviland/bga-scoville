@@ -49,6 +49,8 @@ ALTER TABLE `player` ADD `has_double_back` BOOLEAN NOT NULL DEFAULT TRUE;
 ALTER TABLE `player` ADD `has_extra_pepper` BOOLEAN NOT NULL DEFAULT TRUE;
 ALTER TABLE `player` ADD `has_extra_step` BOOLEAN NOT NULL DEFAULT TRUE;
 
+ALTER TABLE `player` ADD `last_bid` INT UNSIGNED NOT NULL DEFAULT '0';
+
 CREATE TABLE IF NOT EXISTS `pepper_plot` (
    `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
    `board_x` tinyint(2) unsigned NOT NULL,

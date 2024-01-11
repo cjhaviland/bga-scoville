@@ -532,11 +532,29 @@ class ScovilleCjh extends Table
         $player_id = self::getCurrentPlayerId();
 
         // TODO: Check if bid is valid (not negative, not more than MAX bid allowed)
+        $player_coins = self::DbQuery( "SELECT player_coins FROM player WHERE player_id = $player_id" );
 
-        // $this->gamestate->setPlayerProperty($player_id, 'bid', $bidAmount);
+        if ($bid_amount >= 0 && $bid_amount <= $player_coins) {
+            // $this->notifyAllPlayers("dealCard", clienttranslate('${player_name} received a card'), [
+            //     'player_id' => $playerId,
+            //     'player_name' => $this->getActivePlayerName()
+            // ]);
+    
+            // $this->notifyPlayer($playerId, "dealCardPrivate", clienttranslate('You received ${cardName}'), [
+            //     "type" => $card["type"],
+            //     "cardName" => $this->getCardName($card["type"])
+            // ]);
 
-        // Deactivate player; if none left, transition to 'playerTurn' state
-        $this->gamestate->setPlayerNonMultiactive($player_id, 'playerTurn');
+            // Deactivate player; if none left, transition to 'playerTurn' state
+            $this->gamestate->setPlayerNonMultiactive($player_id, 'playerTurn');
+        }
+        else {
+            // Notify player of invalid bid
+            $this->notifyPlayer($playerId, "dealCardPrivate", clienttranslate('You received ${cardName}'), [
+                "type" => $card["type"],
+                "cardName" => $this->getCardName($card["type"])
+            ]);
+        }
     }
 
     
