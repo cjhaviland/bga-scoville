@@ -1,36 +1,152 @@
-Components
-=======================
-Board Components
-- 1 Gameboard
-- 134 Pepper Tokens
- - 17 Red
- - 17 Yellow
- - 17 Blue
- - 14 Green
- - 14 Orange
- - 14 Purple
- - 14 Brown
- - 9 White
- - 9 Black
- - 9 Phantom
-- 50 Pepper Chits (May not be needed)
-- 65 Auction Cards
-- 48 Market Cards
+Materials
+==========================================
+- 1 Game Board
+- Peppers (Red, Yellow, Blue, Green, Orange, Purple, Brown, White, Black, Phantom)
+- 6 Player Screens, Farmers, and Discs (Red, Yellow, Blue, Green, Orange, Purple)
+
+- 30 Morning Auction Cards
+- 35 After Auction Cards
+
+- 24 Morning Market Cards
+- 24 Afternoon Market Cards
+
+- 30 Recipe Cards
 - 12 Award Plaques
-- 118 Coin Tokens
- - 24 10
- - 24 5
- - 70 1
-- Bonus Action Tiles
 
-Player Components
-- 6 Farmers (Player Pieces)
-- 6 Discs (For turn order)
-- 6 Player Screens
+- 24 $10 coins
+- 24 $5 coins
+- 70 $1 coins
 
-Charts
-- 6 Breeding Charts
+- 6 Plant 1 Extra Pepper Bonus Action tiles
+- 6 Move 1 Extra Step Bonus Action tiles
+- 6 Double Back Once Bonus Action tiles
 
-Setup
-=======================
-A. General: Assemble the board
+- Breeding Charts
+
+
+New Game Setup
+==========================================
+1. Give each player a...
+1a. Player Screen, Farmer, and disc of their color
+1b. One of each Bonus Action tile
+1c. $10 worth of coins
+1d. Three peppers (red, yellow, and blue)
+
+2. Shuffle the Morning Market cards
+2a. Draw a number of cards based on the chart on the board
+
+3. Shuffle the deck of Chili Cookoff Recipe cards
+3a. Draw a number of cards based on the chart on the board
+3b. Order them from lowest to highest
+
+4. Shuffle the morning and afternoon Auction cards
+4a. Draw cards from the morning deck equal to the number of players
+
+5. Stack up the Award Plaques in City Hall with the highest value on top
+5a. If this is a 2-3 player game, then remove the top Award from each stack
+
+6. Randomly choose 2 peppers from a list that contains a Red, Yellow, and Blue pepper.
+6a. First pepper goes to left of the starting star
+6b. Second pepper goes to the right of the starting star
+
+7. Random choose the playing order
+7a. Cover up the unused player circles with coins
+
+/**
+    Each piece of this section needs planning for...
+    id: number
+    name: string
+    type: activeplayer | multipleactiveplayer| private | game
+    description: string
+    descriptionmyturn: string
+    action: st_actionMethod PHP method to call when Entering Game Staten (Mandatory for 'game' type)
+    transitions: array of next possible state
+    possibleactions: array of possible actions for the activeplayer or multipleactiveplayer
+    args: PHP method to pass arguments to the Client Side code
+*/
+
+Auction Phase (All Players)
+==========================================
+
+SETUP: Slide the up and off the order track
+MULTIPLE PLAYER STATE: ALL PLAYERS "secretly" select 0 to N coins to bid
+OnLeavingState: When all bids are selected, reveal them.
+
+4. In bid order of highest to lowest; each player chooses their spot on the turn order
+4a. If bids are tied, AND bids are > 0; then order is previous turn order
+4b. All players who bid zero fill the turn order (from lowest to highest) based on previous turn order
+
+5. In the NEW turn order each player will choose an auction card and recieve those peppers from the supply.
+6. After all players have chosen auction cards, refill the Auction House
+6. If the deck is empty, then shuffle the discards and refill
+
+
+Planting (In turn order)
+==========================================
+
+1. A player MUST plant one pepper from their supply into an empty slot
+1a. Pepper must be planted horizontally or vertically to an already planted pepper
+
+2. If eligible, player may select 1 Award Plaque from City Hall
+2a. Player MAY skip collecting a plaque. This makes them eligible to collect a plaque if they play a second pepper.
+
+3. Player can play "Plant 1 Extra Pepper" Bonus Tile to plant 1 additional pepper
+
+
+Harvesting (In REVERSE turn order)
+==========================================
+1. Player moves their farmer UP TO 3 spaces along the path
+1a. If it is the FIRST round, then player's farmer begins on the star facing either direction; Else they choose which direction they'd like to start moving
+1b. Player MUST move their farmer 1 space, but can move up to 3 spaces
+1c. Farmers may NOT pass through or stop on an occupied space
+1d. If a farmer is blocked and cannot move, they end their turn
+1e. Once a farmer has started moving, they cannot change their direction
+
+2. When a farmer steps between two planted plots, the harvest peppers according to the Breeding chart
+
+3. After the first move, player MAY play their 'Double Back Once' Bonus Action tile to change their farmer's direction.
+
+4. Player MAY play the 'Move 1 Extra Step' Bonus action tile and move accordingly
+
+FulFillment (In turn order, any and all actions in any order at most ONCE per round)
+==========================================
+1. Visit the Famers Market
+1a. Player selects a Market card they have the peppers for.
+1b. Player receives list reward on the Market card
+
+2. Compete at the chili cookoff
+2a. Player selects a Recipe card they have the peppers for.
+2b. Player receives the Recipe card and scores points.
+
+3. Sell a batch of peppers
+3a. Player may sell AT MOST 5 peppers of ONE color
+3b. For each pepper sold, gain $1 for every TWO of that color currently planted in the fields
+
+Time Check (Morning)
+==========================================
+1. Count the Chili cookoff cards
+1a. If there is LESS THAN the number of players, then skip Afternoon, and play one LAST round, ending after Fulfillment.
+1b. Else continue.
+
+2. Count the Market cards...
+2a. If the count is >= the number of players, then it is still morning, and continue
+2b. Else it is Afternoon. Discard remaining Morning Market cards and replace with Afternoon Market Cards. Use the Afternoon Auction cards from here on, but do not replace the current morning cards available.
+
+Time Check (Afternoon)
+==========================================
+1. Count both the Chili cookoff and Market cards.
+1a. If there are fewer cards than there are players in ONE of the two locations, then ONE more round ending after fulfillment.
+1b. If there are fewer cards than there are players in BOTH locations, then the game ends immediately with no final round
+1c. Else start a new round!
+
+
+End Game
+==========================================
+1. Tally up points
+1a. Points on Market Cards
+1b. Points on Recipe Cards
+1c. Points on Award Plaques
+1d. Points on the back of unplayed Bonus Action tiles
+1e. Every $3 = 1 point (ignoring remainder)
+
+2. In case of tie, most coins wins

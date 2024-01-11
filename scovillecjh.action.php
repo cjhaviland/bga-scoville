@@ -2,7 +2,7 @@
 /**
  *------
  * BGA framework: © Gregory Isabelli <gisabelli@boardgamearena.com> & Emmanuel Colin <ecolin@boardgamearena.com>
- * scovilleCJH implementation : © <Your name here> <Your email address here>
+ * ScovilleCjh implementation : © <Your name here> <Your email address here>
  *
  * This code has been produced on the BGA studio platform for use on https://boardgamearena.com.
  * See http://en.doc.boardgamearena.com/Studio for more information.
@@ -10,7 +10,7 @@
  * 
  * scovillecjh.action.php
  *
- * scovilleCJH main action entry point
+ * ScovilleCjh main action entry point
  *
  *
  * In this file, you are describing all the methods that can be called from your
@@ -63,6 +63,15 @@
     
     */
 
+    public function bidAction() {
+      self::setAjaxMode();
+
+      $bid_amount = self::getArg('bid_amount', AT_posint, true);
+
+      $this->game->bid($bid_amount);
+
+      self::ajaxResponse();
+    } 
   }
   
 

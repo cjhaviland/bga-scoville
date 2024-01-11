@@ -10,7 +10,7 @@
  * 
  * states.inc.php
  *
- * ScovilleCjh game states description
+ * ScovilleCjh (sandbox oriented) game states description
  *
  */
 
@@ -49,77 +49,33 @@
 
 //    !! It is not a good idea to modify this file when a game is running !!
 
-// define constants for state ids
-
-if (!defined("STATE_END_GAME")) {
-    define("STATE_GAME_SETUP", 1);
-    define("STATE_END_GAME", 99);
-    
-    define("STATE_PLAYER_TURN", 2);
-
-    define("STATE_AUCTION_BID", 10);
-
-    define("TRANSITION_PLAYER_TURN_AUCTION", "playerTurnAuction");
-};
- 
 $machinestates = array(
 
     // The initial state. Please do not modify.
-    STATE_GAME_SETUP => array(
+    1 => array(
         "name" => "gameSetup",
         "description" => "",
         "type" => "manager",
         "action" => "stGameSetup",
-        "transitions" => array( "" => STATE_AUCTION_BID )
+        "transitions" => array( "" => 2 )
     ),
     
     // Note: ID=2 => your first state
 
-    STATE_PLAYER_TURN => array(
-    		"name" => "playerTurn",
-    		"description" => clienttranslate('${actplayer} must play a card or pass'),
-    		"descriptionmyturn" => clienttranslate('${you} must play a card or pass'),
-    		"type" => "activeplayer",
-    		"possibleactions" => array( "playCard", "pass" ),
-    		"transitions" => array( "playCard" => 2, "pass" => 2 )
-    ),
-    
-    STATE_AUCTION_BID => array(
-        'name' => 'auctionBid',
-        'type' => 'multipleactiveplayer',
-        'description' => clienttranslate('Others must bid for position.'),
-        'descriptionmyturn' => clienttranslate('${you} must bid <input type="number" id="player_bid_amount" min="0" value="0"/> coins for position.'),
-        'possibleactions' => array('bid'),
-        'action' => 'stMultiPlayerInit',
-        'transitions' => array('playerTurn' => STATE_PLAYER_TURN,),
-    ),
-    
-/*
-    Examples:
-    
     2 => array(
-        "name" => "nextPlayer",
-        "description" => '',
-        "type" => "game",
-        "action" => "stNextPlayer",
-        "updateGameProgression" => true,   
-        "transitions" => array( "endGame" => 99, "nextPlayer" => 10 )
+    		"name" => "automaticTurnControl",
+    		"description" => '',
+    		"descriptionmyturn" => '',
+    		"type" => "multipleactiveplayer",
+    		"action" => "stInitTurnControl",
+    		"possibleactions" => array( "play" ),
+    		"transitions" => array( "play" => 2, "endgame" => 99 )
     ),
     
-    10 => array(
-        "name" => "playerTurn",
-        "description" => clienttranslate('${actplayer} must play a card or pass'),
-        "descriptionmyturn" => clienttranslate('${you} must play a card or pass'),
-        "type" => "activeplayer",
-        "possibleactions" => array( "playCard", "pass" ),
-        "transitions" => array( "playCard" => 2, "pass" => 2 )
-    ), 
-
-*/    
    
     // Final state.
-    // Please do not modify (and do not overload action/args methods).
-    STATE_END_GAME => array(
+    // Please do not modify.
+    99 => array(
         "name" => "gameEnd",
         "description" => clienttranslate("End of game"),
         "type" => "manager",
@@ -128,6 +84,5 @@ $machinestates = array(
     )
 
 );
-
 
 

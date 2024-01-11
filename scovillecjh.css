@@ -1,7 +1,7 @@
 /**
  *------
  * BGA framework: © Gregory Isabelli <gisabelli@boardgamearena.com> & Emmanuel Colin <ecolin@boardgamearena.com>
- * scovilleCJH implementation : © <Your name here> <Your email address here>
+ * ScovilleCjh implementation : © <Your name here> <Your email address here>
  *
  * This code has been produced on the BGA studio platform for use on http://boardgamearena.com.
  * See http://en.boardgamearena.com/#!doc/Studio for more information.
@@ -9,7 +9,7 @@
  *
  * scovillecjh.css
  *
- * scovilleCJH stylesheet
+ * ScovilleCjh stylesheet
  *
  */
 
@@ -67,10 +67,624 @@
     }
 */
 
-#board {
-    width: 676px;
-    height: 496px;
-    background-image: url('img/board.png');
+* {
+    /* Pepper Colors */
+    --pepper-red: #C13112;
+    --pepper-yellow: #FEE004;
+    --pepper-blue: #009BCD;
+    --pepper-green: #8FC73F;
+    --pepper-orange: #F98526;
+    --pepper-purple: #720D6F;
+    --pepper-brown: #9E610D;
+    --pepper-white: #FFFFFF;
+    --pepper-black: #393534;
+    --pepper-phantom: #9AC1D0;
+    
+    /* Player Colors */
+    --player-blue: #0093D0;
+    --player-green: #00A94D;
+    --player-orange: #F68E1E;
+    --player-purple: #A54499;
+    --player-red: #EE3F34;
+    --player-yellow: #FFEE01;
+}
+
+.bg-blue {
+    background-color: var(--player-blue);
+}
+
+.bg-green {
+    background-color: var(--player-green);
+}
+
+.bg-orange {
+    background-color: var(--player-orange);
+}
+
+.bg-purple {
+    background-color: var(--player-purple);
+}
+
+.bg-red {
+    background-color: var(--player-red);
+}
+
+.bg-yellow {
+    background-color: var(--player-yellow);
+}
+
+/********* PEPPER COLORS **********/
+.red {
+    color: var(--pepper-red);
+}
+
+.yellow {
+    color: var(--pepper-yellow);
+}
+
+.blue {
+    color: var(--pepper-blue);
+}
+
+.green {
+    color: var(--pepper-green);
+}
+
+.orange {
+    color: var(--pepper-orange);
+}
+
+.purple {
+    color: var(--pepper-purple);
+}
+
+.brown {
+    color: var(--pepper-brown);
+}
+
+.white {
+    color: var(--pepper-white);
+}
+
+.black {
+    color: var(--pepper-black);
+}
+
+.phantom {
+    color: var(--pepper-phantom);
+}
+
+
+/***** BOARD ****/
+.table-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.board-container {
+    width: 90%;
+    margin: 1em auto;
+}
+
+h3.container-label {
+    width: 100%;
+}
+
+#market-cards-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.5em;
+
+    width: 90%;
+    margin: 1em auto;
+}
+
+#recipe-cards-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.5em;
+
+    width: 90%;
+    margin: 1em auto;
+}
+
+#player_screen {
+    display: flex;
+    flex-direction: column;
+
+    width: 90%;
+    margin: 1em auto;
+}
+
+#counter_container {
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: 1em;
+}
+
+#bonus_tiles_container {
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: 1em;
+}
+
+.board {
+    background-image: url('img/board.jpg');
+    background-size: 100% auto;
+    background-repeat: no-repeat;
+    
+    aspect-ratio: 1.3621;
+}
+
+#board-top {
+    height: 22.58%;
+    width: 100%;
     position: relative;
-    margin: auto;
+}
+
+#board-middle {
+    height: 47.82%;
+    width: 50.33%;
+
+    margin-left: 24.87%;
+    position: relative;
+}
+
+.farmer-container {
+    position: absolute;
+    height: 29%;
+    width: 10%;
+
+    /* 
+     * 100% / 14 plots 
+     * 0 is left most
+     * 7 is middle 
+     * 14 is right most
+     */
+    top: calc(7.14% * 7);
+
+    /* 
+     * 100% / 20 plots 
+     * 0 is left most
+     * 10 is middle 
+     * 20 is right most
+    */
+    left: calc(5% * 10);
+
+    /* Add rotate(-90deg) when moving in E/W directions */
+    transform: translate(-50%, -50%);
+}
+
+.farmer {
+    height: 25%;
+    width: 40%;
+    /* background-color: var(--player-blue); */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.board-path {
+    height: 16%;
+    width: 33%;
+    background-color: var(--pepper-phantom);
+    position: absolute;
+    cursor: pointer;
+}
+
+/* North Y + 1 or West X - 1 */
+.board-path-12 {
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+
+/* North Y + 1 or West X - 1 */
+.board-path-2 {
+    left: 100%;
+    top: 33.333%;
+    transform: translate(-50%, -100%) rotate(45deg);
+}
+
+.board-path-4 {
+    left: 100%;
+    top: 66.666%;
+    transform: translate(-50%, -0%) rotate(45deg);
+}
+
+.board-path-6 {
+    left: 50%;
+    top: 100%;
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.board-path-8 {
+    left: 0%;
+    top: 66.666%;
+    transform: translate(-50%, -0%) rotate(45deg);
+}
+
+.board-path-10 {
+    left: 0%;
+    top: 33.333%;
+    transform: translate(-50%, -100%) rotate(45deg);
+}
+
+#pepper-container {
+    height: 100%;
+    width: 100%;
+    
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(7, 1fr);
+    grid-column-gap: 0.46%;
+    grid-row-gap: 0.63%;    
+}
+
+#board-bottom {
+    display: flex;
+
+    height: 30.2%
+}
+
+/***** TURN TRACKS ****/
+
+#turn-track-container {
+    width: 45%;
+
+    display: flex;
+    flex-direction: column;
+}
+
+#turn-track-top {
+    height: 50%;
+    position: relative;
+}
+
+#turn-track-bottom {
+    height: 50%;
+    position: relative;
+}
+
+.player-disc-container {
+    position: absolute;
+    
+    width: 10%;
+    aspect-ratio: 1/1;
+}
+
+.player-token {
+    border-radius: 50%;
+    height: 100%;
+    width: 100%;
+}
+
+.player-disc-top {
+    top: 35%;
+}
+
+.player-disc-bottom {
+    top: 6%;
+}
+
+#top-disc-1 {
+    left: calc(28.4% + (0 * 10.8%));
+}
+#top-disc-2 {
+    left: calc(28.4% + (1 * 10.8%));
+}
+#top-disc-3 {
+    left: calc(28.4% + (2 * 10.8%));
+}
+#top-disc-4 {
+    left: calc(28.4% + (3 * 10.8%));
+}
+#top-disc-5 {
+    left: calc(28.4% + (4 * 10.8%));
+}
+#top-disc-6 {
+    left: calc(28.4% + (5 * 10.8%));
+}
+
+#bottom-disc-1 {
+    left: calc(28.4% + (0 * 10.8%));
+}
+#bottom-disc-2 {
+    left: calc(28.4% + (1 * 10.8%));
+}
+#bottom-disc-3 {
+    left: calc(28.4% + (2 * 10.8%));
+}
+#bottom-disc-4 {
+    left: calc(28.4% + (3 * 10.8%));
+}
+#bottom-disc-5 {
+    left: calc(28.4% + (4 * 10.8%));
+}
+#bottom-disc-6 {
+    left: calc(28.4% + (5 * 10.8%));
+}
+
+/***** PEPPER PLOTS ****/
+
+.pepper-plot {
+    width: 100%;
+    height: 100%;
+}
+
+.pepper {
+    background-image: url('img/peppers-transparent.png');
+    background-size: 650% auto;
+    transform: rotate(-0.01turn);
+    height: 100%;
+    width: 100%;
+}
+
+.pepper-red {
+    background-position: 2% 24%;
+}
+
+.pepper-yellow {
+    background-position: 24% 24%;
+}
+
+.pepper-blue {
+    background-position: 46% 24%;
+}
+
+.pepper-green {
+    background-position: 68% 24%;
+}
+
+.pepper-orange {
+    background-position: 90% 24%;
+}
+
+.pepper-purple {
+    background-position: 2% 78%;
+}
+
+.pepper-brown {
+    background-position: 24% 78%;
+}
+
+.pepper-white {
+    background-position: 46% 78%;
+}
+
+.pepper-black {
+    background-position: 68% 78%;
+}
+
+.pepper-phantom {
+    background-position: 90% 78%;
+}
+
+/***** PLAYER PANEL ****/
+.scoville_deck_board {
+    display: flex;
+    justify-content: space-around;
+}
+
+.scoville_label {
+    margin-right: 5px;
+}
+
+.scoville_label_line {
+    display: flex;
+    align-items: center;
+}
+
+#player-card {
+    /* background-image: url('img/player_screens.png'); */
+    background-repeat: no-repeat;
+    /* opacity: 0.6; */
+
+    height: 201px;
+    width: 673px;
+
+    margin: 0 auto;
+}
+
+/***** MARKET CARDS ****/
+.market-card-box {
+    border-radius: 1em;
+    overflow: hidden;
+}
+
+.market-card {
+    /*5x5 Grid = 500% x 500%*/
+    background-size: 500% auto;
+
+    width: 8em; 
+    height: 8em;
+
+    transform: scale(1.1);
+}
+
+.market-card-morning {
+    background-image: url('img/market/morning-market-sprite.png');
+}
+
+.market-card-afternoon {
+    background-image: url('img/market/afternoon-market-sprite.png');
+}
+
+/** Market Card (5x5) Sprite Column is (Total columns minus Column Num) Times (Column Number - 1)*/
+.market-card[data-col="1"] {
+    background-position-x: calc(100% / (5 - 1) * (0));
+} 
+.market-card[data-col="2"] {
+    background-position-x: calc(100% / (5 - 1) * (1));
+}
+.market-card[data-col="3"] {
+    background-position-x: calc(100% / (5 - 1) * (2));
+}
+.market-card[data-col="4"] {
+    background-position-x: calc(100% / (5 - 1) * (3));
+}
+.market-card[data-col="5"] {
+    background-position-x: calc(100% / (5 - 1) * (4));
+}
+
+/** Market Card (5x5) Sprite Row is (Total rows minus row Num) Times (row Number - 1)*/
+.market-card[data-row="1"] {
+    background-position-y: calc(100% / (5 - 1) * (0));
+} 
+.market-card[data-row="2"] {
+    background-position-y: calc(100% / (5 - 1) * (1));
+}
+.market-card[data-row="3"] {
+    background-position-y: calc(100% / (5 - 1) * (2));
+}
+.market-card[data-row="4"] {
+    background-position-y: calc(100% / (5 - 1) * (3));
+}
+.market-card[data-row="5"] {
+    background-position-y: calc(100% / (5 - 1) * (4));
+}
+
+/***** RECIPE CARDS ****/
+.recipe-card-box {
+    border-radius: 1em;
+    overflow: hidden;
+}
+
+.recipe-card {
+    /*5x7 Grid = 500% x 700%*/
+    background-size: 500% auto;
+    background-image: url('img/recipe-cards.png');
+
+    /* IRL Piece is 44mm x 67mm */
+    height: 7em;
+    width: calc(7em * 67/44); 
+
+    transform: scale(1.1);
+}
+
+/** Recipe Card (5x6) Sprite Column is (Total columns minus Column Num) Times (Column Number - 1)*/
+.recipe-card[data-col="1"] {
+    background-position-x: calc(100% / (5 - 1) * (0));
+} 
+.recipe-card[data-col="2"] {
+    background-position-x: calc(100% / (5 - 1) * (1));
+}
+.recipe-card[data-col="3"] {
+    background-position-x: calc(100% / (5 - 1) * (2));
+}
+.recipe-card[data-col="4"] {
+    background-position-x: calc(100% / (5 - 1) * (3));
+}
+.recipe-card[data-col="5"] {
+    background-position-x: calc(100% / (5 - 1) * (4));
+}
+
+/** Recipe Card (5x7) Sprite Row is (Total rows minus row Num) Times (row Number - 1)*/
+.recipe-card[data-row="1"] {
+    background-position-y: calc(100% / (7 - 1) * (0));
+} 
+.recipe-card[data-row="2"] {
+    background-position-y: calc(100% / (7 - 1) * (1));
+}
+.recipe-card[data-row="3"] {
+    background-position-y: calc(100% / (7 - 1) * (2));
+}
+.recipe-card[data-row="4"] {
+    background-position-y: calc(100% / (7 - 1) * (3));
+}
+.recipe-card[data-row="5"] {
+    background-position-y: calc(100% / (7 - 1) * (4));
+}
+.recipe-card[data-row="6"] {
+    background-position-y: calc(100% / (7 - 1) * (5));
+}
+
+/***** AUCTION CARDS ****/
+.auction-card-box {
+    border-radius: 0.5em;
+
+    /* IRL Piece is 67mm x 44mm */
+    height: 68%;
+    width: 7.7%;
+
+    overflow: hidden;
+    position: absolute;
+
+    top: 17%;
+    left: 49.1%
+}
+
+.auction-card {
+    /*5x3 Grid = 500% x 300%*/
+    background-size: 500% auto;
+    background-image: url('img/auction/auction-cards-morning.png');
+
+    
+    height: 100%;
+    width: auto; 
+
+    transform: scale(1.1);
+}
+
+
+/** Auction Card (5x3) Sprite Column is (Total columns minus Column Num) Times (Column Number - 1)*/
+.auction-card[data-col="1"] {
+    background-position-x: calc(100% / (5 - 1) * (0));
+} 
+.auction-card[data-col="2"] {
+    background-position-x: calc(100% / (5 - 1) * (1));
+}
+.auction-card[data-col="3"] {
+    background-position-x: calc(100% / (5 - 1) * (2));
+}
+.auction-card[data-col="4"] {
+    background-position-x: calc(100% / (5 - 1) * (3));
+}
+.auction-card[data-col="5"] {
+    background-position-x: calc(100% / (5 - 1) * (4));
+}
+
+/** Auction Card (5x3) Sprite Row is (Total rows minus row Num) Times (row Number - 1)*/
+.auction-card[data-row="1"] {
+    background-position-y: calc(100% / (3 - 1) * (0));
+} 
+.auction-card[data-row="2"] {
+    background-position-y: calc(100% / (3 - 1) * (1));
+}
+.auction-card[data-row="3"] {
+    background-position-y: calc(100% / (3 - 1) * (2));
+}
+
+
+/***** AWARD PLAQUES ****/
+
+#awards-container {
+    display: flex;
+    gap: 1.4%;
+
+    padding-top: 9.5%;
+
+    width: 55%;
+}
+
+.award-box {
+    height: 77%;
+    width: 16%;
+    position: relative;
+}
+
+.award-plaque {
+    text-align: center;
+
+    position: absolute;
+    top: 61%;
+
+    width: 100%;
+    background-color: orange;
+}
+
+#award-1-box {
+    margin-left: 4.5%;
 }

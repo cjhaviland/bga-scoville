@@ -2,7 +2,7 @@
  /**
   *------
   * BGA framework: © Gregory Isabelli <gisabelli@boardgamearena.com> & Emmanuel Colin <ecolin@boardgamearena.com>
-  * scovilleCJH implementation : © <Your name here> <Your email address here>
+  * ScovilleCjh implementation : © <Your name here> <Your email address here>
   * 
   * This code has been produced on the BGA studio platform for use on http://boardgamearena.com.
   * See http://en.boardgamearena.com/#!doc/Studio for more information.
@@ -19,8 +19,15 @@
 
 require_once( APP_GAMEMODULE_PATH.'module/table/table.game.php' );
 
+if (!defined('DECK_LOC_DECK')) {
+    // constants for deck locations
+    define("DECK_LOC_DECK", "deck");
+    define("DECK_LOC_BOX", "box");
+    define("DECK_LOC_BOARD", "board");
+    define("DECK_LOC_WON", "won");
+}
 
-class scovilleCJH extends Table
+class ScovilleCjh extends Table
 {
 	function __construct( )
 	{
@@ -39,7 +46,20 @@ class scovilleCJH extends Table
             //    "my_first_game_variant" => 100,
             //    "my_second_game_variant" => 101,
             //      ...
-        ) );        
+        ) );
+
+        $this->morning_market_deck = self::getNew("module.common.deck");
+        $this->morning_market_deck->init("morning_market_card");
+        
+        $this->recipe_deck = self::getNew("module.common.deck");
+        $this->recipe_deck->init("recipe_card");
+        
+        $this->morning_auction_deck = self::getNew("module.common.deck");
+        $this->morning_auction_deck->init("morning_auction_card");
+        
+        $this->award_plaque_deck = self::getNew("module.common.deck");
+        $this->award_plaque_deck->init("award_plaque_card");
+        
 	}
 	
     protected function getGameName( )
@@ -61,8 +81,9 @@ class scovilleCJH extends Table
         // The default below is red/green/blue/orange/brown
         // The number of colors defined here must correspond to the maximum number of players allowed for the gams
         $gameinfos = self::getGameinfos();
+        
         $default_colors = $gameinfos['player_colors'];
- 
+
         // Create players
         // Note: if you added some extra field on "player" table in the database (dbmodel.sql), you can initialize it there.
         $sql = "INSERT INTO player (player_id, player_color, player_canal, player_name, player_avatar) VALUES ";
@@ -70,9 +91,10 @@ class scovilleCJH extends Table
         foreach( $players as $player_id => $player )
         {
             $color = array_shift( $default_colors );
-            $values[] = "('".$player_id."','$color','".$player['player_canal']."','".addslashes( $player['player_name'] )."','".addslashes( $player['player_avatar'] )."')";
+            $setupCoinAmount = 10;
+            $values[]= "('".$player_id."','$color','".$player['player_canal']."','".addslashes( $player['player_name'] )."','".addslashes( $player['player_avatar'] )."')";
         }
-        $sql .= implode( $values, ',' );
+        $sql .= implode( ',', $values );
         self::DbQuery( $sql );
         self::reattributeColorsBasedOnPreferences( $players, $gameinfos['player_colors'] );
         self::reloadPlayersBasicInfos();
@@ -88,7 +110,41 @@ class scovilleCJH extends Table
         //self::initStat( 'player', 'player_teststat1', 0 );  // Init a player statistics (for all players)
 
         // TODO: setup the initial game situation here
+
+        // Insert (empty) pepper plots into database
+        $startingPepperIdxs = array_rand($this->starting_peppers, 2);
+
+        $sql = "INSERT INTO pepper_plot (board_x, board_y, pepper) VALUES ";
+        $xyValues = array();
+        for ($x = 1; $x <= 10; $x++) {
+            for ($y = 1; $y <= 7; $y++) {
+                // Setup initial pepper plots 5_4 and 6_4 are the starting plots
+                if ($x == 5 && $y == 4) {
+                    // Take the first random starting pepper
+                    $leftPepper = $this->starting_peppers[$startingPepperIdxs[0]];
+
+                    $xyValues[] = "($x, $y, $leftPepper)";
+                }
+                else if ($x == 6 && $y == 4) {
+                    // Take the second random starting pepper
+                    $rightPepper = $this->starting_peppers[$startingPepperIdxs[1]];
+
+                    $xyValues[] = "($x, $y, $rightPepper)"; 
+                }
+                else {
+                    $xyValues[] = "($x, $y, null)"; 
+                }
+            }
+        }
+        $sql .= implode( ',', $xyValues );
+        self::DbQuery( $sql );
+        
+        self::initBoardPathTable();
        
+        self::setupMorningMarketDeck($players);
+        self::setupRecipeDeck($players);
+        self::setupMorningAuctionDeck($players);
+        self::setupAwardPlaqueDeck($players);
 
         // Activate first player (which is in general a good idea :) )
         $this->activeNextPlayer();
@@ -108,16 +164,42 @@ class scovilleCJH extends Table
     protected function getAllDatas()
     {
         $result = array();
+        
+        // Constants
     
         $current_player_id = self::getCurrentPlayerId();    // !! We must only return informations visible by this player !!
+
+        $gameinfos = self::getGameinfos();
+        $result['allPlayerColors'] = $this->player_colors;
     
         // Get information about players
         // Note: you can retrieve some extra field you added for "player" table in "dbmodel.sql" if you need it.
-        $sql = "SELECT player_id id, player_score score FROM player ";
+        $sql = "SELECT player_id id, player_no turn_order, player_score score, player_coins coins, pepper_red, pepper_yellow, pepper_blue, pepper_green, pepper_orange, pepper_purple, pepper_brown, pepper_white, pepper_black, pepper_phantom, has_double_back, has_extra_pepper, has_extra_step FROM player ";
         $result['players'] = self::getCollectionFromDb( $sql );
   
+        $players = self::loadPlayersBasicInfos();
+
+        $result['counters'] = array();
+
+        foreach ($players as $player) {
+            $playerId = $player["player_id"];
+            $result['counters'][$playerId] = $this->get_counters($result['players'][$playerId]);
+            $result['won'][$playerId] = $this->morning_market_deck->getCardsInLocation(DECK_LOC_WON, $playerId);
+        }
+
+        // Pepper Plots
+        $sql = "SELECT id, board_x, board_y, pepper FROM pepper_plot ";
+        $result['pepperPlots'] = self::getCollectionFromDb( $sql );
+        
+        // Board Paths
+        $sql = "SELECT id, pos_1, pos_2 FROM board_path ";
+        $result['boardPaths'] = self::getCollectionFromDb( $sql );
+
         // TODO: Gather all information about current game situation (visible by player $current_player_id).
-  
+        $result['pepperTokens'] = $this->pepper_tokens;
+        $result['cardsDescription'] = $this->getCardsDescription();
+        $result['cardsOnBoard'] = $this->getCardsOnBoard();
+
         return $result;
     }
 
@@ -148,6 +230,266 @@ class scovilleCJH extends Table
     */
 
 
+
+    /**
+     * Board Table
+     * 15 rows of board paths that alternate 10 on ODD rows, 11 on EVEN rows
+     * Total of 157 Path Positions around the peppers
+     */
+    function initBoardPathTable() 
+    {
+        $sql = "INSERT INTO board_path (pos_1, pos_2) VALUES ";
+        
+        $posValues = array();
+
+        $row = 1;
+        
+        for ($row = 1; $row <= 8; $row++) {
+
+            // Odd row, 10 columns, NORTH/SOUTH
+            for ($col = 1; $col <= 10; $col++) {
+                $isFirstRow = $row == 1 ? true : false; 
+                $isLastRow = $row == 8 ? true : false;
+                
+                $southRowVal = $row - 1;
+                
+                // CompassDir_X_Y
+                $northVal = $isLastRow  ? "NULL" : "'N{$col}_{$row}'";
+                $southVal = $isFirstRow ? "NULL" : "'S{$col}_{$southRowVal}'";
+                
+                $posValues[] = "($northVal, $southVal)";
+            }
+
+            if ($row !== 8) {
+                // Even row, 11 columns, EAST/WEST
+                for ($col = 1; $col <= 11; $col++) {
+                	$isFirstCol = $col == 1 ? true : false; 
+                	$isLastCol  = $col == 11 ? true : false;
+                    
+                    $eastRowVal = $col - 1;
+                    
+                    // CompassDir_X_Y
+                    $eastVal = $isFirstCol ? "NULL" : "'E{$eastRowVal}_{$row}'";
+                    $westVal = $isLastCol  ? "NULL" : "'W{$col}_{$row}'";
+                    $posValues[] = "($eastVal, $westVal)";
+                }
+            }
+        }
+
+        $sql .= implode( ',', $posValues );
+        self::DbQuery( $sql );
+    }
+
+    function get_counters($player) {
+        // $result = array(
+        //     'deck' => $this->cards->countCardInLocation($this->player_deck($player_id)),
+        //     'hand' => $this->cards->countCardInLocation(STOCK_HAND, $player_id) + $this->cards->countCardInLocation(STOCK_LIMBO, $player_id),
+        //     'discard' => $this->cards->countCardInLocation($this->player_discard($player_id)),
+        // );
+        // if (self::getGameStateValue(GAME_STATE_ARTICHOKE_COUNTS) > 0) {
+        //     $counts = $this->count_cards_and_artichokes($player_id);
+        //     $result['artichokes'] = $counts['artichoke_count'];
+        // }
+        $result = array(
+            'coins' => (int)$player['coins'],
+            'pepper_red' => (int)$player['pepper_red'],
+            'pepper_yellow' => (int)$player['pepper_yellow'],
+            'pepper_blue' => (int)$player['pepper_blue'],
+            'pepper_green' => (int)$player['pepper_green'],
+            'pepper_orange' => (int)$player['pepper_orange'],
+            'pepper_purple' => (int)$player['pepper_purple'],
+            'pepper_brown' => (int)$player['pepper_brown'],
+            'pepper_white' => (int)$player['pepper_white'],
+            'pepper_black' => (int)$player['pepper_black'],
+            'pepper_phantom' => (int)$player['pepper_phantom']
+        );
+        
+        return $result;
+    }
+
+    function setupMorningMarketDeck($players)
+    {
+        $cards = array();
+
+        foreach ($this->getCardsCount()["morning_market"] as $range) {
+            for ($i = $range["from"]; $i <= $range["to"]; $i++) {
+                $morningMarket = $this->morning_market_cards[$i];
+                $cards[] = array('type' => $morningMarket["nameId"], 'type_arg' => $i, 'nbr' => 1);
+            }
+        }
+
+        $this->morning_market_deck->createCards($cards, DECK_LOC_DECK);
+        $this->morning_market_deck->shuffle(DECK_LOC_DECK);
+
+        // Get the number of cards to draw
+        $nbrPlayers = count($players);
+        $nbrMarketCardsToDraw = $this->player_num_options[$nbrPlayers]["marketCards"];
+        $this->morning_market_deck->pickCardsForLocation($nbrMarketCardsToDraw, DECK_LOC_DECK, DECK_LOC_BOARD);
+
+        // Put all other cards "Back in the Box"
+        $this->morning_market_deck->moveAllCardsInLocation(DECK_LOC_DECK, DECK_LOC_BOX);
+    }
+    
+    function setupRecipeDeck($players)
+    {
+        $cards = array();
+
+        /**
+         * type: The nameId of the recipe card
+         * type_arg: The VP value for "ranking" the card 
+         */
+        foreach ($this->getCardsCount()["recipe"] as $range) {
+            for ($i = $range["from"]; $i <= $range["to"]; $i++) {
+                $recipes = $this->recipe_cards[$i];
+                $cards[] = array('type' => $i, 'type_arg' => $recipes["rewards"]["vp"], 'nbr' => 1);
+            }
+        }
+
+        $this->recipe_deck->createCards($cards, DECK_LOC_DECK);
+        $this->recipe_deck->shuffle(DECK_LOC_DECK);
+
+        // Get the number of cards to draw
+        $nbrPlayers = count($players);
+        $nbrRecipeCardsToDraw = $this->player_num_options[$nbrPlayers]["recipeCards"];
+        $this->recipe_deck->pickCardsForLocation($nbrRecipeCardsToDraw, DECK_LOC_DECK, DECK_LOC_BOARD);
+
+        
+        // Put all other cards "Back in the Box"
+        $this->recipe_deck->moveAllCardsInLocation(DECK_LOC_DECK, DECK_LOC_BOX);
+    }
+    
+    function setupMorningAuctionDeck($players)
+    {
+        $cards = array();
+
+        foreach ($this->getCardsCount()["morning_auction"] as $range) {
+            for ($i = $range["from"]; $i <= $range["to"]; $i++) {
+                $morningMarket = $this->morning_auction_cards[$i];
+                $cards[] = array('type' => $morningMarket["nameId"], 'type_arg' => $i, 'nbr' => $morningMarket["nbr"]);
+            }
+        }
+
+        $this->morning_auction_deck->createCards($cards, DECK_LOC_DECK);
+        $this->morning_auction_deck->shuffle(DECK_LOC_DECK);
+
+        // Get the number of cards to draw
+        $nbrPlayers = count($players);
+        $nbrAuctionToDraw = $this->player_num_options[$nbrPlayers]["auctionCards"];
+        $this->morning_auction_deck->pickCardsForLocation($nbrAuctionToDraw, DECK_LOC_DECK, DECK_LOC_BOARD);
+    }
+    
+    function setupAwardPlaqueDeck($players)
+    {
+        $cards = array();
+        $nbrPlayers = count($players);
+        $limitPlaqueNbr = $this->player_num_options[$nbrPlayers]["lessRewardPlaques"] ? 1 : 0;
+
+        foreach ($this->getCardsCount()["award_plaques"] as $range) {
+            // For each type of Award Plaque...
+            for ($i = $range["from"]; $i <= $range["to"]; $i++) {
+                // Get the Award Plaque info from the Material file
+                $awardPlaque = $this->award_plaques[$i];
+
+                // Get how many of that type of plaque needs to be added to the deck
+                $awardTypeCount = $awardPlaque["nbr"] - $limitPlaqueNbr;
+
+                for ($j = 0; $j < $awardTypeCount; $j++) {
+                    // type_arg is the "Rank" in this case or the amount of VP
+                    // card_location_arg is used a ranking, supposedly the highest number is pulled first which is what we want
+                    $cards[] = array('type' => $awardPlaque["nameId"], 'type_arg' => $awardPlaque["vp"][$j], 'nbr' => 1);
+                }
+            }
+        }
+
+        $this->award_plaque_deck->createCards($cards, DECK_LOC_DECK);
+
+        // "Draw" the cards and set the location_arg to be the VP value so they are ordered from highest to lowest
+        foreach ($this->award_plaque_deck->getCardsInLocation(DECK_LOC_DECK, null, "card_type_arg") as $card) {
+            $this->award_plaque_deck->insertCardOnExtremePosition($card["id"], DECK_LOC_BOARD, true);
+        }
+    }
+
+    function getCardsCount()
+    {
+        $cardsAvailable = array();
+
+        $cardsAvailable["morning_market"] = array(
+            array(
+                "from" => 1,
+                "to" => 24,
+            ),
+        );
+        
+        $cardsAvailable["afternoon_market"] = array(
+            array(
+                "from" => 1,
+                "to" => 24,
+            ),
+        );
+        
+        $cardsAvailable["morning_auction"] = array(
+            array(
+                "from" => 1,
+                "to" => 12,
+            ),
+        );
+        
+        $cardsAvailable["afternoon_auction"] = array(
+            array(
+                "from" => 1,
+                "to" => 12,
+            ),
+        );
+        
+        $cardsAvailable["recipe"] = array(
+            array(
+                "from" => 1,
+                "to" => 30,
+            ),
+        );
+        
+        $cardsAvailable["award_plaques"] = array(
+            array(
+                "from" => 1,
+                "to" => 5,
+            ),
+        );
+
+        return $cardsAvailable;
+    }
+
+    function getCardsDescription() {
+        $desc = array(
+            'morningMarketCards' => $this->morning_market_cards,
+            'recipeCards' => $this->recipe_cards,
+            'morningAuctionCards' => $this->morning_auction_cards,
+            'afternoonAuctionCards' => $this->afternoon_auction_cards,
+            'awardPlaques' => $this->award_plaques
+        );
+
+        return $desc;
+    }
+    
+    function getCardsOnBoard() {
+        // TODO: Add Morning/Afternoon switch so player cannot see what the upcoming afternoon cards are
+        $onBoard = array(
+            'market' => $this->morning_market_deck->getCardsInLocation(DECK_LOC_BOARD),
+            'recipe' => $this->recipe_deck->getCardsInLocation(DECK_LOC_BOARD),
+            'auction' => $this->morning_auction_deck->getCardsInLocation(DECK_LOC_BOARD),
+            'awards' => $this->award_plaque_deck->getCardsInLocation(DECK_LOC_BOARD)
+        );
+
+        return $onBoard;
+    }
+
+    /**
+     * Find an array item's Row (X) and Column (Y) coordinates in a grid given it's item number and the grid size
+     */
+    function getSpriteRowColumn($item_num, $num_of_rows, $num_of_cols) {
+        $row_number = floor($item_num / $num_of_rows);
+        $col_number = ($item_num % $num_of_cols) + 1;
+        return array($row_number, $col_number);
+    }
 
 //////////////////////////////////////////////////////////////////////////////
 //////////// Player actions
@@ -183,6 +525,37 @@ class scovilleCJH extends Table
     }
     
     */
+
+    function bid($bid_amount) {
+        self::checkAction('bid');
+
+        $player_id = self::getCurrentPlayerId();
+
+        // TODO: Check if bid is valid (not negative, not more than MAX bid allowed)
+        $player_coins = self::DbQuery( "SELECT player_coins FROM player WHERE player_id = $player_id" );
+
+        if ($bid_amount >= 0 && $bid_amount <= $player_coins) {
+            // $this->notifyAllPlayers("dealCard", clienttranslate('${player_name} received a card'), [
+            //     'player_id' => $playerId,
+            //     'player_name' => $this->getActivePlayerName()
+            // ]);
+    
+            // $this->notifyPlayer($playerId, "dealCardPrivate", clienttranslate('You received ${cardName}'), [
+            //     "type" => $card["type"],
+            //     "cardName" => $this->getCardName($card["type"])
+            // ]);
+
+            // Deactivate player; if none left, transition to 'playerTurn' state
+            $this->gamestate->setPlayerNonMultiactive($player_id, 'playerTurn');
+        }
+        else {
+            // Notify player of invalid bid
+            $this->notifyPlayer($playerId, "dealCardPrivate", clienttranslate('You received ${cardName}'), [
+                "type" => $card["type"],
+                "cardName" => $this->getCardName($card["type"])
+            ]);
+        }
+    }
 
     
 //////////////////////////////////////////////////////////////////////////////
@@ -233,6 +606,10 @@ class scovilleCJH extends Table
         $this->gamestate->nextState( 'some_gamestate_transition' );
     }    
     */
+
+    function stMultiPlayerInit() {
+        $this->gamestate->setAllPlayersMultiactive();
+    }
 
 //////////////////////////////////////////////////////////////////////////////
 //////////// Zombie
