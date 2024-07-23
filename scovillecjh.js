@@ -277,6 +277,24 @@ define("bgagame/scovillecjh", ["require", "exports", "ebg/core/gamegui", "cookbo
                     var counterData = _b[_i];
                     _loop_1(counterData);
                 }
+                if (player === null || player === void 0 ? void 0 : player.has_extra_step) {
+                    dojo.place(this.format_block('jstpl_bonus_tile', {
+                        tileId: 'has_extra_step',
+                        text: 'Move 1 Extra Step'
+                    }), "bonus_tiles_container");
+                }
+                if (player === null || player === void 0 ? void 0 : player.has_extra_pepper) {
+                    dojo.place(this.format_block('jstpl_bonus_tile', {
+                        tileId: 'has_extra_pepper',
+                        text: 'Plant 1 Extra Pepper'
+                    }), "bonus_tiles_container");
+                }
+                if (player === null || player === void 0 ? void 0 : player.has_double_back) {
+                    dojo.place(this.format_block('jstpl_bonus_tile', {
+                        tileId: 'has_double_back',
+                        text: 'Double Back Once'
+                    }), "bonus_tiles_container");
+                }
             }
             this.setupNotifications();
             console.log("Ending game setup");

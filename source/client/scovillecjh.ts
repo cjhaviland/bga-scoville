@@ -134,32 +134,33 @@ class ScovilleCjh extends CommonMixer(Gamegui)
 				    this.addTooltip(`label_${counterData.counterId}_${this.player_id}`, dojo.string.substitute( _(`Number of ${counterData.counterName} ${player.name} has.`), {
 				        player_name: player.name }), "");
 				}
+				
+				if (player?.has_extra_step) {
+					dojo.place(this.format_block('jstpl_bonus_tile', {
+						tileId: 'has_extra_step',
+						text: 'Move 1 Extra Step'
+					}), `bonus_tiles_container`);
+				}
+				
+				if (player?.has_extra_pepper) {
+					dojo.place(this.format_block('jstpl_bonus_tile', {
+						tileId: 'has_extra_pepper',
+						text: 'Plant 1 Extra Pepper'
+					}), `bonus_tiles_container`);
+				}
+				
+				if (player?.has_double_back) {
+					dojo.place(this.format_block('jstpl_bonus_tile', {
+						tileId: 'has_double_back',
+						text: 'Double Back Once'
+					}), `bonus_tiles_container`);
+				}
 			}
 
 
             
 
 
-            // if (player?.has_extra_step) {
-            //     dojo.place(this.format_block('jstpl_bonus_tile', {
-            //         tileId: 'has_extra_step',
-            //         text: 'Move 1 Extra Step'
-            //     }), `bonus_tiles_container`);
-            // }
-            
-            // if (player?.has_extra_pepper) {
-            //     dojo.place(this.format_block('jstpl_bonus_tile', {
-            //         tileId: 'has_extra_pepper',
-            //         text: 'Plant 1 Extra Pepper'
-            //     }), `bonus_tiles_container`);
-            // }
-            
-            // if (player?.has_double_back) {
-            //     dojo.place(this.format_block('jstpl_bonus_tile', {
-            //         tileId: 'has_double_back',
-            //         text: 'Double Back Once'
-            //     }), `bonus_tiles_container`);
-            // }
 
             // Setting up ALL players
             // for( let player_id in players )
