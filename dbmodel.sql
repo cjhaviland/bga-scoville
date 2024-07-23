@@ -31,25 +31,36 @@
 
 
 -- Example 2: add a custom field to the standard "player" table
-ALTER TABLE `player` ADD `player_coins` INT UNSIGNED NOT NULL DEFAULT '10';
+-- ALTER TABLE `player` ADD `player_coins` INT UNSIGNED NOT NULL DEFAULT '10';
 
-ALTER TABLE `player` ADD `pepper_red` INT UNSIGNED NOT NULL DEFAULT '1';
-ALTER TABLE `player` ADD `pepper_yellow` INT UNSIGNED NOT NULL DEFAULT '1';
-ALTER TABLE `player` ADD `pepper_blue` INT UNSIGNED NOT NULL DEFAULT '1';
+-- ALTER TABLE `player` ADD `pepper_red` INT UNSIGNED NOT NULL DEFAULT '1';
+-- ALTER TABLE `player` ADD `pepper_yellow` INT UNSIGNED NOT NULL DEFAULT '1';
+-- ALTER TABLE `player` ADD `pepper_blue` INT UNSIGNED NOT NULL DEFAULT '1';
 
-ALTER TABLE `player` ADD `pepper_green` INT UNSIGNED NOT NULL DEFAULT '0';
-ALTER TABLE `player` ADD `pepper_orange` INT UNSIGNED NOT NULL DEFAULT '0';
-ALTER TABLE `player` ADD `pepper_purple` INT UNSIGNED NOT NULL DEFAULT '0';
-ALTER TABLE `player` ADD `pepper_brown` INT UNSIGNED NOT NULL DEFAULT '0';
-ALTER TABLE `player` ADD `pepper_white` INT UNSIGNED NOT NULL DEFAULT '0';
-ALTER TABLE `player` ADD `pepper_black` INT UNSIGNED NOT NULL DEFAULT '0';
-ALTER TABLE `player` ADD `pepper_phantom` INT UNSIGNED NOT NULL DEFAULT '0';
+-- ALTER TABLE `player` ADD `pepper_green` INT UNSIGNED NOT NULL DEFAULT '0';
+-- ALTER TABLE `player` ADD `pepper_orange` INT UNSIGNED NOT NULL DEFAULT '0';
+-- ALTER TABLE `player` ADD `pepper_purple` INT UNSIGNED NOT NULL DEFAULT '0';
+-- ALTER TABLE `player` ADD `pepper_brown` INT UNSIGNED NOT NULL DEFAULT '0';
+-- ALTER TABLE `player` ADD `pepper_white` INT UNSIGNED NOT NULL DEFAULT '0';
+-- ALTER TABLE `player` ADD `pepper_black` INT UNSIGNED NOT NULL DEFAULT '0';
+-- ALTER TABLE `player` ADD `pepper_phantom` INT UNSIGNED NOT NULL DEFAULT '0';
 
 ALTER TABLE `player` ADD `has_double_back` BOOLEAN NOT NULL DEFAULT TRUE;
 ALTER TABLE `player` ADD `has_extra_pepper` BOOLEAN NOT NULL DEFAULT TRUE;
 ALTER TABLE `player` ADD `has_extra_step` BOOLEAN NOT NULL DEFAULT TRUE;
 
 ALTER TABLE `player` ADD `last_bid` INT UNSIGNED NOT NULL DEFAULT '0';
+
+-- Table to store counters for player
+CREATE TABLE IF NOT EXISTS `player_counter` (
+   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+   `player_id` INT NOT NULL,
+   `counter_id` varchar(20) NOT NULL,
+   `counter_name` varchar(20) NOT NULL,
+   `counter_value` INT UNSIGNED NOT NULL DEFAULT '0',
+   `display_order` INT UNSIGNED NOT NULL DEFAULT '0',
+   PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 CREATE TABLE IF NOT EXISTS `pepper_plot` (
    `id` int(10) unsigned NOT NULL AUTO_INCREMENT,

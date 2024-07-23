@@ -10,38 +10,254 @@
 /// <amd-module name="bgagame/scovillecjh"/>
 
 import Gamegui = require('ebg/core/gamegui');
+import CommonMixer = require("cookbook/common");
 import "ebg/counter";
+import "ebg/stock";
+import Counter = require('ebg/counter');
 
 /** The root for all of your game code. */
-class ScovilleCjh extends Gamegui
+class ScovilleCjh extends CommonMixer(Gamegui)
 {
 	// myGlobalValue: number = 0;
 	// myGlobalArray: string[] = [];
+	
+            // Here, you can init the global variables of your user interface
+            // Example:
+            // this.myGlobalValue = 0;
+            pepperTokens: Record<number, PepperToken> = {};
+            allPlayerColors: Record<string, PlayerColor> = {};
+            pepperPlots: PepperPlot[] = [];
+
+            domFontSize: number = 0;
+            marketCardWidth: number = 0;
+            marketCardHeight: number = 0;
+
+            spriteInfo = {
+                morningMarket: {
+                    url: 'img/market/morning-market-sprite.png',
+                    numberOfRows: 5,
+                    numberOfColumns: 5,
+                },
+                afternoonMarket: {
+                    url: 'img/market/afternoon-market-sprite.png',
+                    numberOfRows: 5,
+                    numberOfColumns: 5,
+                },
+                morningAuction: {
+                    url: 'img/auction/auction-cards-morning.png',
+                    numberOfRows: 3,
+                    numberOfColumns: 5,
+                },
+                afternoonAuction: {
+                    url: 'img/auction/auction-cards-afternoon.png',
+                    numberOfRows: 5,
+                    numberOfColumns: 3,
+                },
+                recipe: {
+                    url: 'img/recipe-cards.png',
+                    numberOfRows: 7,
+                    numberOfColumns: 5,
+                },
+            }
+
+			playerScreenCounters: Record<string, Counter> = {};
+			yourPlayerColor: string = '';
+			cardsOnBoard: CardsOnBoard = {} as CardsOnBoard;
+			counterIcons: any;
 
 	/** @gameSpecific See {@link Gamegui} for more information. */
 	constructor(){
 		super();
 		console.log('scovillecjh constructor');
+
+		const domEl = document.getElementsByTagName('html')[0]
+		if (domEl) {
+			this.domFontSize = parseFloat(getComputedStyle(domEl).fontSize)
+			this.marketCardWidth = this.domFontSize * 5;
+            this.marketCardHeight = this.domFontSize * 5;
+		}
 	}
 
 	/** @gameSpecific See {@link Gamegui.setup} for more information. */
 	override setup(gamedatas: Gamedatas): void
 	{
-		console.log( "Starting game setup" );
-		
-		// Setting up player boards
-		for( var player_id in gamedatas.players )
-		{
-			var player = gamedatas.players[player_id];
-			// TODO: Setting up players boards if needed
-		}
-		
-		// TODO: Set up your game interface here, according to "gamedatas"
+		console.log("Starting game setup", gamedatas );
 
-		// Setup game notifications to handle (see "setupNotifications" method below)
-		this.setupNotifications();
+            const { allPlayerColors, players, won, pepperPlots, boardPaths, pepperTokens, cardsDescription, cardsOnBoard, gamestate, tablespeed, game_result_neutralized, neutralized_player_id, playerorder, gamestates, notifications, decision, playerCounterData } = gamedatas;
 
-		console.log( "Ending game setup" );
+			if (!this.isSpectator) {
+				/**
+				 * B. Players
+				 *  Give each player a Screen and the farmer and disc in their color, 
+				 *  one of each Bonus Action tile, $10 worth of coins, 
+				 *  and three peppers: red, yellow, and blue. 
+				 *  Players should set up their screens to hide their stuff behind them during play.
+				 */
+				
+				// this.yourPlayerColor = players[currentPlayerId]?.color ?? '';
+				// this.allPlayerColors = allPlayerColors;
+				
+				// this.pepperTokens = pepperTokens;
+				// this.pepperPlots = pepperPlots;
+				
+				// this.cardsOnBoard = cardsOnBoard;
+				
+				// Setting up Player Screen
+				const player = this.gamedatas.players[this.player_id] as Player;
+
+				// Add player's name to the screen container
+				const playerScreenNameEl = document.getElementById('player_screen_name')
+				if (playerScreenNameEl)
+					playerScreenNameEl.innerText = player.name ?? ''
+				
+				// Get piece counters for player
+				
+				/** Player Screen Counters */
+				// for (let counterDataKey in gamedatas.playerCounterData) {
+				// 	const counterValue = gamedatas.playerCounterData[counterDataKey] ?? 0
+				//     const explodedName = counterDataKey.split('_');
+				//     const counterIconKey = explodedName[0] ?? '';
+				//     const pepperColor = explodedName.length > 1 ? explodedName[1] : '';
+	
+				// 	// Place counter element into container
+				//     dojo.place(this.format_block('jstpl_screen_counter', {
+				//         id: this.player_id,
+				//         name: counterData,
+				//         cssClasses: `${this.counterIcons[counterIconKey].iconClass} ${pepperColor}`,
+				//     }), `counter_container`);
+	
+				// 	// Create counter
+				//     this.createCounter(this.player_id, counterData, )
+	
+				//     this.addTooltip(`label_${counterData}_${this.player_id}`, dojo.string.substitute( _(`Number of ${pepperColor} ${counterIconKey} ${player.name} has.`), {
+				//         player_name: player.name }), "");
+				// }
+			}
+
+
+            
+
+
+            // if (player?.has_extra_step) {
+            //     dojo.place(this.format_block('jstpl_bonus_tile', {
+            //         tileId: 'has_extra_step',
+            //         text: 'Move 1 Extra Step'
+            //     }), `bonus_tiles_container`);
+            // }
+            
+            // if (player?.has_extra_pepper) {
+            //     dojo.place(this.format_block('jstpl_bonus_tile', {
+            //         tileId: 'has_extra_pepper',
+            //         text: 'Plant 1 Extra Pepper'
+            //     }), `bonus_tiles_container`);
+            // }
+            
+            // if (player?.has_double_back) {
+            //     dojo.place(this.format_block('jstpl_bonus_tile', {
+            //         tileId: 'has_double_back',
+            //         text: 'Double Back Once'
+            //     }), `bonus_tiles_container`);
+            // }
+
+            // Setting up ALL players
+            // for( let player_id in players )
+            // {
+            //     let player = players[player_id] as Player;
+
+            //     // let player_board_div = $('player_board_' + player_id);
+            //     // dojo.place(this.format_block('jstpl_player_board', {id: player_id}), player_board_div);
+
+            //     this.addTokenOnBoard(player, true)
+            //     // this.addFarmerOnBoard(player)
+            // }
+            
+            // TODO: Set up your game interface here, according to "gamedatas"
+            
+            // Setup Player Card
+            // document.getElementById('player-card').style.backgroundPositionY = -(this.allPlayerColors[this.yourPlayerColor].sprite_pos * 201) + 'px';
+            // for( let y = 1; y <= 7; y++ )
+            // {
+            //     for( let x = 1; x <= 10; x++ )
+            //     {
+            //         dojo.place(this.format_block('jstpl_pepper_plot', { x: x, y: y }), `pepper-container`);
+
+            //         // When creating the pepper plots, check if there is a pepper on the plot
+            //         const plotPepper = this.pepperPlots.find(plot => plot.board_x === x && plot.board_y === y && plot.pepper != null) as PepperPlot;
+            //         if (plotPepper != null) {
+            //             console.log(`Adding pepper to plot ${x}_${y}`);
+                        
+			// 			const pepperId = parseInt(plotPepper.pepper ?? '');
+            //             dojo.place(this.format_block('jstpl_pepper', {color: this.pepperTokens[pepperId]?.color}), `pepper_plot_${plotPepper.board_x}_${plotPepper.board_y}`);
+            //         }
+            //     }        
+            // }
+
+            // Setup board paths
+            // TODO: Get spaces where a player exists
+            // for (let pathId in this.boardPaths) {
+            //     const path = this.boardPaths[pathId]
+
+            //     dojo.place(this.format_block('jstpl_board_path', { id: pathId }), `board-path-container`);
+            // }
+
+            // Setup Market cards
+            // for (let cardId in cardsOnBoard.market) {
+            //     const card = cardsOnBoard.market[cardId];
+
+			// 	if (card) {
+			// 		const cardDesc = cardsDescription.morningMarketCards[parseInt(card.type)];
+	
+			// 		const rowCol = this.getSpriteRowColumn(card.type, this.spriteInfo.morningMarket.numberOfColumns)
+	
+			// 		dojo.place(this.format_block('jstpl_market_card', {morningAfternoon: 'morning', type: card.type, row: rowCol.row, col: rowCol.col}), 'market-cards-container');
+			// 	}
+            // }
+           
+            // // Setup Auction cards
+            // for (let cardId in cardsOnBoard.auction) {
+            //     const card = cardsOnBoard.auction[cardId];
+
+			// 	if(card) {
+			// 		const cardDesc = cardsDescription.morningAuctionCards[parseInt(card.type)];
+	
+			// 		const rowCol = this.getSpriteRowColumn(card.type, this.spriteInfo.morningAuction.numberOfColumns)
+	
+			// 		const keyIndex = Object.keys(cardsOnBoard.auction).findIndex(key => cardsOnBoard.auction[parseInt(key)]?.id === card.id);
+			// 		const leftVal = (keyIndex * 8.1) + 49.1;
+			// 		dojo.place(this.format_block('jstpl_auction_card', {morningAfternoon: 'morning', type: card.type, row: rowCol.row, col: rowCol.col, leftVal: leftVal}), 'board-top');
+			// 	}
+            // }
+            
+            // // Setup Recipe cards
+            // for (let cardId in cardsOnBoard.recipe) {
+            //     const card = cardsOnBoard.recipe[cardId];
+
+			// 	if (card) {
+			// 		const cardDesc = cardsDescription.recipeCards[parseInt(card.type)];
+	
+			// 		const rowCol = this.getSpriteRowColumn(card.type, this.spriteInfo.recipe.numberOfColumns)
+	
+			// 		dojo.place(this.format_block('jstpl_recipe_card', {type: card.type, row: rowCol.row, col: rowCol.col}), 'recipe-cards-container');
+			// 	}
+            // }
+            
+            // // Setup Award Plaques
+            // for (let cardId in cardsOnBoard.awards) {
+            //     const card = cardsOnBoard.awards[cardId];
+
+			// 	if (card) {
+			// 		const cardDesc = cardsDescription.awardPlaques[parseInt(card.type)];
+	
+			// 		// const rowCol = this.getSpriteRowColumn(card.type, this.spriteInfo.recipe.numberOfColumns)
+	
+			// 		dojo.place(this.format_block('jstpl_award_plaque', {type: card.type, vp: card.type_arg}), `award-${card.type}-box`);
+			// 	}
+            // }
+ 
+            // Setup game notifications to handle (see "setupNotifications" method below)
+            this.setupNotifications();
+
+            console.log( "Ending game setup" );
 	}
 
 	///////////////////////////////////////////////////
@@ -54,8 +270,8 @@ class ScovilleCjh extends Gamegui
 		
 		switch( stateName )
 		{
-		case 'dummmy':
-			break;
+			case 'auctionBid':
+                break;
 		}
 	}
 
@@ -66,8 +282,8 @@ class ScovilleCjh extends Gamegui
 		
 		switch( stateName )
 		{
-		case 'dummmy':
-			break;
+			case 'auctionBid':
+				break;
 		}
 	}
 
@@ -81,9 +297,9 @@ class ScovilleCjh extends Gamegui
 
 		switch( stateName )
 		{
-		case 'dummmy':
-			// Add buttons if needed
-			break;
+			case 'auctionBid':
+				this.addActionButton( 'button_bid', _(`Bid coins`), 'onBid' );
+				break;
 		}
 	}
 
@@ -94,7 +310,74 @@ class ScovilleCjh extends Gamegui
 		Here, you can defines some utility methods that you can use everywhere in your typescript
 		script.
 	*/
+	createCounter (player_id: number, counterName: string) {
+		// this.counter[player_id][name] = new ebg.counter();
 
+		this.playerScreenCounters[counterName] = new ebg.counter();
+		this.playerScreenCounters[counterName]?.create(`counter_${counterName}_${player_id}`);
+
+		// const counterRecord = this.gamedatas?.counters[player_id][name]
+		// this.playerScreenCounters[counterName]?.setValue();
+	}
+
+	addTokenOnBoard( player: Player, isTurnOrderTrack: boolean)
+	{
+		const topOrBottom = isTurnOrderTrack ? 'bottom' : 'top';
+
+		dojo.place( this.format_block( 'jstpl_player_token', {
+			playerId: player.id,
+			color: this.getColorName(player.color)
+		} ) , `${topOrBottom}-disc-${player.turn_order}`);
+	}
+	
+	addFarmerOnBoard(player: Player)
+	{
+		dojo.place( this.format_block( 'jstpl_player_farmer', {
+			playerId: player.id,
+			color: this.getColorName(player.color)
+		} ) , `board-path-container`);
+	}
+
+	getColorName(colorHex: string) {
+		switch(colorHex) {
+			case '0093D0':
+				return 'blue';
+			case '00A94D':
+				return 'green';
+			case 'F68E1E':
+				return 'orange';
+			case 'A54499':
+				return 'purple';
+			case 'EE3F34':
+				return 'red';
+			case 'FFEE01':
+				return 'yellow';
+			default:
+				return '';
+		}
+	}
+
+	getSpriteRowColumn(itemNum: string, itemsPerRow: number) {
+		const parsedItemNum = parseInt(itemNum);
+
+		// Calculate row
+		const rowNumber = Math.ceil(parsedItemNum / itemsPerRow);
+
+		// Calculate column n % itemsPerRow === 0 means it's in the last column
+		const colNumber = parsedItemNum % itemsPerRow;
+
+		return { row: rowNumber, col: colNumber === 0 ? itemsPerRow : colNumber };
+	}
+
+	checkIfBidIsValid(bid: number) {
+		const playerCoins = this.gamedatas.players[this.player_id]?.player_coins ?? 0
+
+		if (bid > playerCoins || bid < 0) {
+			return false;
+		}
+		
+		return true;
+	}
 
 	///////////////////////////////////////////////////
 	//// Player's action
@@ -140,6 +423,46 @@ class ScovilleCjh extends Gamegui
 		this.ajaxAction( 'myAction', { myArgument1: arg1, myArgument2: arg2 }, (is_error) => {} );
 	}
 	*/
+
+	onBid( evt: Event ) {
+		// Preventing default browser reaction
+		// dojo.stopEvent( evt );
+
+		// Check that this action is possible (see "possibleactions" in states.inc.php)
+		if (this.checkAction('actBid')) {
+			const bidAmountEl = document.getElementById('player_bid_amount') as HTMLInputElement;
+
+			if (bidAmountEl) {
+				if (!this.checkIfBidIsValid(parseInt(bidAmountEl.value))) {
+					this.showMessage(_('Please choose a valid bid amount!'), 'error');
+					return;
+				}
+	
+				this.ajaxcall( "/scovillecjh/scovillecjh/bidAction.html", {
+					lock: true,
+					bid_amount: bidAmountEl.value,
+				}, 
+				this, 
+				(result: any) => console.log(result));
+			}
+		}
+	}
+
+	// placeFarmer() {
+		// Check that this action is possible
+		// if (!this.checkAction('placeFarmer')) {
+		//     return;
+		// }
+
+		// Make call to server
+		// this.ajaxCall('/scovillecjh/placeFarmer.php', {
+		//     playerId: this.currentPlayer.id
+		// }, this, function(result) {
+
+		// Update board state
+
+		
+	// }
 
 	///////////////////////////////////////////////////
 	//// Reaction to cometD notifications

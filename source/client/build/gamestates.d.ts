@@ -20,7 +20,7 @@ interface GameStates {
 		},
 	},
 	2: {
-		'name': 'dummmy',
+		'name': 'playerTurn',
 		'description': '${actplayer} must play a card or pass',
 		'descriptionmyturn': '${you} must play a card or pass',
 		'type': 'activeplayer',
@@ -35,6 +35,23 @@ interface GameStates {
 		'transitions': {
 			'playCard': 2,
 			'pass': 2,
+		},
+	},
+	10: {
+		'name': 'auctionBid',
+		'description': 'Others must bid for position.',
+		'descriptionmyturn': 'test',
+		'type': 'multipleactiveplayer',
+		'possibleactions': {
+			'actBid': [{
+				'name': 'bid_amount',
+				'type': 'AT_int',
+				'typescriptType': number,
+			}],
+		},
+		'action': 'stMultiPlayerInit',
+		'transitions': {
+			'': 2,
 		},
 	},
 	99: {

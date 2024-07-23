@@ -28,7 +28,7 @@
 
 	// Note: ID=2: your first state
 	"2": {
-		"name": "dummmy",
+		"name": "playerTurn",
 		"description": "${actplayer} must play a card or pass",
 		"descriptionmyturn": "${you} must play a card or pass",
 		"type": "activeplayer",
@@ -38,28 +38,19 @@
 		},
 		"transitions": { "playCard": 2, "pass": 2 }
 	},
-
-/*
-	// Examples:
 	
-	"2": {
-		"name": "nextPlayer",
-		"description": "",
-		"type": "game",
-		"action": "stNextPlayer",
-		"updateGameProgression": true,
-		"transitions": { "endGame": 99, "nextPlayer": 10 }
-	},
-
 	"10": {
-		"name": "playerTurn",
-		"description": "${actplayer} must play a card or pass",
-		"descriptionmyturn": "${you} must play a card or pass",
-		"type": "activeplayer",
-		"possibleactions": [ "playCard", "pass" ],
-		"transitions": { "playCard": 2, "pass": 2 }
+		"name": "auctionBid",
+		"description": "Others must bid for position.",
+		// "descriptionmyturn": "${you} must bid <input type="number" id="player_bid_amount" min="0" value="0"/> coins for position.",
+		"descriptionmyturn": "test",
+		"type": "multipleactiveplayer",
+		"possibleactions": {
+			"actBid": [{ "name": "bid_amount", "type": "AT_int" }]
+		},
+		"action": "stMultiPlayerInit",
+		"transitions": { "": 2 }
 	},
-*/
 
 	// Final state.
 	// Please do not modify (and do not overload action/args methods}.

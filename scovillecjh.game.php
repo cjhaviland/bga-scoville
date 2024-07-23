@@ -16,7 +16,6 @@
   *
   */
 
-
 require_once( APP_GAMEMODULE_PATH.'module/table/table.game.php' );
 
 if (!defined('DECK_LOC_DECK')) {
@@ -29,6 +28,22 @@ if (!defined('DECK_LOC_DECK')) {
 
 class ScovilleCjh extends Table
 {
+    public $morning_market_deck;
+    public $recipe_deck;
+    public $morning_auction_deck;
+    public $award_plaque_deck;
+
+    public $starting_peppers;
+    public $player_colors;
+    public $pepper_tokens;
+    public $morning_market_cards;
+    public $recipe_cards;
+    public $morning_auction_cards;
+    public $afternoon_auction_cards;
+    public $award_plaques;
+    public $player_num_options;
+    public $starting_values;
+
 	function __construct( )
 	{
         // Your global variables labels:
@@ -140,6 +155,7 @@ class ScovilleCjh extends Table
         self::DbQuery( $sql );
         
         self::initBoardPathTable();
+        self::initPlayerCounters($players);
        
         self::setupMorningMarketDeck($players);
         self::setupRecipeDeck($players);
@@ -174,22 +190,23 @@ class ScovilleCjh extends Table
     
         // Get information about players
         // Note: you can retrieve some extra field you added for "player" table in "dbmodel.sql" if you need it.
-        $sql = "SELECT player_id id, player_no turn_order, player_score score, player_coins coins, pepper_red, pepper_yellow, pepper_blue, pepper_green, pepper_orange, pepper_purple, pepper_brown, pepper_white, pepper_black, pepper_phantom, has_double_back, has_extra_pepper, has_extra_step FROM player ";
+        $sql = "SELECT player_id id, player_no turn_order, player_score score, has_double_back, has_extra_pepper, has_extra_step FROM player ";
         $result['players'] = self::getCollectionFromDb( $sql );
   
         $players = self::loadPlayersBasicInfos();
+        $result['currentPlayerId'] = (int)$current_player_id;
 
-        $result['counters'] = array();
+        $result['playerCounterData'] = $this->getPlayerCounters($current_player_id);
 
-        foreach ($players as $player) {
-            $playerId = $player["player_id"];
-            $result['counters'][$playerId] = $this->get_counters($result['players'][$playerId]);
-            $result['won'][$playerId] = $this->morning_market_deck->getCardsInLocation(DECK_LOC_WON, $playerId);
-        }
+        // foreach ($players as $player) {
+        //     $playerId = $player["player_id"];
+        //     $result['playerCounterData'][$playerId] = $this->getCounterData($result['players'][$playerId]);
+        //     $result['won'][$playerId] = $this->morning_market_deck->getCardsInLocation(DECK_LOC_WON, $playerId);
+        // }
 
         // Pepper Plots
         $sql = "SELECT id, board_x, board_y, pepper FROM pepper_plot ";
-        $result['pepperPlots'] = self::getCollectionFromDb( $sql );
+        $result['pepperPlots'] = self::getObjectListFromDB( $sql );
         
         // Board Paths
         $sql = "SELECT id, pos_1, pos_2 FROM board_path ";
@@ -280,7 +297,52 @@ class ScovilleCjh extends Table
         self::DbQuery( $sql );
     }
 
-    function get_counters($player) {
+    // Insert counter rows for all players with default values
+    function initPlayerCounters($players) {
+        $sql = "INSERT INTO player_counter (player_id, counter_id, counter_name, counter_value, display_order) VALUES ";
+        $values = array();
+
+        // Add hardcoded counters
+        $starting_value_coins = $this->starting_values['player_coins'];
+
+        foreach ($players as $player_id => $player) {
+            $values[] = "($player_id, 'player_coins', 'Coins', $starting_value_coins, 1)";
+    
+            foreach($this->pepper_tokens as $pepper_key => $pepper) {
+                $starting_value_pepper = 0;
+                $name_id = $pepper["name_id"];
+                $name = $pepper["name"];
+
+                if (array_key_exists($name_id, $this->starting_values)) {
+                    $starting_value_pepper = $this->starting_values[$name_id];
+                }
+
+                $values[] = "($player_id, '$name_id', '$name', $starting_value_pepper, 1)";
+            }
+        }
+
+        $sql .= implode( ',', $values );
+        self::DbQuery($sql);
+    }
+
+    function getPlayerCounters(int $player_id) {
+        $sql = "SELECT id, player_id playerId, counter_id counterId, counter_name counterName, counter_value counterValue, display_order displayOrder 
+                FROM player_counter 
+                WHERE player_id = $player_id";
+
+        return $this->getObjectListFromDB($sql);
+    }
+    
+    function getPlayerCounter(int $player_id, string $counter_id) {
+        $sql = "SELECT id, player_id playerId, counter_id counterId, counter_name counterName, counter_value counterValue, display_order displayOrder 
+                FROM player_counter 
+                WHERE player_id = $player_id 
+                    AND counter_id = $counter_id";
+
+        $this->getUniqueValueFromDB($sql);
+    }
+
+    // function getCounterData($player_id) {
         // $result = array(
         //     'deck' => $this->cards->countCardInLocation($this->player_deck($player_id)),
         //     'hand' => $this->cards->countCardInLocation(STOCK_HAND, $player_id) + $this->cards->countCardInLocation(STOCK_LIMBO, $player_id),
@@ -290,22 +352,23 @@ class ScovilleCjh extends Table
         //     $counts = $this->count_cards_and_artichokes($player_id);
         //     $result['artichokes'] = $counts['artichoke_count'];
         // }
-        $result = array(
-            'coins' => (int)$player['coins'],
-            'pepper_red' => (int)$player['pepper_red'],
-            'pepper_yellow' => (int)$player['pepper_yellow'],
-            'pepper_blue' => (int)$player['pepper_blue'],
-            'pepper_green' => (int)$player['pepper_green'],
-            'pepper_orange' => (int)$player['pepper_orange'],
-            'pepper_purple' => (int)$player['pepper_purple'],
-            'pepper_brown' => (int)$player['pepper_brown'],
-            'pepper_white' => (int)$player['pepper_white'],
-            'pepper_black' => (int)$player['pepper_black'],
-            'pepper_phantom' => (int)$player['pepper_phantom']
-        );
+        // $result = array(
+        //     'player_coins' => (int)$player['player_coins'],
+        //     'pepper_red' => (int)$player['pepper_red'],
+        //     'pepper_yellow' => (int)$player['pepper_yellow'],
+        //     'pepper_blue' => (int)$player['pepper_blue'],
+        //     'pepper_green' => (int)$player['pepper_green'],
+        //     'pepper_orange' => (int)$player['pepper_orange'],
+        //     'pepper_purple' => (int)$player['pepper_purple'],
+        //     'pepper_brown' => (int)$player['pepper_brown'],
+        //     'pepper_white' => (int)$player['pepper_white'],
+        //     'pepper_black' => (int)$player['pepper_black'],
+        //     'pepper_phantom' => (int)$player['pepper_phantom']
+        // );
         
-        return $result;
-    }
+        // return $result;
+    //     return $this->getPlayerCounters($player["player_id"]);
+    // }
 
     function setupMorningMarketDeck($players)
     {
@@ -526,7 +589,7 @@ class ScovilleCjh extends Table
     
     */
 
-    function bid($bid_amount) {
+    function actBid(int $bid_amount) {
         self::checkAction('bid');
 
         $player_id = self::getCurrentPlayerId();
@@ -550,10 +613,10 @@ class ScovilleCjh extends Table
         }
         else {
             // Notify player of invalid bid
-            $this->notifyPlayer($playerId, "dealCardPrivate", clienttranslate('You received ${cardName}'), [
-                "type" => $card["type"],
-                "cardName" => $this->getCardName($card["type"])
-            ]);
+            // $this->notifyPlayer($player_id, "dealCardPrivate", clienttranslate('You received ${cardName}'), [
+            //     "type" => $card["type"],
+            //     "cardName" => $this->getCardName($card["type"])
+            // ]);
         }
     }
 

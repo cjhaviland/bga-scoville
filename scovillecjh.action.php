@@ -45,4 +45,15 @@ class action_scovillecjh extends APP_GameAction
 		$this->game->pass(  );
 		self::ajaxResponse();
 	}
+
+	public function actBid()
+	{
+		self::setAjaxMode();
+
+		/** @var int $bid_amount */
+		$bid_amount = self::getArg('bid_amount', AT_int, true);
+
+		$this->game->actBid( $bid_amount );
+		self::ajaxResponse();
+	}
 }

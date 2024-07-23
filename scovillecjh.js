@@ -1,42 +1,213 @@
-/**
- *------
- * BGA framework: © Gregory Isabelli <gisabelli@boardgamearena.com> & Emmanuel Colin <ecolin@boardgamearena.com>
- * ScovilleCjh implementation : © <Your name here> <Your email address here>
- *
- * This code has been produced on the BGA studio platform for use on http://boardgamearena.com.
- * See http://en.boardgamearena.com/#!doc/Studio for more information.
- * -----
- *
- * scovillecjh.js
- *
- * ScovilleCjh user interface script
- * 
- * In this file, you are describing the logic of your user interface, in Javascript language.
- *
- */
-
-define([
-    "dojo","dojo/_base/declare",
-    "ebg/core/gamegui",
-    "ebg/counter",
-    "ebg/stock"
-],
-function (dojo, declare) {
-    return declare("bgagame.scovillecjh", ebg.core.gamegui, {
-        constructor: function(){
-            console.log('scovillecjh constructor');
-              
-            // Here, you can init the global variables of your user interface
-            // Example:
-            // this.myGlobalValue = 0;
-            this.pepperTokens = null;
-            this.allPlayerColors = null;
-
-            this.domFontSize = parseFloat(getComputedStyle(document.getElementsByTagName('html')[0]).fontSize)
-            this.marketCardWidth = this.domFontSize * 5;
-            this.marketCardHeight = this.domFontSize * 5;
-
-            this.spriteInfo = {
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+define("cookbook/common", ["require", "exports", "dojo"], function (require, exports, dojo) {
+    "use strict";
+    var CommonMixin = function (Base) { return (function (_super) {
+        __extends(Common, _super);
+        function Common() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        Common.prototype.attachToNewParentNoDestroy = function (mobile_in, new_parent_in, relation, place_position) {
+            var mobile = $(mobile_in);
+            var new_parent = $(new_parent_in);
+            if (!mobile || !new_parent) {
+                console.error("attachToNewParentNoDestroy: mobile or new_parent was not found on dom.", mobile_in, new_parent_in);
+                return { l: NaN, t: NaN, w: NaN, h: NaN };
+            }
+            var src = dojo.position(mobile);
+            if (place_position)
+                mobile.style.position = place_position;
+            dojo.place(mobile, new_parent, relation);
+            mobile.offsetTop;
+            var tgt = dojo.position(mobile);
+            var box = dojo.marginBox(mobile);
+            var cbox = dojo.contentBox(mobile);
+            if (!box.t || !box.l || !box.w || !box.h || !cbox.w || !cbox.h) {
+                console.error("attachToNewParentNoDestroy: box or cbox has an undefined value (t-l-w-h). This should not happen.", box, cbox);
+                return box;
+            }
+            var left = box.l + src.x - tgt.x;
+            var top = box.t + src.y - tgt.y;
+            mobile.style.position = "absolute";
+            mobile.style.left = left + "px";
+            mobile.style.top = top + "px";
+            box.l += box.w - cbox.w;
+            box.t += box.h - cbox.h;
+            mobile.offsetTop;
+            return box;
+        };
+        Common.prototype.ajaxAction = function (action, args, callback, ajax_method) {
+            if (!this.checkAction(action))
+                return false;
+            if (!args)
+                args = {};
+            if (!args.lock)
+                args.lock = true;
+            this.ajaxcall("/".concat(this.game_name, "/").concat(this.game_name, "/").concat(action, ".html"), args, this, function () { }, callback, ajax_method);
+            return true;
+        };
+        Common.prototype.subscribeNotif = function (event, callback) {
+            return dojo.subscribe(event, this, callback);
+        };
+        Common.prototype.addImageActionButton = function (id, label, method, destination, blinking, color, tooltip) {
+            if (!color)
+                color = "gray";
+            this.addActionButton(id, label, method, destination, blinking, color);
+            var div = $(id);
+            if (div === null) {
+                console.error("addImageActionButton: id was not found on dom", id);
+                return null;
+            }
+            if (!(div instanceof HTMLElement)) {
+                console.error("addImageActionButton: id was not an HTMLElement", id, div);
+                return null;
+            }
+            dojo.style(div, "border", "none");
+            dojo.addClass(div, "shadow bgaimagebutton");
+            if (tooltip) {
+                dojo.attr(div, "title", tooltip);
+            }
+            return div;
+        };
+        Common.prototype.isReadOnly = function () {
+            return this.isSpectator || typeof g_replayFrom !== 'undefined' || g_archive_mode;
+        };
+        Common.prototype.scrollIntoViewAfter = function (target, delay) {
+            if (this.instantaneousMode)
+                return;
+            var target_div = $(target);
+            if (target_div === null) {
+                console.error("scrollIntoViewAfter: target was not found on dom", target);
+                return;
+            }
+            if (typeof g_replayFrom != "undefined" || !delay || delay <= 0) {
+                target_div.scrollIntoView();
+                return;
+            }
+            setTimeout(function () {
+                target_div === null || target_div === void 0 ? void 0 : target_div.scrollIntoView({ behavior: "smooth", block: "center" });
+            }, delay);
+        };
+        Common.prototype.divYou = function () {
+            return this.divColoredPlayer(this.player_id, __("lang_mainsite", "You"));
+        };
+        Common.prototype.divColoredPlayer = function (player_id, text) {
+            var player = this.gamedatas.players[player_id];
+            if (player === undefined)
+                return "--unknown player--";
+            return "<span style=\"color:".concat(player.color, ";background-color:#").concat(player.color_back, ";\">").concat(text !== null && text !== void 0 ? text : player.name, "</span>");
+        };
+        Common.prototype.setMainTitle = function (html) {
+            $('pagemaintitletext').innerHTML = html;
+        };
+        Common.prototype.setDescriptionOnMyTurn = function (description) {
+            this.gamedatas.gamestate.descriptionmyturn = description;
+            var tpl = dojo.clone(this.gamedatas.gamestate.args);
+            if (tpl === null)
+                tpl = {};
+            if (this.isCurrentPlayerActive() && description !== null)
+                tpl.you = this.divYou();
+            var title = this.format_string_recursive(description, tpl);
+            this.setMainTitle(title !== null && title !== void 0 ? title : '');
+        };
+        Common.prototype.addPreferenceListener = function (callback) {
+            var _this = this;
+            dojo.query('.preference_control').on('change', function (e) {
+                var _a;
+                var target = e.target;
+                if (!(target instanceof HTMLSelectElement)) {
+                    console.error("Preference control class is not a valid element to be listening to events from. The target of the event does not have an id.", e.target);
+                    return;
+                }
+                var match = (_a = target.id.match(/^preference_[cf]ontrol_(\d+)$/)) === null || _a === void 0 ? void 0 : _a[1];
+                if (!match)
+                    return;
+                var matchId = parseInt(match);
+                if (isNaN(matchId)) {
+                    console.error("Preference control id was not a valid number.", match);
+                    return;
+                }
+                var pref = _this.prefs[matchId];
+                if (!pref) {
+                    console.warn("Preference was changed but somehow the preference id was not found.", matchId, _this.prefs);
+                    return;
+                }
+                var value = target.value;
+                if (!pref.values[value]) {
+                    console.warn("Preference value was changed but somehow the value is not a valid value.", value, pref.values);
+                }
+                pref.value = value;
+                callback(matchId);
+            });
+        };
+        Common.prototype.onScriptError = function (error, url, line) {
+            if (this.page_is_unloading)
+                return;
+            console.error("Script error:", error);
+            _super.prototype.onScriptError.call(this, error, url, line);
+        };
+        Common.prototype.showError = function (log, args) {
+            if (args === void 0) { args = {}; }
+            args['you'] = this.divYou();
+            var message = this.format_string_recursive(log, args);
+            this.showMessage(message, "error");
+            console.error(message);
+        };
+        Common.prototype.getPlayerColor = function (player_id) {
+            var _a, _b;
+            return (_b = (_a = this.gamedatas.players[player_id]) === null || _a === void 0 ? void 0 : _a.color) !== null && _b !== void 0 ? _b : null;
+        };
+        Common.prototype.getPlayerName = function (player_id) {
+            var _a, _b;
+            return (_b = (_a = this.gamedatas.players[player_id]) === null || _a === void 0 ? void 0 : _a.name) !== null && _b !== void 0 ? _b : null;
+        };
+        Common.prototype.getPlayerFromColor = function (color) {
+            for (var id in this.gamedatas.players) {
+                var player = this.gamedatas.players[id];
+                if ((player === null || player === void 0 ? void 0 : player.color) === color)
+                    return player;
+            }
+            return null;
+        };
+        Common.prototype.getPlayerFromName = function (name) {
+            for (var id in this.gamedatas.players) {
+                var player = this.gamedatas.players[id];
+                if ((player === null || player === void 0 ? void 0 : player.name) === name)
+                    return player;
+            }
+            return null;
+        };
+        return Common;
+    }(Base)); };
+    return CommonMixin;
+});
+define("bgagame/scovillecjh", ["require", "exports", "ebg/core/gamegui", "cookbook/common", "ebg/counter", "ebg/stock"], function (require, exports, Gamegui, CommonMixer) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var ScovilleCjh = (function (_super) {
+        __extends(ScovilleCjh, _super);
+        function ScovilleCjh() {
+            var _this = _super.call(this) || this;
+            _this.pepperTokens = {};
+            _this.allPlayerColors = {};
+            _this.pepperPlots = [];
+            _this.domFontSize = 0;
+            _this.marketCardWidth = 0;
+            _this.marketCardHeight = 0;
+            _this.spriteInfo = {
                 morningMarket: {
                     url: 'img/market/morning-market-sprite.png',
                     numberOfRows: 5,
@@ -62,308 +233,76 @@ function (dojo, declare) {
                     numberOfRows: 7,
                     numberOfColumns: 5,
                 },
+            };
+            _this.playerScreenCounters = {};
+            _this.yourPlayerColor = '';
+            _this.cardsOnBoard = {};
+            console.log('scovillecjh constructor');
+            var domEl = document.getElementsByTagName('html')[0];
+            if (domEl) {
+                _this.domFontSize = parseFloat(getComputedStyle(domEl).fontSize);
+                _this.marketCardWidth = _this.domFontSize * 5;
+                _this.marketCardHeight = _this.domFontSize * 5;
             }
-
-            this.counterIcons = {
-                'coins': {
-                    iconClass: 'fa6-coins',
-                },
-                'pepper': {
-                    iconClass: 'fa6-pepper-hot',
-                },
+            return _this;
+        }
+        ScovilleCjh.prototype.setup = function (gamedatas) {
+            var _a;
+            console.log("Starting game setup", gamedatas);
+            var allPlayerColors = gamedatas.allPlayerColors, players = gamedatas.players, won = gamedatas.won, pepperPlots = gamedatas.pepperPlots, boardPaths = gamedatas.boardPaths, pepperTokens = gamedatas.pepperTokens, cardsDescription = gamedatas.cardsDescription, cardsOnBoard = gamedatas.cardsOnBoard, gamestate = gamedatas.gamestate, tablespeed = gamedatas.tablespeed, game_result_neutralized = gamedatas.game_result_neutralized, neutralized_player_id = gamedatas.neutralized_player_id, playerorder = gamedatas.playerorder, gamestates = gamedatas.gamestates, notifications = gamedatas.notifications, decision = gamedatas.decision, playerCounterData = gamedatas.playerCounterData;
+            if (!this.isSpectator) {
+                var player = this.gamedatas.players[this.player_id];
+                var playerScreenNameEl = document.getElementById('player_screen_name');
+                if (playerScreenNameEl)
+                    playerScreenNameEl.innerText = (_a = player.name) !== null && _a !== void 0 ? _a : '';
             }
-        },
-        
-        /*
-            setup:
-            
-            This method must set up the game user interface according to current game situation specified
-            in parameters.
-            
-            The method is called each time the game interface is displayed to a player, ie:
-            _ when the game starts
-            _ when a player refreshes the game page (F5)
-            
-            "gamedatas" argument contains all datas retrieved by your "getAllDatas" PHP method.
-        */
-        
-        setup: function( gamedatas )
-        {
-            console.log( "Starting game setup", gamedatas );
-
-            const { allPlayerColors, players, counters, won, pepperPlots, boardPaths, pepperTokens, cardsDescription, cardsOnBoard, gamestate, tablespeed, game_result_neutralized, neutralized_player_id, playerorder, gamestates, notifications, decision } = gamedatas;
-            
-            this.counter = {};
-            this.yourPlayerColor = players[this.player_id].color;
-            this.allPlayerColors = allPlayerColors;
-            
-            this.pepperTokens = pepperTokens;
-            
-            this.cardsOnBoard = cardsOnBoard;
-            
-            // Setting up Player Screen
-            const playerCounters = counters[this.player_id];
-            const player = players[this.player_id];
-            this.counter[this.player_id] = {}
-
-            document.getElementById('player_screen_name').innerText = player.name
-
-            for (let screenCounter in playerCounters) {
-                const explodedName = screenCounter.split('_');
-                const counterIconKey = explodedName[0];
-                const pepperColor = explodedName.length > 1 ? explodedName[1] : '';
-
-                dojo.place(this.format_block('jstpl_screen_counter', {
-                    id: this.player_id,
-                    name: screenCounter,
-                    cssClasses: `${this.counterIcons[counterIconKey].iconClass} ${pepperColor}`,
-                }), `counter_container`);
-
-                this.createCounter(this.player_id, screenCounter)
-
-                this.addTooltip(`label_${screenCounter}_${this.player_id}`, dojo.string.substitute( _(`Number of ${pepperColor} ${counterIconKey} ${players[this.player_id].name} has.`), {
-                    player_name: player.name }), "");
-            }
-
-            if (player['has_extra_step']) {
-                dojo.place(this.format_block('jstpl_bonus_tile', {
-                    tileId: 'has_extra_step',
-                    text: 'Move 1 Extra Step'
-                }), `bonus_tiles_container`);
-            }
-            
-            if (player['has_extra_pepper']) {
-                dojo.place(this.format_block('jstpl_bonus_tile', {
-                    tileId: 'has_extra_pepper',
-                    text: 'Plant 1 Extra Pepper'
-                }), `bonus_tiles_container`);
-            }
-            
-            if (player['has_double_back']) {
-                dojo.place(this.format_block('jstpl_bonus_tile', {
-                    tileId: 'has_double_back',
-                    text: 'Double Back Once'
-                }), `bonus_tiles_container`);
-            }
-
-            // Setting up ALL players
-            for( let player_id in players )
-            {
-                let player = players[player_id];
-
-                // let player_board_div = $('player_board_' + player_id);
-                // dojo.place(this.format_block('jstpl_player_board', {id: player_id}), player_board_div);
-
-                this.addTokenOnBoard(player, true)
-                // this.addFarmerOnBoard(player)
-            }
-            
-            // TODO: Set up your game interface here, according to "gamedatas"
-            
-            // Setup Player Card
-            // document.getElementById('player-card').style.backgroundPositionY = -(this.allPlayerColors[this.yourPlayerColor].sprite_pos * 201) + 'px';
-
-            for( $y=1; $y<=7; $y++ )
-            {
-                for( $x=1; $x<=10; $x++ )
-                {
-                    dojo.place(this.format_block('jstpl_pepper_plot', { x: $x, y: $y }), `pepper-container`);
-                }        
-            }
-            
-            // Setup initial pepper plots 5_4 and 6_4 are the starting plots
-            for(let plotId in this.pepperPlots){ 
-                
-                const plot = this.pepperPlots[plotId]
-
-                // Add pepper color to the plot
-                if (plot.pepper != null) {
-                    // document.getElementById(`pepper_plot_${plot.board_x}_${plot.board_y}`).style.backgroundColor = this.pepperTokens[plot.pepper].color;
-                    dojo.place(this.format_block('jstpl_pepper', {color: this.pepperTokens[plot.pepper].color}), `pepper_plot_${plot.board_x}_${plot.board_y}`);
-                }
-            }
-
-            // Setup board paths
-            // TODO: Get spaces where a player exists
-            // for (let pathId in this.boardPaths) {
-            //     const path = this.boardPaths[pathId]
-
-            //     dojo.place(this.format_block('jstpl_board_path', { id: pathId }), `board-path-container`);
-            // }
-
-            // Setup Market cards
-            for (let cardId in cardsOnBoard.market) {
-                const card = cardsOnBoard.market[cardId];
-                const cardDesc = cardsDescription.morningMarketCards[card.type];
-
-                const rowCol = this.getSpriteRowColumn(card.type, this.spriteInfo.morningMarket.numberOfColumns)
-
-                dojo.place(this.format_block('jstpl_market_card', {morningAfternoon: 'morning', type: card.type, row: rowCol.row, col: rowCol.col}), 'market-cards-container');
-            }
-           
-            // Setup Auction cards
-            for (let cardId in cardsOnBoard.auction) {
-                const card = cardsOnBoard.auction[cardId];
-                const cardDesc = cardsDescription.morningAuctionCards[card.type];
-
-                const rowCol = this.getSpriteRowColumn(card.type, this.spriteInfo.morningAuction.numberOfColumns)
-
-                const keyIndex = Object.keys(cardsOnBoard.auction).findIndex(key => cardsOnBoard.auction[key].id === card.id);
-                const leftVal = (keyIndex * 8.1) + 49.1;
-                dojo.place(this.format_block('jstpl_auction_card', {morningAfternoon: 'morning', type: card.type, row: rowCol.row, col: rowCol.col, leftVal: leftVal}), 'board-top');
-            }
-            
-            // Setup Recipe cards
-            for (let cardId in cardsOnBoard.recipe) {
-                const card = cardsOnBoard.recipe[cardId];
-                const cardDesc = cardsDescription.recipeCards[card.type];
-
-                const rowCol = this.getSpriteRowColumn(card.type, this.spriteInfo.recipe.numberOfColumns)
-
-                dojo.place(this.format_block('jstpl_recipe_card', {type: card.type, row: rowCol.row, col: rowCol.col}), 'recipe-cards-container');
-            }
-            
-            // Setup Award Plaques
-            for (let cardId in cardsOnBoard.awards) {
-                const card = cardsOnBoard.awards[cardId];
-                const cardDesc = cardsDescription.awardPlaques[card.type];
-
-                // const rowCol = this.getSpriteRowColumn(card.type, this.spriteInfo.recipe.numberOfColumns)
-
-                dojo.place(this.format_block('jstpl_award_plaque', {type: card.type, vp: card.type_arg}), `award-${card.type}-box`);
-            }
- 
-            // Setup game notifications to handle (see "setupNotifications" method below)
             this.setupNotifications();
-
-            console.log( "Ending game setup" );
-        },
-       
-
-        ///////////////////////////////////////////////////
-        //// Game & client states
-        
-        // onEnteringState: this method is called each time we are entering into a new game state.
-        //                  You can use this method to perform some user interface changes at this moment.
-        //
-        onEnteringState: function( stateName, args )
-        {
-            console.log( 'Entering state: '+stateName );
-            
-            switch( stateName )
-            {
-            
-            /* Example:
-            
-            case 'myGameState':
-            
-                // Show some HTML block at this game state
-                dojo.style( 'my_html_block_id', 'display', 'block' );
-                
-                break;
-           */
-
-            case 'auctionBid':
-                break;
-           
-           
-            case 'dummmy':
-                break;
-            }
-        },
-
-        // onLeavingState: this method is called each time we are leaving a game state.
-        //                 You can use this method to perform some user interface changes at this moment.
-        //
-        onLeavingState: function( stateName )
-        {
-            console.log( 'Leaving state: '+stateName );
-            
-            switch( stateName )
-            {
-            
-            /* Example:
-            
-            case 'myGameState':
-            
-                // Hide the HTML block we are displaying only during this game state
-                dojo.style( 'my_html_block_id', 'display', 'none' );
-                
-                break;
-           */
-           
-           
-            case 'dummmy':
-                break;
-            }               
-        }, 
-
-        // onUpdateActionButtons: in this method you can manage "action buttons" that are displayed in the
-        //                        action status bar (ie: the HTML links in the status bar).
-        //        
-        onUpdateActionButtons: function( stateName, args )
-        {
-            console.log( 'onUpdateActionButtons: '+stateName );
-                      
-            if( this.isCurrentPlayerActive() )
-            {            
-                switch( stateName )
-                {
-/*               
-                 Example:
- 
-                 case 'myGameState':
-                    
-                    // Add 3 action buttons in the action status bar:
-                    
-                    this.addActionButton( 'button_1_id', _('Button 1 label'), 'onMyMethodToCall1' ); 
-                    this.addActionButton( 'button_2_id', _('Button 2 label'), 'onMyMethodToCall2' ); 
-                    this.addActionButton( 'button_3_id', _('Button 3 label'), 'onMyMethodToCall3' ); 
+            console.log("Ending game setup");
+        };
+        ScovilleCjh.prototype.onEnteringState = function (stateName, args) {
+            console.log('Entering state: ' + stateName);
+            switch (stateName) {
+                case 'auctionBid':
                     break;
-*/
-                    case 'auctionBid':
-                        this.addActionButton( 'button_bid', _(`Bid coins`), 'onBid' );
-                        break;
-                }
             }
-        },        
-
-        ///////////////////////////////////////////////////
-        //// Utility methods
-        
-        /*
-        
-            Here, you can defines some utility methods that you can use everywhere in your javascript
-            script.
-        
-        */
-
-        createCounter: function (player_id, name) {
-            this.counter[player_id][name] = new ebg.counter();
-            this.counter[player_id][name].create(`counter_${name}_${player_id}`);
-            this.counter[player_id][name].setValue(this.gamedatas.counters[player_id][name]);
-        },
-
-        addTokenOnBoard: function( player, isTurnOrderTrack)
-        {
-            const topOrBottom = isTurnOrderTrack ? 'bottom' : 'top';
-
-            dojo.place( this.format_block( 'jstpl_player_token', {
+        };
+        ScovilleCjh.prototype.onLeavingState = function (stateName) {
+            console.log('Leaving state: ' + stateName);
+            switch (stateName) {
+                case 'auctionBid':
+                    break;
+            }
+        };
+        ScovilleCjh.prototype.onUpdateActionButtons = function (stateName, args) {
+            console.log('onUpdateActionButtons: ' + stateName, args);
+            if (!this.isCurrentPlayerActive())
+                return;
+            switch (stateName) {
+                case 'auctionBid':
+                    this.addActionButton('button_bid', _("Bid coins"), 'onBid');
+                    break;
+            }
+        };
+        ScovilleCjh.prototype.createCounter = function (player_id, counterName) {
+            var _a;
+            this.playerScreenCounters[counterName] = new ebg.counter();
+            (_a = this.playerScreenCounters[counterName]) === null || _a === void 0 ? void 0 : _a.create("counter_".concat(counterName, "_").concat(player_id));
+        };
+        ScovilleCjh.prototype.addTokenOnBoard = function (player, isTurnOrderTrack) {
+            var topOrBottom = isTurnOrderTrack ? 'bottom' : 'top';
+            dojo.place(this.format_block('jstpl_player_token', {
                 playerId: player.id,
                 color: this.getColorName(player.color)
-            } ) , `${topOrBottom}-disc-${player.turn_order}`);
-        },
-        
-        addFarmerOnBoard: function(player)
-        {
-            dojo.place( this.format_block( 'jstpl_player_farmer', {
+            }), "".concat(topOrBottom, "-disc-").concat(player.turn_order));
+        };
+        ScovilleCjh.prototype.addFarmerOnBoard = function (player) {
+            dojo.place(this.format_block('jstpl_player_farmer', {
                 playerId: player.id,
                 color: this.getColorName(player.color)
-            } ) , `board-path-container`);
-        },
-
-        getColorName: function(colorHex) {
-            switch(colorHex) {
+            }), "board-path-container");
+        };
+        ScovilleCjh.prototype.getColorName = function (colorHex) {
+            switch (colorHex) {
                 case '0093D0':
                     return 'blue';
                 case '00A94D':
@@ -376,168 +315,43 @@ function (dojo, declare) {
                     return 'red';
                 case 'FFEE01':
                     return 'yellow';
+                default:
+                    return '';
             }
-        },
-
-        getSpriteRowColumn: function(itemNum, itemsPerRow) {
-            const parsedItemNum = parseInt(itemNum);
-
-            // Calculate row
-            const rowNumber = Math.ceil(parsedItemNum / itemsPerRow);
-
-            // Calculate column n % itemsPerRow === 0 means it's in the last column
-            const colNumber = parsedItemNum % itemsPerRow;
-
+        };
+        ScovilleCjh.prototype.getSpriteRowColumn = function (itemNum, itemsPerRow) {
+            var parsedItemNum = parseInt(itemNum);
+            var rowNumber = Math.ceil(parsedItemNum / itemsPerRow);
+            var colNumber = parsedItemNum % itemsPerRow;
             return { row: rowNumber, col: colNumber === 0 ? itemsPerRow : colNumber };
-        },
-
-        checkIfBidIsValid: function(bid) {
-            const playerCoins = this.gamedatas.players[this.player_id].coins
-
+        };
+        ScovilleCjh.prototype.checkIfBidIsValid = function (bid) {
+            var _a, _b;
+            var playerCoins = (_b = (_a = this.gamedatas.players[this.player_id]) === null || _a === void 0 ? void 0 : _a.player_coins) !== null && _b !== void 0 ? _b : 0;
             if (bid > playerCoins || bid < 0) {
                 return false;
             }
-            
             return true;
-        },
-
-        // getAvailableFarmerPaths(currentPath, currentDir) {
-            
-        // },
-
-        ///////////////////////////////////////////////////
-        //// Player's action
-        
-        /*
-        
-            Here, you are defining methods to handle player's action (ex: results of mouse click on 
-            game objects).
-            
-            Most of the time, these methods:
-            _ check the action is possible at this game state.
-            _ make a call to the game server
-        
-        */
-        
-        /* Example:
-        
-        onMyMethodToCall1: function( evt )
-        {
-            console.log( 'onMyMethodToCall1' );
-            
-            // Preventing default browser reaction
-            dojo.stopEvent( evt );
-
-            // Check that this action is possible (see "possibleactions" in states.inc.php)
-            if( ! this.checkAction( 'myAction' ) )
-            {   return; }
-
-            this.ajaxcall( "/scovillecjh/scovillecjh/myAction.html", { 
-                                                                    lock: true, 
-                                                                    myArgument1: arg1, 
-                                                                    myArgument2: arg2,
-                                                                    ...
-                                                                 }, 
-                         this, function( result ) {
-                            
-                            // What to do after the server call if it succeeded
-                            // (most of the time: nothing)
-                            
-                         }, function( is_error) {
-
-                            // What to do after the server call in anyway (success or failure)
-                            // (most of the time: nothing)
-
-                         } );        
-        },        
-        
-        */
-        onBid: function( evt ) {
-            // Preventing default browser reaction
-            // dojo.stopEvent( evt );
-
-            // Check that this action is possible (see "possibleactions" in states.inc.php)
-            if (this.checkAction('bid')) {
-                const bidAmountEl = document.getElementById('player_bid_amount');
-
-                if (!this.checkIfBidIsValid(bidAmountEl.value)) {
-                    this.showMessage(_('Please choose a valid bid amount!'), 'error');
-                    return;
+        };
+        ScovilleCjh.prototype.onBid = function (evt) {
+            if (this.checkAction('actBid')) {
+                var bidAmountEl = document.getElementById('player_bid_amount');
+                if (bidAmountEl) {
+                    if (!this.checkIfBidIsValid(parseInt(bidAmountEl.value))) {
+                        this.showMessage(_('Please choose a valid bid amount!'), 'error');
+                        return;
+                    }
+                    this.ajaxcall("/scovillecjh/scovillecjh/bidAction.html", {
+                        lock: true,
+                        bid_amount: bidAmountEl.value,
+                    }, this, function (result) { return console.log(result); });
                 }
-
-                this.ajaxcall( "/scovillecjh/scovillecjh/bidAction.html", {
-                    lock: true,
-                    bid_amount: bidAmountEl.value,
-                }, 
-                this, 
-                function(result) {
-                    console.log(result);
-                });
             }
-        },
-        // placeFarmer() {
-            // Check that this action is possible
-            // if (!this.checkAction('placeFarmer')) {
-            //     return;
-            // }
-
-            // Make call to server
-            // this.ajaxCall('/scovillecjh/placeFarmer.php', {
-            //     playerId: this.currentPlayer.id
-            // }, this, function(result) {
-
-            // Update board state
-
-            
-        // },
-
-        
-        ///////////////////////////////////////////////////
-        //// Reaction to cometD notifications
-
-        /*
-            setupNotifications:
-            
-            In this method, you associate each of your game notifications with your local method to handle it.
-            
-            Note: game notification names correspond to "notifyAllPlayers" and "notifyPlayer" calls in
-                  your scovillecjh.game.php file.
-        
-        */
-        setupNotifications: function()
-        {
-            console.log( 'notifications subscriptions setup' );
-            
-            // TODO: here, associate your game notifications with local methods
-            
-            // Example 1: standard notification handling
-            // dojo.subscribe( 'cardPlayed', this, "notif_cardPlayed" );
-            
-            // Example 2: standard notification handling + tell the user interface to wait
-            //            during 3 seconds after calling the method in order to let the players
-            //            see what is happening in the game.
-            // dojo.subscribe( 'cardPlayed', this, "notif_cardPlayed" );
-            // this.notifqueue.setSynchronous( 'cardPlayed', 3000 );
-            // 
-
-            // dojo.subscribe('bid', this, "notif_placeBid");
-        },  
-        
-        // TODO: from this point and below, you can write your game notifications handling methods
-        
-        /*
-        Example:
-        
-        notif_cardPlayed: function( notif )
-        {
-            console.log( 'notif_cardPlayed' );
-            console.log( notif );
-            
-            // Note: notif.args contains the arguments specified during you "notifyAllPlayers" / "notifyPlayer" PHP call
-            
-            // TODO: play the card in the user interface.
-        },    
-        
-        */
-   });             
+        };
+        ScovilleCjh.prototype.setupNotifications = function () {
+            console.log('notifications subscriptions setup');
+        };
+        return ScovilleCjh;
+    }(CommonMixer(Gamegui)));
+    dojo.setObject("bgagame.scovillecjh", ScovilleCjh);
 });

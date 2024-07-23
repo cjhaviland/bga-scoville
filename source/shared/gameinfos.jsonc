@@ -36,7 +36,7 @@
 	"slow_additional_time": 50,
 
 	// Game Rankings
-	"tie_breaker_description": totranslate("The tied player with the most coins"),
+	"tie_breaker_description": "The tied player with the most coins",
 	"losers_not_ranked": false,
 	"solo_mode_ranked": false,
 	"is_coop": 0,
