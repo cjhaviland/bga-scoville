@@ -296,6 +296,10 @@ define("bgagame/scovillecjh", ["require", "exports", "ebg/core/gamegui", "cookbo
                     }), "bonus_tiles_container");
                 }
             }
+            for (var player_id in players) {
+                var player = players[player_id];
+                this.addTokenOnBoard(player, true);
+            }
             this.setupNotifications();
             console.log("Ending game setup");
         };

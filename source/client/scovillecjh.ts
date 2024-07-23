@@ -157,22 +157,17 @@ class ScovilleCjh extends CommonMixer(Gamegui)
 				}
 			}
 
-
-            
-
-
-
             // Setting up ALL players
-            // for( let player_id in players )
-            // {
-            //     let player = players[player_id] as Player;
+            for(let player_id in players)
+            {
+                const player = players[player_id] as Player;
 
-            //     // let player_board_div = $('player_board_' + player_id);
-            //     // dojo.place(this.format_block('jstpl_player_board', {id: player_id}), player_board_div);
+                // let player_board_div = $('player_board_' + player_id);
+                // dojo.place(this.format_block('jstpl_player_board', {id: player_id}), player_board_div);
 
-            //     this.addTokenOnBoard(player, true)
-            //     // this.addFarmerOnBoard(player)
-            // }
+                this.addTokenOnBoard(player, true)
+                // this.addFarmerOnBoard(player)
+            }
             
             // TODO: Set up your game interface here, according to "gamedatas"
             
@@ -328,7 +323,7 @@ class ScovilleCjh extends CommonMixer(Gamegui)
 		}
 	}
 
-	addTokenOnBoard( player: Player, isTurnOrderTrack: boolean)
+	addTokenOnBoard(player: Player, isTurnOrderTrack: boolean)
 	{
 		const topOrBottom = isTurnOrderTrack ? 'bottom' : 'top';
 
