@@ -24,9 +24,6 @@ class ScovilleCjh extends CommonMixer(Gamegui)
             // Here, you can init the global variables of your user interface
             // Example:
             // this.myGlobalValue = 0;
-            pepperTokens: Record<number, PepperToken> = {};
-            allPlayerColors: Record<string, PlayerColor> = {};
-            pepperPlots: PepperPlot[] = [];
 
             domFontSize: number = 0;
             marketCardWidth: number = 0;
@@ -61,9 +58,6 @@ class ScovilleCjh extends CommonMixer(Gamegui)
             }
 
 			playerScreenCounters: Record<string, Counter> = {};
-			yourPlayerColor: string = '';
-			cardsOnBoard: CardsOnBoard = {} as CardsOnBoard;
-			counterIcons: any;
 
 	/** @gameSpecific See {@link Gamegui} for more information. */
 	constructor(){
@@ -113,25 +107,33 @@ class ScovilleCjh extends CommonMixer(Gamegui)
 				// Get piece counters for player
 				
 				/** Player Screen Counters */
-				// for (let counterDataKey in gamedatas.playerCounterData) {
-				// 	const counterValue = gamedatas.playerCounterData[counterDataKey] ?? 0
-				//     const explodedName = counterDataKey.split('_');
-				//     const counterIconKey = explodedName[0] ?? '';
-				//     const pepperColor = explodedName.length > 1 ? explodedName[1] : '';
+				for (let counterData of gamedatas.playerCounterData) {
+					const pepperToken = gamedatas.pepperTokens.find(p => p.name_id == counterData.counterId)
+					let cssClasses = ''
+
+					if (counterData.counterId.includes('pepper')) {
+						cssClasses = `fa6-pepper-hot ${pepperToken?.color}`
+					}
+					else if (counterData.counterId.includes('coins')) {
+						cssClasses = 'fa6-coins'
+					}
+					else {
+						cssClasses = ''
+					}
 	
-				// 	// Place counter element into container
-				//     dojo.place(this.format_block('jstpl_screen_counter', {
-				//         id: this.player_id,
-				//         name: counterData,
-				//         cssClasses: `${this.counterIcons[counterIconKey].iconClass} ${pepperColor}`,
-				//     }), `counter_container`);
+					// Place counter element into container
+				    dojo.place(this.format_block('jstpl_screen_counter', {
+				        id: this.player_id,
+				        name: counterData.counterId,
+				        cssClasses: cssClasses,
+				    }), `counter_container`);
 	
-				// 	// Create counter
-				//     this.createCounter(this.player_id, counterData, )
+					// Create counter
+				    this.createCounter(this.player_id, counterData)
 	
-				//     this.addTooltip(`label_${counterData}_${this.player_id}`, dojo.string.substitute( _(`Number of ${pepperColor} ${counterIconKey} ${player.name} has.`), {
-				//         player_name: player.name }), "");
-				// }
+				    this.addTooltip(`label_${counterData.counterId}_${this.player_id}`, dojo.string.substitute( _(`Number of ${counterData.counterName} ${player.name} has.`), {
+				        player_name: player.name }), "");
+				}
 			}
 
 
@@ -310,14 +312,19 @@ class ScovilleCjh extends CommonMixer(Gamegui)
 		Here, you can defines some utility methods that you can use everywhere in your typescript
 		script.
 	*/
-	createCounter (player_id: number, counterName: string) {
-		// this.counter[player_id][name] = new ebg.counter();
-
-		this.playerScreenCounters[counterName] = new ebg.counter();
-		this.playerScreenCounters[counterName]?.create(`counter_${counterName}_${player_id}`);
-
-		// const counterRecord = this.gamedatas?.counters[player_id][name]
-		// this.playerScreenCounters[counterName]?.setValue();
+	createCounter (playerId: number, counterData: PlayerCounterData) {
+		try {
+			let counter = new ebg.counter()
+			
+			counter.create(`counter_${counterData.counterId}_${playerId}`);
+			
+			counter.setValue(counterData.counterValue ?? 0);
+	
+			this.playerScreenCounters[counterData.counterId] = counter
+		}
+		catch (error) {
+			console.error(error)
+		}
 	}
 
 	addTokenOnBoard( player: Player, isTurnOrderTrack: boolean)

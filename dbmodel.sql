@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS `pepper_plot` (
    `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
    `board_x` tinyint(2) unsigned NOT NULL,
    `board_y` tinyint(2) unsigned NOT NULL,
-   `pepper` varchar(2) NULL,
+   `pepper` varchar(22) NULL,
    PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 

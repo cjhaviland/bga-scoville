@@ -60,69 +60,139 @@
   --player-yellow: #FFEE01;
 }
 
-.bg-blue {
-  background-color: var(--player-blue);
-}
-
-.bg-green {
-  background-color: var(--player-green);
-}
-
-.bg-orange {
-  background-color: var(--player-orange);
-}
-
-.bg-purple {
-  background-color: var(--player-purple);
-}
-
+/********* PEPPER COLORS **********/
 .bg-red {
-  background-color: var(--player-red);
+  background-color: var(--pepper-red);
+}
+
+.red {
+  color: var(--pepper-red);
+}
+
+.pepper-red {
+  background-position: 2% 24%;
 }
 
 .bg-yellow {
-  background-color: var(--player-yellow);
-}
-
-/********* PEPPER COLORS **********/
-.red {
-  color: var(--pepper-red);
+  background-color: var(--pepper-yellow);
 }
 
 .yellow {
   color: var(--pepper-yellow);
 }
 
+.pepper-yellow {
+  background-position: 24% 24%;
+}
+
+.bg-blue {
+  background-color: var(--pepper-blue);
+}
+
 .blue {
   color: var(--pepper-blue);
+}
+
+.pepper-blue {
+  background-position: 46% 24%;
+}
+
+.bg-green {
+  background-color: var(--pepper-green);
 }
 
 .green {
   color: var(--pepper-green);
 }
 
+.pepper-green {
+  background-position: 68% 24%;
+}
+
+.bg-orange {
+  background-color: var(--pepper-orange);
+}
+
 .orange {
   color: var(--pepper-orange);
+}
+
+.pepper-orange {
+  background-position: 90% 24%;
+}
+
+.bg-purple {
+  background-color: var(--pepper-purple);
 }
 
 .purple {
   color: var(--pepper-purple);
 }
 
+.pepper-purple {
+  background-position: 2% 78%;
+}
+
+.bg-brown {
+  background-color: var(--pepper-brown);
+}
+
 .brown {
   color: var(--pepper-brown);
+}
+
+.pepper-brown {
+  background-position: 24% 78%;
+}
+
+.bg-white {
+  background-color: var(--pepper-white);
 }
 
 .white {
   color: var(--pepper-white);
 }
 
+.pepper-white {
+  background-position: 46% 78%;
+}
+
+.bg-black {
+  background-color: var(--pepper-black);
+}
+
 .black {
   color: var(--pepper-black);
 }
 
+.pepper-black {
+  background-position: 68% 78%;
+}
+
+.bg-phantom {
+  background-color: var(--pepper-phantom);
+}
+
 .phantom {
   color: var(--pepper-phantom);
+}
+
+.pepper-phantom {
+  background-position: 90% 78%;
+}
+
+/***** PEPPER PLOTS ****/
+.pepper-plot {
+  width: 100%;
+  height: 100%;
+}
+
+.pepper {
+  background-image: url("img/peppers-transparent.png");
+  background-size: 650% auto;
+  transform: rotate(-0.01turn);
+  height: 100%;
+  width: 100%;
 }
 
 /***** BOARD ****/
@@ -330,7 +400,15 @@ h3.container-label {
   left: 28.4%;
 }
 
+#bottom-disc-1 {
+  left: 28.4%;
+}
+
 #top-disc-2 {
+  left: 39.2%;
+}
+
+#bottom-disc-2 {
   left: 39.2%;
 }
 
@@ -338,7 +416,15 @@ h3.container-label {
   left: 50%;
 }
 
+#bottom-disc-3 {
+  left: 50%;
+}
+
 #top-disc-4 {
+  left: 60.8%;
+}
+
+#bottom-disc-4 {
   left: 60.8%;
 }
 
@@ -346,86 +432,16 @@ h3.container-label {
   left: 71.6%;
 }
 
-#top-disc-6 {
-  left: 82.4%;
-}
-
-#bottom-disc-1 {
-  left: 28.4%;
-}
-
-#bottom-disc-2 {
-  left: 39.2%;
-}
-
-#bottom-disc-3 {
-  left: 50%;
-}
-
-#bottom-disc-4 {
-  left: 60.8%;
-}
-
 #bottom-disc-5 {
   left: 71.6%;
 }
 
-#bottom-disc-6 {
+#top-disc-6 {
   left: 82.4%;
 }
 
-/***** PEPPER PLOTS ****/
-.pepper-plot {
-  width: 100%;
-  height: 100%;
-}
-
-.pepper {
-  background-image: url("img/peppers-transparent.png");
-  background-size: 650% auto;
-  transform: rotate(-0.01turn);
-  height: 100%;
-  width: 100%;
-}
-
-.pepper-red {
-  background-position: 2% 24%;
-}
-
-.pepper-yellow {
-  background-position: 24% 24%;
-}
-
-.pepper-blue {
-  background-position: 46% 24%;
-}
-
-.pepper-green {
-  background-position: 68% 24%;
-}
-
-.pepper-orange {
-  background-position: 90% 24%;
-}
-
-.pepper-purple {
-  background-position: 2% 78%;
-}
-
-.pepper-brown {
-  background-position: 24% 78%;
-}
-
-.pepper-white {
-  background-position: 46% 78%;
-}
-
-.pepper-black {
-  background-position: 68% 78%;
-}
-
-.pepper-phantom {
-  background-position: 90% 78%;
+#bottom-disc-6 {
+  left: 82.4%;
 }
 
 /***** PLAYER PANEL ****/
@@ -479,39 +495,47 @@ h3.container-label {
   background-position-x: 0%;
 }
 
-.market-card[data-col="2"] {
-  background-position-x: 25%;
-}
-
-.market-card[data-col="3"] {
-  background-position-x: 50%;
-}
-
-.market-card[data-col="4"] {
-  background-position-x: 75%;
-}
-
-.market-card[data-col="5"] {
-  background-position-x: 100%;
-}
-
 /** Market Card (5x5) Sprite Row is (Total rows minus row Num) Times (row Number - 1)*/
 .market-card[data-row="1"] {
   background-position-y: 0%;
 }
 
+/** Market Card (5x5) Sprite Column is (Total columns minus Column Num) Times (Column Number - 1)*/
+.market-card[data-col="2"] {
+  background-position-x: 25%;
+}
+
+/** Market Card (5x5) Sprite Row is (Total rows minus row Num) Times (row Number - 1)*/
 .market-card[data-row="2"] {
   background-position-y: 25%;
 }
 
+/** Market Card (5x5) Sprite Column is (Total columns minus Column Num) Times (Column Number - 1)*/
+.market-card[data-col="3"] {
+  background-position-x: 50%;
+}
+
+/** Market Card (5x5) Sprite Row is (Total rows minus row Num) Times (row Number - 1)*/
 .market-card[data-row="3"] {
   background-position-y: 50%;
 }
 
+/** Market Card (5x5) Sprite Column is (Total columns minus Column Num) Times (Column Number - 1)*/
+.market-card[data-col="4"] {
+  background-position-x: 75%;
+}
+
+/** Market Card (5x5) Sprite Row is (Total rows minus row Num) Times (row Number - 1)*/
 .market-card[data-row="4"] {
   background-position-y: 75%;
 }
 
+/** Market Card (5x5) Sprite Column is (Total columns minus Column Num) Times (Column Number - 1)*/
+.market-card[data-col="5"] {
+  background-position-x: 100%;
+}
+
+/** Market Card (5x5) Sprite Row is (Total rows minus row Num) Times (row Number - 1)*/
 .market-card[data-row="5"] {
   background-position-y: 100%;
 }
@@ -537,20 +561,29 @@ h3.container-label {
   background-position-x: 0%;
 }
 
+/** Recipe Card (5x6) Sprite Column is (Total columns minus Column Num) Times (Column Number - 1)*/
 .recipe-card[data-col="2"] {
   background-position-x: 25%;
 }
 
+/** Recipe Card (5x6) Sprite Column is (Total columns minus Column Num) Times (Column Number - 1)*/
 .recipe-card[data-col="3"] {
   background-position-x: 50%;
 }
 
+/** Recipe Card (5x6) Sprite Column is (Total columns minus Column Num) Times (Column Number - 1)*/
 .recipe-card[data-col="4"] {
   background-position-x: 75%;
 }
 
+/** Recipe Card (5x6) Sprite Column is (Total columns minus Column Num) Times (Column Number - 1)*/
 .recipe-card[data-col="5"] {
   background-position-x: 100%;
+}
+
+/** Recipe Card (5x6) Sprite Column is (Total columns minus Column Num) Times (Column Number - 1)*/
+.recipe-card[data-col="6"] {
+  background-position-x: 125%;
 }
 
 /** Recipe Card (5x7) Sprite Row is (Total rows minus row Num) Times (row Number - 1)*/
@@ -558,24 +591,34 @@ h3.container-label {
   background-position-y: 0%;
 }
 
+/** Recipe Card (5x7) Sprite Row is (Total rows minus row Num) Times (row Number - 1)*/
 .recipe-card[data-row="2"] {
   background-position-y: 16.6666666667%;
 }
 
+/** Recipe Card (5x7) Sprite Row is (Total rows minus row Num) Times (row Number - 1)*/
 .recipe-card[data-row="3"] {
   background-position-y: 33.3333333333%;
 }
 
+/** Recipe Card (5x7) Sprite Row is (Total rows minus row Num) Times (row Number - 1)*/
 .recipe-card[data-row="4"] {
   background-position-y: 50%;
 }
 
+/** Recipe Card (5x7) Sprite Row is (Total rows minus row Num) Times (row Number - 1)*/
 .recipe-card[data-row="5"] {
   background-position-y: 66.6666666667%;
 }
 
+/** Recipe Card (5x7) Sprite Row is (Total rows minus row Num) Times (row Number - 1)*/
 .recipe-card[data-row="6"] {
   background-position-y: 83.3333333333%;
+}
+
+/** Recipe Card (5x7) Sprite Row is (Total rows minus row Num) Times (row Number - 1)*/
+.recipe-card[data-row="7"] {
+  background-position-y: 100%;
 }
 
 /***** AUCTION CARDS ****/
@@ -604,18 +647,22 @@ h3.container-label {
   background-position-x: 0%;
 }
 
+/** Auction Card (5x3) Sprite Column is (Total columns minus Column Num) Times (Column Number - 1)*/
 .auction-card[data-col="2"] {
   background-position-x: 25%;
 }
 
+/** Auction Card (5x3) Sprite Column is (Total columns minus Column Num) Times (Column Number - 1)*/
 .auction-card[data-col="3"] {
   background-position-x: 50%;
 }
 
+/** Auction Card (5x3) Sprite Column is (Total columns minus Column Num) Times (Column Number - 1)*/
 .auction-card[data-col="4"] {
   background-position-x: 75%;
 }
 
+/** Auction Card (5x3) Sprite Column is (Total columns minus Column Num) Times (Column Number - 1)*/
 .auction-card[data-col="5"] {
   background-position-x: 100%;
 }
@@ -625,10 +672,12 @@ h3.container-label {
   background-position-y: 0%;
 }
 
+/** Auction Card (5x3) Sprite Row is (Total rows minus row Num) Times (row Number - 1)*/
 .auction-card[data-row="2"] {
   background-position-y: 50%;
 }
 
+/** Auction Card (5x3) Sprite Row is (Total rows minus row Num) Times (row Number - 1)*/
 .auction-card[data-row="3"] {
   background-position-y: 100%;
 }

@@ -87,17 +87,17 @@ $this->player_colors = array(
 );
 
 if (!defined('PEPPER_RED')) { // ensure this block is only invoked once, since it is included multiple times
-  define('PEPPER_RED', 1);
-  define('PEPPER_YELLOW', 2);
-  define('PEPPER_BLUE', 3);
-  define('PEPPER_GREEN', 4);
-  define('PEPPER_ORANGE', 5);
-  define('PEPPER_PURPLE', 6);
-  define('PEPPER_BROWN', 7);
-  define('PEPPER_WHITE', 8);
-  define('PEPPER_BLACK', 9);
-  define('PEPPER_PHANTOM', 10);
-  define('PEPPER_BLACK_OR_WHITE', 11);
+  define('PEPPER_RED', 'pepper_red');
+  define('PEPPER_YELLOW', 'pepper_yellow');
+  define('PEPPER_BLUE', 'pepper_blue');
+  define('PEPPER_GREEN', 'pepper_green');
+  define('PEPPER_ORANGE', 'pepper_orange');
+  define('PEPPER_PURPLE', 'pepper_purple');
+  define('PEPPER_BROWN', 'pepper_brown');
+  define('PEPPER_WHITE', 'pepper_white');
+  define('PEPPER_BLACK', 'pepper_black');
+  define('PEPPER_PHANTOM', 'pepper_phantom');
+  define('PEPPER_BLACK_OR_WHITE', 'pepper_black_or_white');
 }
 
 $this->pepper_tokens = array(
@@ -116,9 +116,9 @@ $this->pepper_tokens = array(
 $this->starting_peppers = array(PEPPER_RED, PEPPER_YELLOW, PEPPER_BLUE);
 
 $this->starting_values = array(
-  'pepper_red' => 1,
-  'pepper_yellow' => 1,
-  'pepper_blue' => 1,
+  PEPPER_RED => 1,
+  PEPPER_YELLOW => 1,
+  PEPPER_BLUE => 1,
   'player_coins' => 10
 );
 

@@ -201,9 +201,6 @@ define("bgagame/scovillecjh", ["require", "exports", "ebg/core/gamegui", "cookbo
         __extends(ScovilleCjh, _super);
         function ScovilleCjh() {
             var _this = _super.call(this) || this;
-            _this.pepperTokens = {};
-            _this.allPlayerColors = {};
-            _this.pepperPlots = [];
             _this.domFontSize = 0;
             _this.marketCardWidth = 0;
             _this.marketCardHeight = 0;
@@ -235,8 +232,6 @@ define("bgagame/scovillecjh", ["require", "exports", "ebg/core/gamegui", "cookbo
                 },
             };
             _this.playerScreenCounters = {};
-            _this.yourPlayerColor = '';
-            _this.cardsOnBoard = {};
             console.log('scovillecjh constructor');
             var domEl = document.getElementsByTagName('html')[0];
             if (domEl) {
@@ -255,6 +250,33 @@ define("bgagame/scovillecjh", ["require", "exports", "ebg/core/gamegui", "cookbo
                 var playerScreenNameEl = document.getElementById('player_screen_name');
                 if (playerScreenNameEl)
                     playerScreenNameEl.innerText = (_a = player.name) !== null && _a !== void 0 ? _a : '';
+                var _loop_1 = function (counterData) {
+                    var pepperToken = gamedatas.pepperTokens.find(function (p) { return p.name_id == counterData.counterId; });
+                    var cssClasses = '';
+                    if (counterData.counterId.includes('pepper')) {
+                        cssClasses = "fa6-pepper-hot ".concat(pepperToken === null || pepperToken === void 0 ? void 0 : pepperToken.color);
+                    }
+                    else if (counterData.counterId.includes('coins')) {
+                        cssClasses = 'fa6-coins';
+                    }
+                    else {
+                        cssClasses = '';
+                    }
+                    dojo.place(this_1.format_block('jstpl_screen_counter', {
+                        id: this_1.player_id,
+                        name: counterData.counterId,
+                        cssClasses: cssClasses,
+                    }), "counter_container");
+                    this_1.createCounter(this_1.player_id, counterData);
+                    this_1.addTooltip("label_".concat(counterData.counterId, "_").concat(this_1.player_id), dojo.string.substitute(_("Number of ".concat(counterData.counterName, " ").concat(player.name, " has.")), {
+                        player_name: player.name
+                    }), "");
+                };
+                var this_1 = this;
+                for (var _i = 0, _b = gamedatas.playerCounterData; _i < _b.length; _i++) {
+                    var counterData = _b[_i];
+                    _loop_1(counterData);
+                }
             }
             this.setupNotifications();
             console.log("Ending game setup");
@@ -283,10 +305,17 @@ define("bgagame/scovillecjh", ["require", "exports", "ebg/core/gamegui", "cookbo
                     break;
             }
         };
-        ScovilleCjh.prototype.createCounter = function (player_id, counterName) {
+        ScovilleCjh.prototype.createCounter = function (playerId, counterData) {
             var _a;
-            this.playerScreenCounters[counterName] = new ebg.counter();
-            (_a = this.playerScreenCounters[counterName]) === null || _a === void 0 ? void 0 : _a.create("counter_".concat(counterName, "_").concat(player_id));
+            try {
+                var counter = new ebg.counter();
+                counter.create("counter_".concat(counterData.counterId, "_").concat(playerId));
+                counter.setValue((_a = counterData.counterValue) !== null && _a !== void 0 ? _a : 0);
+                this.playerScreenCounters[counterData.counterId] = counter;
+            }
+            catch (error) {
+                console.error(error);
+            }
         };
         ScovilleCjh.prototype.addTokenOnBoard = function (player, isTurnOrderTrack) {
             var topOrBottom = isTurnOrderTrack ? 'bottom' : 'top';

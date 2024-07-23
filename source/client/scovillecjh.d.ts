@@ -21,19 +21,11 @@ declare global {
 		// [key: string | number]: Record<keyof any, any>; // Uncomment to remove type safety on game state arguments
 		playerCounterData: PlayerCounterData[]
 		allPlayerColors: Record<string, PlayerColor>
-		boardPaths: Record<number, BoardPath>
-		cardsDescription: {
-			morningAuctionCards: Record<number,AuctionCard>
-			afternoonAuctionCards: Record<number,AuctionCard>
-			awardPlaques: Record<number, AwardPlaque>
-			morningMarketCards: Record<number, MarketCard>
-			afternoonMarketCards: Record<number, MarketCard>
-			recipeCards: Record<number, RecipeCard>
-		}, 
+		boardPaths: BoardPath[]
+		pepperPlots: PepperPlot[]
+		pepperTokens: PepperToken[]
+		cardsDescription: CardDescriptions, 
 		cardsOnBoard: CardsOnBoard 
-		pepperPlots: PepperPlot[],
-		pepperTokens: Record<number, PepperToken>
-		// counters: Record<number, Counter>
 		won: Record<number, unknown> 
 	}
 
@@ -87,6 +79,7 @@ declare global {
 	}
 
 	interface PepperToken {
+		name_id: string
 		name: string
 		color: string
 		color_code: string
@@ -125,11 +118,20 @@ declare global {
 		}
 	}
 
+	interface CardDescriptions {
+		morningAuctionCards: AuctionCard[]
+		afternoonAuctionCards: AuctionCard[]
+		awardPlaques: AwardPlaque[]
+		morningMarketCards: MarketCard[]
+		afternoonMarketCards: MarketCard[]
+		recipeCards: RecipeCard[]
+	}
+	
 	interface CardsOnBoard {
-		auction: Record<number, DeckItem>
-		awards: Record<number, DeckItem>
-		market: Record<number, DeckItem>
-		recipe: Record<number, DeckItem>
+		auction: DeckItem[]
+		awards: DeckItem[]
+		market: DeckItem[]
+		recipe: DeckItem[]
 	}
 
 	interface PlayerCounterData { 

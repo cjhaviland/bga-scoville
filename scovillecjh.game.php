@@ -126,34 +126,8 @@ class ScovilleCjh extends Table
 
         // TODO: setup the initial game situation here
 
-        // Insert (empty) pepper plots into database
-        $startingPepperIdxs = array_rand($this->starting_peppers, 2);
-
-        $sql = "INSERT INTO pepper_plot (board_x, board_y, pepper) VALUES ";
-        $xyValues = array();
-        for ($x = 1; $x <= 10; $x++) {
-            for ($y = 1; $y <= 7; $y++) {
-                // Setup initial pepper plots 5_4 and 6_4 are the starting plots
-                if ($x == 5 && $y == 4) {
-                    // Take the first random starting pepper
-                    $leftPepper = $this->starting_peppers[$startingPepperIdxs[0]];
-
-                    $xyValues[] = "($x, $y, $leftPepper)";
-                }
-                else if ($x == 6 && $y == 4) {
-                    // Take the second random starting pepper
-                    $rightPepper = $this->starting_peppers[$startingPepperIdxs[1]];
-
-                    $xyValues[] = "($x, $y, $rightPepper)"; 
-                }
-                else {
-                    $xyValues[] = "($x, $y, null)"; 
-                }
-            }
-        }
-        $sql .= implode( ',', $xyValues );
-        self::DbQuery( $sql );
         
+        self::initPepperPlots();
         self::initBoardPathTable();
         self::initPlayerCounters($players);
        
@@ -205,15 +179,13 @@ class ScovilleCjh extends Table
         // }
 
         // Pepper Plots
-        $sql = "SELECT id, board_x, board_y, pepper FROM pepper_plot ";
-        $result['pepperPlots'] = self::getObjectListFromDB( $sql );
+        $result['pepperPlots'] = $this->getAllPepperPlots();
         
         // Board Paths
-        $sql = "SELECT id, pos_1, pos_2 FROM board_path ";
-        $result['boardPaths'] = self::getCollectionFromDb( $sql );
+        $result['boardPaths'] = $this->getBoardPaths();
 
         // TODO: Gather all information about current game situation (visible by player $current_player_id).
-        $result['pepperTokens'] = $this->pepper_tokens;
+        $result['pepperTokens'] = array_values($this->pepper_tokens);
         $result['cardsDescription'] = $this->getCardsDescription();
         $result['cardsOnBoard'] = $this->getCardsOnBoard();
 
@@ -245,8 +217,42 @@ class ScovilleCjh extends Table
     /*
         In this space, you can put any utility methods useful for your game logic
     */
+    
+    // Insert (empty) pepper plots into database
+    function initPepperPlots() {
+        $startingPepperIdxs = array_rand($this->starting_peppers, 2);
 
+        $sql = "INSERT INTO pepper_plot (board_x, board_y, pepper) VALUES ";
+        $xyValues = array();
+        for ($x = 1; $x <= 10; $x++) {
+            for ($y = 1; $y <= 7; $y++) {
+                // Setup initial pepper plots 5_4 and 6_4 are the starting plots
+                if ($x == 5 && $y == 4) {
+                    // Take the first random starting pepper
+                    $leftPepper = $this->starting_peppers[$startingPepperIdxs[0]];
 
+                    $xyValues[] = "($x, $y, '$leftPepper')";
+                }
+                else if ($x == 6 && $y == 4) {
+                    // Take the second random starting pepper
+                    $rightPepper = $this->starting_peppers[$startingPepperIdxs[1]];
+
+                    $xyValues[] = "($x, $y, '$rightPepper')"; 
+                }
+                else {
+                    $xyValues[] = "($x, $y, null)"; 
+                }
+            }
+        }
+        $sql .= implode( ',', $xyValues );
+        self::DbQuery( $sql );
+    }
+
+    // Get All
+    function getAllPepperPlots() {
+        $sql = "SELECT id, board_x, board_y, pepper FROM pepper_plot ";
+        return self::getObjectListFromDB($sql);
+    }
 
     /**
      * Board Table
@@ -297,6 +303,11 @@ class ScovilleCjh extends Table
         self::DbQuery( $sql );
     }
 
+    function getBoardPaths() {
+        $sql = "SELECT id, pos_1, pos_2 FROM board_path ";
+        return self::getObjectListFromDB($sql);
+    }
+
     // Insert counter rows for all players with default values
     function initPlayerCounters($players) {
         $sql = "INSERT INTO player_counter (player_id, counter_id, counter_name, counter_value, display_order) VALUES ";
@@ -310,14 +321,13 @@ class ScovilleCjh extends Table
     
             foreach($this->pepper_tokens as $pepper_key => $pepper) {
                 $starting_value_pepper = 0;
-                $name_id = $pepper["name_id"];
                 $name = $pepper["name"];
 
-                if (array_key_exists($name_id, $this->starting_values)) {
-                    $starting_value_pepper = $this->starting_values[$name_id];
+                if (array_key_exists($pepper_key, $this->starting_values)) {
+                    $starting_value_pepper = $this->starting_values[$pepper_key];
                 }
 
-                $values[] = "($player_id, '$name_id', '$name', $starting_value_pepper, 1)";
+                $values[] = "($player_id, '$pepper_key', '$name', $starting_value_pepper, 1)";
             }
         }
 
@@ -341,34 +351,6 @@ class ScovilleCjh extends Table
 
         $this->getUniqueValueFromDB($sql);
     }
-
-    // function getCounterData($player_id) {
-        // $result = array(
-        //     'deck' => $this->cards->countCardInLocation($this->player_deck($player_id)),
-        //     'hand' => $this->cards->countCardInLocation(STOCK_HAND, $player_id) + $this->cards->countCardInLocation(STOCK_LIMBO, $player_id),
-        //     'discard' => $this->cards->countCardInLocation($this->player_discard($player_id)),
-        // );
-        // if (self::getGameStateValue(GAME_STATE_ARTICHOKE_COUNTS) > 0) {
-        //     $counts = $this->count_cards_and_artichokes($player_id);
-        //     $result['artichokes'] = $counts['artichoke_count'];
-        // }
-        // $result = array(
-        //     'player_coins' => (int)$player['player_coins'],
-        //     'pepper_red' => (int)$player['pepper_red'],
-        //     'pepper_yellow' => (int)$player['pepper_yellow'],
-        //     'pepper_blue' => (int)$player['pepper_blue'],
-        //     'pepper_green' => (int)$player['pepper_green'],
-        //     'pepper_orange' => (int)$player['pepper_orange'],
-        //     'pepper_purple' => (int)$player['pepper_purple'],
-        //     'pepper_brown' => (int)$player['pepper_brown'],
-        //     'pepper_white' => (int)$player['pepper_white'],
-        //     'pepper_black' => (int)$player['pepper_black'],
-        //     'pepper_phantom' => (int)$player['pepper_phantom']
-        // );
-        
-        // return $result;
-    //     return $this->getPlayerCounters($player["player_id"]);
-    // }
 
     function setupMorningMarketDeck($players)
     {
@@ -522,27 +504,23 @@ class ScovilleCjh extends Table
     }
 
     function getCardsDescription() {
-        $desc = array(
-            'morningMarketCards' => $this->morning_market_cards,
-            'recipeCards' => $this->recipe_cards,
-            'morningAuctionCards' => $this->morning_auction_cards,
-            'afternoonAuctionCards' => $this->afternoon_auction_cards,
-            'awardPlaques' => $this->award_plaques
-        );
-
-        return $desc;
+        return [
+            'morningMarketCards' => array_values($this->morning_market_cards),
+            'recipeCards' => array_values($this->recipe_cards),
+            'morningAuctionCards' => array_values($this->morning_auction_cards),
+            'afternoonAuctionCards' => array_values($this->afternoon_auction_cards),
+            'awardPlaques' => array_values($this->award_plaques)
+        ];
     }
     
     function getCardsOnBoard() {
         // TODO: Add Morning/Afternoon switch so player cannot see what the upcoming afternoon cards are
-        $onBoard = array(
-            'market' => $this->morning_market_deck->getCardsInLocation(DECK_LOC_BOARD),
-            'recipe' => $this->recipe_deck->getCardsInLocation(DECK_LOC_BOARD),
-            'auction' => $this->morning_auction_deck->getCardsInLocation(DECK_LOC_BOARD),
-            'awards' => $this->award_plaque_deck->getCardsInLocation(DECK_LOC_BOARD)
-        );
-
-        return $onBoard;
+        return [
+            'market' => array_values($this->morning_market_deck->getCardsInLocation(DECK_LOC_BOARD)),
+            'recipe' => array_values($this->recipe_deck->getCardsInLocation(DECK_LOC_BOARD)),
+            'auction' => array_values($this->morning_auction_deck->getCardsInLocation(DECK_LOC_BOARD)),
+            'awards' => array_values($this->award_plaque_deck->getCardsInLocation(DECK_LOC_BOARD))
+        ];
     }
 
     /**
