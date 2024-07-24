@@ -300,6 +300,55 @@ define("bgagame/scovillecjh", ["require", "exports", "ebg/core/gamegui", "cookbo
                 var player = players[player_id];
                 this.addTokenOnBoard(player, true);
             }
+            for (var y = 1; y <= 7; y++) {
+                for (var x = 1; x <= 10; x++) {
+                    dojo.place(this.format_block('jstpl_pepper_plot', { x: x, y: y }), "pepper-container");
+                }
+            }
+            var plotPeppers = this.gamedatas.pepperPlots.filter(function (plot) { return plot.pepper != null; });
+            var _loop_2 = function (plotPepper) {
+                var pepperToken = this_2.gamedatas.pepperTokens.find(function (p) { return p.name_id == plotPepper.pepper; });
+                if (pepperToken)
+                    dojo.place(this_2.format_block('jstpl_pepper', { color: pepperToken.color }), "pepper_plot_".concat(plotPepper.board_x, "_").concat(plotPepper.board_y));
+            };
+            var this_2 = this;
+            for (var _c = 0, plotPeppers_1 = plotPeppers; _c < plotPeppers_1.length; _c++) {
+                var plotPepper = plotPeppers_1[_c];
+                _loop_2(plotPepper);
+            }
+            for (var _d = 0, _e = cardsOnBoard.market; _d < _e.length; _d++) {
+                var card = _e[_d];
+                if (card) {
+                    var rowCol = this.getSpriteRowColumn(card.type, this.spriteInfo.morningMarket.numberOfColumns);
+                    dojo.place(this.format_block('jstpl_market_card', { morningAfternoon: 'morning', type: card.type, row: rowCol.row, col: rowCol.col }), 'market-cards-container');
+                }
+            }
+            var _loop_3 = function (card) {
+                if (card) {
+                    var rowCol = this_3.getSpriteRowColumn(card.type, this_3.spriteInfo.morningAuction.numberOfColumns);
+                    var keyIndex = Object.keys(cardsOnBoard.auction).findIndex(function (key) { var _a; return ((_a = cardsOnBoard.auction[parseInt(key)]) === null || _a === void 0 ? void 0 : _a.id) === card.id; });
+                    var leftVal = (keyIndex * 8.1) + 49.1;
+                    dojo.place(this_3.format_block('jstpl_auction_card', { morningAfternoon: 'morning', type: card.type, row: rowCol.row, col: rowCol.col, leftVal: leftVal }), 'board-top');
+                }
+            };
+            var this_3 = this;
+            for (var _f = 0, _g = cardsOnBoard.auction; _f < _g.length; _f++) {
+                var card = _g[_f];
+                _loop_3(card);
+            }
+            for (var _h = 0, _j = cardsOnBoard.recipe; _h < _j.length; _h++) {
+                var card = _j[_h];
+                if (card) {
+                    var rowCol = this.getSpriteRowColumn(card.type, this.spriteInfo.recipe.numberOfColumns);
+                    dojo.place(this.format_block('jstpl_recipe_card', { type: card.type, row: rowCol.row, col: rowCol.col }), 'recipe-cards-container');
+                }
+            }
+            for (var _k = 0, _l = cardsOnBoard.awards; _k < _l.length; _k++) {
+                var card = _l[_k];
+                if (card) {
+                    dojo.place(this.format_block('jstpl_award_plaque', { type: card.type, vp: card.type_arg }), "award-".concat(card.type, "-box"));
+                }
+            }
             this.setupNotifications();
             console.log("Ending game setup");
         };

@@ -88,14 +88,6 @@ class ScovilleCjh extends CommonMixer(Gamegui)
 				 *  Players should set up their screens to hide their stuff behind them during play.
 				 */
 				
-				// this.yourPlayerColor = players[currentPlayerId]?.color ?? '';
-				// this.allPlayerColors = allPlayerColors;
-				
-				// this.pepperTokens = pepperTokens;
-				// this.pepperPlots = pepperPlots;
-				
-				// this.cardsOnBoard = cardsOnBoard;
-				
 				// Setting up Player Screen
 				const player = this.gamedatas.players[this.player_id] as Player;
 
@@ -169,88 +161,80 @@ class ScovilleCjh extends CommonMixer(Gamegui)
                 // this.addFarmerOnBoard(player)
             }
             
-            // TODO: Set up your game interface here, according to "gamedatas"
-            
             // Setup Player Card
             // document.getElementById('player-card').style.backgroundPositionY = -(this.allPlayerColors[this.yourPlayerColor].sprite_pos * 201) + 'px';
-            // for( let y = 1; y <= 7; y++ )
-            // {
-            //     for( let x = 1; x <= 10; x++ )
-            //     {
-            //         dojo.place(this.format_block('jstpl_pepper_plot', { x: x, y: y }), `pepper-container`);
 
-            //         // When creating the pepper plots, check if there is a pepper on the plot
-            //         const plotPepper = this.pepperPlots.find(plot => plot.board_x === x && plot.board_y === y && plot.pepper != null) as PepperPlot;
-            //         if (plotPepper != null) {
-            //             console.log(`Adding pepper to plot ${x}_${y}`);
-                        
-			// 			const pepperId = parseInt(plotPepper.pepper ?? '');
-            //             dojo.place(this.format_block('jstpl_pepper', {color: this.pepperTokens[pepperId]?.color}), `pepper_plot_${plotPepper.board_x}_${plotPepper.board_y}`);
-            //         }
-            //     }        
+			/** Setup Pepper Plots */ 
+            for( let y = 1; y <= 7; y++ )
+            {
+                for( let x = 1; x <= 10; x++ )
+                {
+                    dojo.place(this.format_block('jstpl_pepper_plot', { x: x, y: y }), `pepper-container`);
+                }        
+            }
+
+			/** Add Peppers to the Plots */
+			const plotPeppers = this.gamedatas.pepperPlots.filter(plot => plot.pepper != null)
+			for (let plotPepper of plotPeppers) {
+				const pepperToken = this.gamedatas.pepperTokens.find(p => p.name_id == plotPepper.pepper)
+
+				if (pepperToken)
+					dojo.place(this.format_block('jstpl_pepper', {color: pepperToken.color}), `pepper_plot_${plotPepper.board_x}_${plotPepper.board_y}`);
+			}
+
+            /** Setup board paths */
+			// TODO: Why is this missing?
+            // for (let boardPath of this.gamedatas.boardPaths) {
+            //     dojo.place(this.format_block('jstpl_board_path', { id: boardPath.id }), `board-path-container`);
             // }
-
-            // Setup board paths
-            // TODO: Get spaces where a player exists
-            // for (let pathId in this.boardPaths) {
-            //     const path = this.boardPaths[pathId]
-
-            //     dojo.place(this.format_block('jstpl_board_path', { id: pathId }), `board-path-container`);
-            // }
+			
+			// TODO: Get spaces where a player exists
 
             // Setup Market cards
-            // for (let cardId in cardsOnBoard.market) {
-            //     const card = cardsOnBoard.market[cardId];
-
-			// 	if (card) {
-			// 		const cardDesc = cardsDescription.morningMarketCards[parseInt(card.type)];
+            for (let card of cardsOnBoard.market) {
+				if (card) {
+					// const cardDesc = cardsDescription.morningMarketCards.find(x => x.nameId == parseInt(card.type));
 	
-			// 		const rowCol = this.getSpriteRowColumn(card.type, this.spriteInfo.morningMarket.numberOfColumns)
+					const rowCol = this.getSpriteRowColumn(card.type, this.spriteInfo.morningMarket.numberOfColumns)
 	
-			// 		dojo.place(this.format_block('jstpl_market_card', {morningAfternoon: 'morning', type: card.type, row: rowCol.row, col: rowCol.col}), 'market-cards-container');
-			// 	}
-            // }
+					dojo.place(this.format_block('jstpl_market_card', {morningAfternoon: 'morning', type: card.type, row: rowCol.row, col: rowCol.col}), 'market-cards-container');
+				}
+            }
            
-            // // Setup Auction cards
-            // for (let cardId in cardsOnBoard.auction) {
-            //     const card = cardsOnBoard.auction[cardId];
-
-			// 	if(card) {
-			// 		const cardDesc = cardsDescription.morningAuctionCards[parseInt(card.type)];
+            // Setup Auction cards
+            for (let card of cardsOnBoard.auction) {
+				if(card) {
+					// const cardDesc = cardsDescription.morningAuctionCards.find(x => x.nameId == parseInt(card.type));
 	
-			// 		const rowCol = this.getSpriteRowColumn(card.type, this.spriteInfo.morningAuction.numberOfColumns)
+					const rowCol = this.getSpriteRowColumn(card.type, this.spriteInfo.morningAuction.numberOfColumns)
 	
-			// 		const keyIndex = Object.keys(cardsOnBoard.auction).findIndex(key => cardsOnBoard.auction[parseInt(key)]?.id === card.id);
-			// 		const leftVal = (keyIndex * 8.1) + 49.1;
-			// 		dojo.place(this.format_block('jstpl_auction_card', {morningAfternoon: 'morning', type: card.type, row: rowCol.row, col: rowCol.col, leftVal: leftVal}), 'board-top');
-			// 	}
-            // }
+					const keyIndex = Object.keys(cardsOnBoard.auction).findIndex(key => cardsOnBoard.auction[parseInt(key)]?.id === card.id);
+					const leftVal = (keyIndex * 8.1) + 49.1;
+					dojo.place(this.format_block('jstpl_auction_card', {morningAfternoon: 'morning', type: card.type, row: rowCol.row, col: rowCol.col, leftVal: leftVal}), 'board-top');
+				}
+            }
             
-            // // Setup Recipe cards
-            // for (let cardId in cardsOnBoard.recipe) {
-            //     const card = cardsOnBoard.recipe[cardId];
-
-			// 	if (card) {
-			// 		const cardDesc = cardsDescription.recipeCards[parseInt(card.type)];
+            // Setup Recipe cards
+            for (let card of cardsOnBoard.recipe) {
+				if (card) {
+					// const cardDesc = cardsDescription.recipeCards.find(x => x.nameId == card.type);
 	
-			// 		const rowCol = this.getSpriteRowColumn(card.type, this.spriteInfo.recipe.numberOfColumns)
+					const rowCol = this.getSpriteRowColumn(card.type, this.spriteInfo.recipe.numberOfColumns)
 	
-			// 		dojo.place(this.format_block('jstpl_recipe_card', {type: card.type, row: rowCol.row, col: rowCol.col}), 'recipe-cards-container');
-			// 	}
-            // }
+					dojo.place(this.format_block('jstpl_recipe_card', {type: card.type, row: rowCol.row, col: rowCol.col}), 'recipe-cards-container');
+				}
+            }
             
-            // // Setup Award Plaques
-            // for (let cardId in cardsOnBoard.awards) {
-            //     const card = cardsOnBoard.awards[cardId];
-
-			// 	if (card) {
-			// 		const cardDesc = cardsDescription.awardPlaques[parseInt(card.type)];
+            // Setup Award Plaques
+            for (let card of cardsOnBoard.awards) {
+				if (card) {
+					// const cardDesc = cardsDescription.awardPlaques.find(x => x.nameId == parseInt(card.type));
 	
-			// 		// const rowCol = this.getSpriteRowColumn(card.type, this.spriteInfo.recipe.numberOfColumns)
+					// const rowCol = this.getSpriteRowColumn(card.type, this.spriteInfo.recipe.numberOfColumns)
 	
-			// 		dojo.place(this.format_block('jstpl_award_plaque', {type: card.type, vp: card.type_arg}), `award-${card.type}-box`);
-			// 	}
-            // }
+					dojo.place(this.format_block('jstpl_award_plaque', {type: card.type, vp: card.type_arg}), `award-${card.type}-box`);
+				}
+            }
  
             // Setup game notifications to handle (see "setupNotifications" method below)
             this.setupNotifications();
