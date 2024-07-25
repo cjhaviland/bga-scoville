@@ -14,11 +14,13 @@ declare global {
 	/** @gameSpecific Add game specific notifications / arguments here. See {@link NotifTypes} for more information. */
 	interface NotifTypes {
 		// [name: string]: any; // Uncomment to remove type safety on notification names and arguments
+		invalidBid: { bidAmount: string, maxBid: string }
 	}
 
 	/** @gameSpecific Add game specific gamedatas arguments here. See {@link Gamedatas} for more information. */
 	interface Gamedatas {
 		// [key: string | number]: Record<keyof any, any>; // Uncomment to remove type safety on game state arguments
+		currentRound: number
 		playerCounterData: PlayerCounterData[]
 		allPlayerColors: Record<string, PlayerColor>
 		boardPaths: BoardPath[]

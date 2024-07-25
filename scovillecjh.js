@@ -244,7 +244,7 @@ define("bgagame/scovillecjh", ["require", "exports", "ebg/core/gamegui", "cookbo
         ScovilleCjh.prototype.setup = function (gamedatas) {
             var _a;
             console.log("Starting game setup", gamedatas);
-            var allPlayerColors = gamedatas.allPlayerColors, players = gamedatas.players, won = gamedatas.won, pepperPlots = gamedatas.pepperPlots, boardPaths = gamedatas.boardPaths, pepperTokens = gamedatas.pepperTokens, cardsDescription = gamedatas.cardsDescription, cardsOnBoard = gamedatas.cardsOnBoard, gamestate = gamedatas.gamestate, tablespeed = gamedatas.tablespeed, game_result_neutralized = gamedatas.game_result_neutralized, neutralized_player_id = gamedatas.neutralized_player_id, playerorder = gamedatas.playerorder, gamestates = gamedatas.gamestates, notifications = gamedatas.notifications, decision = gamedatas.decision, playerCounterData = gamedatas.playerCounterData;
+            var allPlayerColors = gamedatas.allPlayerColors, players = gamedatas.players, won = gamedatas.won, pepperPlots = gamedatas.pepperPlots, boardPaths = gamedatas.boardPaths, pepperTokens = gamedatas.pepperTokens, cardsDescription = gamedatas.cardsDescription, cardsOnBoard = gamedatas.cardsOnBoard, gamestate = gamedatas.gamestate, tablespeed = gamedatas.tablespeed, game_result_neutralized = gamedatas.game_result_neutralized, neutralized_player_id = gamedatas.neutralized_player_id, playerorder = gamedatas.playerorder, gamestates = gamedatas.gamestates, notifications = gamedatas.notifications, decision = gamedatas.decision, playerCounterData = gamedatas.playerCounterData, currentRound = gamedatas.currentRound;
             if (!this.isSpectator) {
                 var player = this.gamedatas.players[this.player_id];
                 var playerScreenNameEl = document.getElementById('player_screen_name');
@@ -355,7 +355,12 @@ define("bgagame/scovillecjh", ["require", "exports", "ebg/core/gamegui", "cookbo
         ScovilleCjh.prototype.onEnteringState = function (stateName, args) {
             console.log('Entering state: ' + stateName);
             switch (stateName) {
+                case 'gameNewRound':
+                    console.log("New round: ".concat(this.gamedatas.currentRound));
+                    break;
                 case 'auctionBid':
+                    this.slideAllTokensToTop();
+                    this.addAuctionBidInput();
                     break;
             }
         };
@@ -395,6 +400,15 @@ define("bgagame/scovillecjh", ["require", "exports", "ebg/core/gamegui", "cookbo
                 color: this.getColorName(player.color)
             }), "".concat(topOrBottom, "-disc-").concat(player.turn_order));
         };
+        ScovilleCjh.prototype.moveToken = function (player, newPosition) {
+            this.attachToNewParent("player-".concat(player.id, "-token"), "".concat(newPosition, "-disc-").concat(player.turn_order), 0);
+        };
+        ScovilleCjh.prototype.slideAllTokensToTop = function () {
+            for (var playerId in this.gamedatas.players) {
+                var player = this.gamedatas.players[playerId];
+                this.moveToken(player, 'top');
+            }
+        };
         ScovilleCjh.prototype.addFarmerOnBoard = function (player) {
             dojo.place(this.format_block('jstpl_player_farmer', {
                 playerId: player.id,
@@ -433,23 +447,41 @@ define("bgagame/scovillecjh", ["require", "exports", "ebg/core/gamegui", "cookbo
             }
             return true;
         };
+        ScovilleCjh.prototype.addAuctionBidInput = function () {
+            dojo.place(this.format_block('jstpl_bid_input', {
+                max_bid: this.getPlayerCoins()
+            }), "pagemaintitletext");
+        };
+        ScovilleCjh.prototype.getPlayerCoins = function () {
+            var _a;
+            var coinCounter = this.gamedatas.playerCounterData.find(function (x) { return x.counterId === 'player_coins'; });
+            return (_a = coinCounter === null || coinCounter === void 0 ? void 0 : coinCounter.counterValue) !== null && _a !== void 0 ? _a : 0;
+        };
         ScovilleCjh.prototype.onBid = function (evt) {
+            evt.preventDefault();
             if (this.checkAction('actBid')) {
                 var bidAmountEl = document.getElementById('player_bid_amount');
                 if (bidAmountEl) {
-                    if (!this.checkIfBidIsValid(parseInt(bidAmountEl.value))) {
-                        this.showMessage(_('Please choose a valid bid amount!'), 'error');
-                        return;
-                    }
-                    this.ajaxcall("/scovillecjh/scovillecjh/bidAction.html", {
-                        lock: true,
-                        bid_amount: bidAmountEl.value,
-                    }, this, function (result) { return console.log(result); });
+                    this.bgaPerformAction('actBid', {
+                        bid_amount: bidAmountEl.value
+                    }).then(function (result) {
+                        console.log("then", result);
+                    }).catch(function (error) {
+                        console.log("Error:", error);
+                    });
                 }
             }
         };
         ScovilleCjh.prototype.setupNotifications = function () {
             console.log('notifications subscriptions setup');
+            this.subscribeNotif('invalidBid', this.notif_invalidBid);
+        };
+        ScovilleCjh.prototype.notif_invalidBid = function (notif) {
+            if (!g_archive_mode) {
+                var message = this.format_string_recursive(notif.log, notif.args);
+                this.showMessage("".concat(message), 'error');
+            }
+            console.log('notif_invalidBid', notif);
         };
         return ScovilleCjh;
     }(CommonMixer(Gamegui)));

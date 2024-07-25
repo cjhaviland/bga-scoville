@@ -27,25 +27,6 @@ class action_scovillecjh extends APP_GameAction
 		}
 	}
 
-	public function playCard()
-	{
-		self::setAjaxMode();
-
-		/** @var int $card_id */
-		$card_id = self::getArg('card_id', AT_int, true);
-
-		$this->game->playCard( $card_id );
-		self::ajaxResponse();
-	}
-
-	public function pass()
-	{
-		self::setAjaxMode();
-
-		$this->game->pass(  );
-		self::ajaxResponse();
-	}
-
 	public function actBid()
 	{
 		self::setAjaxMode();

@@ -18,7 +18,8 @@ declare(strict_types=1);
  */
 if (false) {
 	/** @var scovillecjh $game */
-	$game->stMultiPlayerInit();
+	$game->stGameNewRound();
+	$game->stAuctionBid();
 }
 
 $machinestates = array(
@@ -32,25 +33,23 @@ $machinestates = array(
 		),
 	),
 	2 => array(
-		'name' => 'playerTurn',
-		'description' => clienttranslate('${actplayer} must play a card or pass'),
-		'descriptionmyturn' => clienttranslate('${you} must play a card or pass'),
-		'type' => 'activeplayer',
-		'possibleactions' => ['playCard', 'pass'],
+		'name' => 'gameNewRound',
+		'description' => clienttranslate('Setting up new round...'),
+		'type' => 'game',
+		'action' => 'stGameNewRound',
 		'transitions' => array(
-			'playCard' => 2,
-			'pass' => 2,
+			'auctionBid' => 10,
 		),
 	),
 	10 => array(
 		'name' => 'auctionBid',
 		'description' => clienttranslate('Others must bid for position.'),
-		'descriptionmyturn' => clienttranslate('test'),
+		'descriptionmyturn' => clienttranslate('${you} must bid coins for position: '),
 		'type' => 'multipleactiveplayer',
 		'possibleactions' => ['actBid'],
-		'action' => 'stMultiPlayerInit',
+		'action' => 'stAuctionBid',
 		'transitions' => array(
-			'' => 2,
+			'newRound' => 2,
 		),
 	),
 	99 => array(

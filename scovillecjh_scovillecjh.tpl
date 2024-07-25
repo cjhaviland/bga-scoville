@@ -109,6 +109,8 @@ const jstpl_screen_counter = '<div id="label_${name}_${id}"><i class="fa6 fa6-so
 
 const jstpl_bonus_tile = '<div id="${tileId}" class="bonus-tile">${text}</div>';
 
+const jstpl_bid_input = '<input type="number" id="player_bid_amount" min="0" max="${max_bid}" value="0"/> ';
+
 </script>  
 
 {OVERALL_GAME_FOOTER}

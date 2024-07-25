@@ -26,6 +26,10 @@ if (!defined('DECK_LOC_DECK')) {
     define("DECK_LOC_WON", "won");
 }
 
+if (!defined('GS_ROUND')) {
+    define("GS_ROUND", "round");
+}
+
 class ScovilleCjh extends Table
 {
     public $morning_market_deck;
@@ -61,6 +65,7 @@ class ScovilleCjh extends Table
             //    "my_first_game_variant" => 100,
             //    "my_second_game_variant" => 101,
             //      ...
+            GS_ROUND => 10
         ) );
 
         $this->morning_market_deck = self::getNew("module.common.deck");
@@ -106,7 +111,6 @@ class ScovilleCjh extends Table
         foreach( $players as $player_id => $player )
         {
             $color = array_shift( $default_colors );
-            $setupCoinAmount = 10;
             $values[]= "('".$player_id."','$color','".$player['player_canal']."','".addslashes( $player['player_name'] )."','".addslashes( $player['player_avatar'] )."')";
         }
         $sql .= implode( ',', $values );
@@ -117,7 +121,7 @@ class ScovilleCjh extends Table
         /************ Start the game initialization *****/
 
         // Init global values with their initial values
-        //self::setGameStateInitialValue( 'my_first_global_variable', 0 );
+        self::setGameStateInitialValue( GS_ROUND, 0 );
         
         // Init game statistics
         // (note: statistics used in this file must be defined in your stats.inc.php file)
@@ -126,14 +130,22 @@ class ScovilleCjh extends Table
 
         // TODO: setup the initial game situation here
 
-        
+        // B: Players
+        // G: Starting Plots
         self::initPepperPlots();
         self::initBoardPathTable();
         self::initPlayerCounters($players);
-       
+
+        // C: Farmer's Market
         self::setupMorningMarketDeck($players);
+
+        // D: Chili Cookoff
         self::setupRecipeDeck($players);
+
+        // E: Auction House
         self::setupMorningAuctionDeck($players);
+
+        // F: City Hall
         self::setupAwardPlaqueDeck($players);
 
         // Activate first player (which is in general a good idea :) )
@@ -169,7 +181,7 @@ class ScovilleCjh extends Table
   
         $players = self::loadPlayersBasicInfos();
         $result['currentPlayerId'] = (int)$current_player_id;
-
+        $result['currentRound'] = $this->getGameStateValue(GS_ROUND);
         $result['playerCounterData'] = $this->getPlayerCounters($current_player_id);
 
         // foreach ($players as $player) {
@@ -347,9 +359,18 @@ class ScovilleCjh extends Table
         $sql = "SELECT id, player_id playerId, counter_id counterId, counter_name counterName, counter_value counterValue, display_order displayOrder 
                 FROM player_counter 
                 WHERE player_id = $player_id 
-                    AND counter_id = $counter_id";
+                    AND counter_id = '$counter_id'";
 
-        $this->getUniqueValueFromDB($sql);
+        return $this->getObjectFromDB($sql);
+    }
+    
+    function getPlayerCounterValue(int $player_id, string $counter_id) {
+        $sql = "SELECT counter_value
+                FROM player_counter 
+                WHERE player_id = $player_id 
+                    AND counter_id = '$counter_id'";
+
+        return $this->getUniqueValueFromDB($sql);
     }
 
     function setupMorningMarketDeck($players)
@@ -568,34 +589,46 @@ class ScovilleCjh extends Table
     */
 
     function actBid(int $bid_amount) {
-        self::checkAction('bid');
+        $this->checkAction('actBid');
 
-        $player_id = self::getCurrentPlayerId();
+        $player_id = $this->getCurrentPlayerId();
 
         // TODO: Check if bid is valid (not negative, not more than MAX bid allowed)
-        $player_coins = self::DbQuery( "SELECT player_coins FROM player WHERE player_id = $player_id" );
+        $player_coins = $this->getPlayerCounterValue($player_id, "player_coins");
+        
 
         if ($bid_amount >= 0 && $bid_amount <= $player_coins) {
-            // $this->notifyAllPlayers("dealCard", clienttranslate('${player_name} received a card'), [
-            //     'player_id' => $playerId,
-            //     'player_name' => $this->getActivePlayerName()
-            // ]);
-    
-            // $this->notifyPlayer($playerId, "dealCardPrivate", clienttranslate('You received ${cardName}'), [
-            //     "type" => $card["type"],
-            //     "cardName" => $this->getCardName($card["type"])
-            // ]);
+            $this->notifyAllPlayers(
+                "message",
+                clienttranslate('${player_name} has submitted their bid'),
+                [
+                    "player_name" => $this->getPlayerNameById($player_id),
+                ]
+            );
 
             // Deactivate player; if none left, transition to 'playerTurn' state
-            $this->gamestate->setPlayerNonMultiactive($player_id, 'playerTurn');
+            // $this->gamestate->setPlayerNonMultiactive($player_id, 'newRound');
         }
         else {
             // Notify player of invalid bid
-            // $this->notifyPlayer($player_id, "dealCardPrivate", clienttranslate('You received ${cardName}'), [
-            //     "type" => $card["type"],
-            //     "cardName" => $this->getCardName($card["type"])
-            // ]);
+            $this->notifyPlayer(
+                $player_id, 
+                "invalidBid", 
+                clienttranslate('Invalid bid amount of ${bidAmount}. Max bid is: ${maxBid}'), 
+                [
+                    "bidAmount" => $bid_amount,
+                    "maxBid" => $player_coins
+                ]
+            );
         }
+    }
+
+    function pass() {
+        self::checkAction('pass');
+    }
+
+    function playCard($card_id) {
+        self::checkAction('playCard');
     }
 
     
@@ -648,8 +681,15 @@ class ScovilleCjh extends Table
     }    
     */
 
-    function stMultiPlayerInit() {
+    function stGameNewRound() {
+        $round = $this->incGameStateValue(GS_ROUND, 1);
+        
         $this->gamestate->setAllPlayersMultiactive();
+        $this->gamestate->nextState("auctionBid");
+    }
+
+    function stAuctionBid() {
+
     }
 
 //////////////////////////////////////////////////////////////////////////////

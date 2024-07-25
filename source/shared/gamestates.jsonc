@@ -28,28 +28,34 @@
 
 	// Note: ID=2: your first state
 	"2": {
-		"name": "playerTurn",
-		"description": "${actplayer} must play a card or pass",
-		"descriptionmyturn": "${you} must play a card or pass",
-		"type": "activeplayer",
-		"possibleactions": {
-			"playCard": [{ "name": "card_id", "type": "AT_int" }],
-			"pass": []
-		},
-		"transitions": { "playCard": 2, "pass": 2 }
+		"name": "gameNewRound",
+		"description": "Setting up new round...",
+		"type": "game",
+		"action": "stGameNewRound",
+		"transitions": { "auctionBid": 10 }
 	},
+	// "2": {
+	// 	"name": "playerTurn",
+	// 	"description": "${actplayer} must play a card or pass",
+	// 	"descriptionmyturn": "${you} must play a card or pass",
+	// 	"type": "game",
+	// 	"possibleactions": {
+	// 		"playCard": [{ "name": "card_id", "type": "AT_int" }],
+	// 		"pass": []
+	// 	},
+	// 	"transitions": { "playCard": 2, "pass": 2 }
+	// },
 	
 	"10": {
 		"name": "auctionBid",
 		"description": "Others must bid for position.",
-		// "descriptionmyturn": "${you} must bid <input type="number" id="player_bid_amount" min="0" value="0"/> coins for position.",
-		"descriptionmyturn": "test",
+		"descriptionmyturn": "${you} must bid coins for position: ",
 		"type": "multipleactiveplayer",
 		"possibleactions": {
 			"actBid": [{ "name": "bid_amount", "type": "AT_int" }]
 		},
-		"action": "stMultiPlayerInit",
-		"transitions": { "": 2 }
+		"action": "stAuctionBid",
+		"transitions": { "newRound": 2 }
 	},
 
 	// Final state.

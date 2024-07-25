@@ -20,27 +20,18 @@ interface GameStates {
 		},
 	},
 	2: {
-		'name': 'playerTurn',
-		'description': '${actplayer} must play a card or pass',
-		'descriptionmyturn': '${you} must play a card or pass',
-		'type': 'activeplayer',
-		'possibleactions': {
-			'playCard': [{
-				'name': 'card_id',
-				'type': 'AT_int',
-				'typescriptType': number,
-			}],
-			'pass': [],
-		},
+		'name': 'gameNewRound',
+		'description': 'Setting up new round...',
+		'type': 'game',
+		'action': 'stGameNewRound',
 		'transitions': {
-			'playCard': 2,
-			'pass': 2,
+			'auctionBid': 10,
 		},
 	},
 	10: {
 		'name': 'auctionBid',
 		'description': 'Others must bid for position.',
-		'descriptionmyturn': 'test',
+		'descriptionmyturn': '${you} must bid coins for position: ',
 		'type': 'multipleactiveplayer',
 		'possibleactions': {
 			'actBid': [{
@@ -49,9 +40,9 @@ interface GameStates {
 				'typescriptType': number,
 			}],
 		},
-		'action': 'stMultiPlayerInit',
+		'action': 'stAuctionBid',
 		'transitions': {
-			'': 2,
+			'newRound': 2,
 		},
 	},
 	99: {

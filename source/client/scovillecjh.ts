@@ -77,7 +77,7 @@ class ScovilleCjh extends CommonMixer(Gamegui)
 	{
 		console.log("Starting game setup", gamedatas );
 
-            const { allPlayerColors, players, won, pepperPlots, boardPaths, pepperTokens, cardsDescription, cardsOnBoard, gamestate, tablespeed, game_result_neutralized, neutralized_player_id, playerorder, gamestates, notifications, decision, playerCounterData } = gamedatas;
+            const { allPlayerColors, players, won, pepperPlots, boardPaths, pepperTokens, cardsDescription, cardsOnBoard, gamestate, tablespeed, game_result_neutralized, neutralized_player_id, playerorder, gamestates, notifications, decision, playerCounterData, currentRound } = gamedatas;
 
 			if (!this.isSpectator) {
 				/**
@@ -252,7 +252,12 @@ class ScovilleCjh extends CommonMixer(Gamegui)
 		
 		switch( stateName )
 		{
+			case 'gameNewRound':
+				console.log(`New round: ${this.gamedatas.currentRound}`);
+                break;
 			case 'auctionBid':
+				this.slideAllTokensToTop()
+				this.addAuctionBidInput();
                 break;
 		}
 	}
@@ -316,6 +321,17 @@ class ScovilleCjh extends CommonMixer(Gamegui)
 			color: this.getColorName(player.color)
 		} ) , `${topOrBottom}-disc-${player.turn_order}`);
 	}
+
+	moveToken(player: Player, newPosition: string) {
+		this.attachToNewParent(`player-${player.id}-token`, `${newPosition}-disc-${player.turn_order}`, 0);
+	}
+
+	slideAllTokensToTop() {
+		for (let playerId in this.gamedatas.players) {
+			const player = this.gamedatas.players[playerId] as Player
+			this.moveToken(player, 'top');
+		}
+	}
 	
 	addFarmerOnBoard(player: Player)
 	{
@@ -366,6 +382,18 @@ class ScovilleCjh extends CommonMixer(Gamegui)
 		return true;
 	}
 
+	addAuctionBidInput() {
+		dojo.place( this.format_block( 'jstpl_bid_input', {
+			max_bid: this.getPlayerCoins()
+		} ) , `pagemaintitletext`);
+	}
+
+	getPlayerCoins() {
+		const coinCounter = this.gamedatas.playerCounterData.find(x => x.counterId === 'player_coins');
+
+		return coinCounter?.counterValue ?? 0;
+	}
+
 	///////////////////////////////////////////////////
 	//// Player's action
 	
@@ -413,24 +441,20 @@ class ScovilleCjh extends CommonMixer(Gamegui)
 
 	onBid( evt: Event ) {
 		// Preventing default browser reaction
-		// dojo.stopEvent( evt );
+		evt.preventDefault();
 
 		// Check that this action is possible (see "possibleactions" in states.inc.php)
 		if (this.checkAction('actBid')) {
 			const bidAmountEl = document.getElementById('player_bid_amount') as HTMLInputElement;
 
 			if (bidAmountEl) {
-				if (!this.checkIfBidIsValid(parseInt(bidAmountEl.value))) {
-					this.showMessage(_('Please choose a valid bid amount!'), 'error');
-					return;
-				}
-	
-				this.ajaxcall( "/scovillecjh/scovillecjh/bidAction.html", {
-					lock: true,
-					bid_amount: bidAmountEl.value,
-				}, 
-				this, 
-				(result: any) => console.log(result));
+				this.bgaPerformAction('actBid', { 
+					bid_amount: bidAmountEl.value
+				}).then((result) => {
+					console.log(`then`, result)
+				}).catch((error) => {
+					console.log(`Error:`, error)
+				})
 			}
 		}
 	}
@@ -465,7 +489,8 @@ class ScovilleCjh extends CommonMixer(Gamegui)
 		// dojo.subscribe( 'cardPlayed', this, "notif_cardPlayed" );
 
 		// With GameguiCookbook::Common class...
-		// this.subscribeNotif( 'cardPlayed', this.notif_cardPlayed ); // Adds type safety to the subscription
+		// Adds type safety to the subscription
+		this.subscribeNotif( 'invalidBid', this.notif_invalidBid );
 	}
 
 	/*
@@ -481,6 +506,14 @@ class ScovilleCjh extends CommonMixer(Gamegui)
 		// Note: notif.args contains the arguments specified during you "notifyAllPlayers" / "notifyPlayer" PHP call
 	}
 	*/
+	notif_invalidBid( notif: NotifAs<'invalidBid'> ) {
+		if (!g_archive_mode) {
+        	const message = this.format_string_recursive(notif.log, notif.args);
+			this.showMessage(`${message}`, 'error');		
+		}
+
+		console.log( 'notif_invalidBid', notif );
+	}
 }
 
 
